@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalender Interaktif | FullCalendar + Bootstrap 5</title>
+
+    <!-- Google Fonts: Nunito -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- FullCalendar Core and Plugins CDN -->
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        /* Override FullCalendar's default styles to match Bootstrap */
+        .fc {
+            --fc-border-color: #dee2e6;
+            --fc-today-bg-color: rgba(13, 110, 253, 0.1);
+        }
+        .fc .fc-button {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            text-transform: capitalize;
+        }
+        .fc .fc-button-primary {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+        .fc .fc-button-primary:hover {
+            background-color: #0b5ed7;
+            border-color: #0a58ca;
+        }
+        .fc .fc-toolbar-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+
+        /* Light event style */
+        .fc-daygrid-event {
+            border-radius: 0.375rem;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 2px 5px;
+            border: 1px solid var(--bs-secondary-bg);
+            border-left-width: 4px;
+            background-color: var(--bs-secondary-bg);
+        }
+        .fc-daygrid-event .fc-event-title {
+            color: var(--bs-body-color);
+            padding-left: 4px;
+        }
+
+        /* Custom event colors */
+        .event-blue { border-left-color: var(--bs-blue); }
+        .event-cyan { border-left-color: var(--bs-cyan); }
+        .event-indigo { border-left-color: var(--bs-indigo); }
+        .event-teal { border-left-color: var(--bs-teal); }
+        .event-sky { border-left-color: #0ea5e9; }
+
+    </style>
+</head>
+<body class="text-gray-700">
+
+    <div class="container my-5">
+        <div class="card shadow-sm border-light">
+            <div class="card-body p-4">
+                <div id='calendar'></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Offcanvas Side Panel for daily schedule -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="side-panel" aria-labelledby="side-panel-label">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="side-panel-label">Jadwal Acara</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body">
+        <div id="side-panel-content">
+            <!-- Event list will be injected here -->
+        </div>
+      </div>
+      <div class="p-3 border-top bg-light">
+          <button id="add-event-from-panel" class="btn btn-primary w-100">
+              <i class="bi bi-plus-circle me-2"></i>Tambah Acara Baru
+          </button>
+      </div>
+    </div>
+
+    <!-- Modal for adding new event -->
+    <div class="modal fade" id="add-event-modal" tabindex="-1" aria-labelledby="addEventModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <form id="add-event-form">
+            <div class="modal-header">
+              <h5 class="modal-title" id="addEventModalLabel">Buat Acara Baru 🗓️</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="event-title" class="form-label">Judul Acara</label>
+                    <input type="text" class="form-control" id="event-title" placeholder="Contoh: Rapat Proyek Penting" required>
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col">
+                        <label for="event-start-time" class="form-label">Jam Mulai</label>
+                        <input type="time" class="form-control" id="event-start-time">
+                    </div>
+                    <div class="col">
+                        <label for="event-end-time" class="form-label">Jam Selesai</label>
+                        <input type="time" class="form-control" id="event-end-time">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="event-client" class="form-label">Nama Klien</label>
+                    <input type="text" class="form-control" id="event-client" placeholder="Contoh: PT Maju Mundur">
+                </div>
+                <div class="mb-3">
+                    <label for="event-zoom" class="form-label">Link Zoom</label>
+                    <input type="url" class="form-control" id="event-zoom" placeholder="https://zoom.us/j/...">
+                </div>
+                <div class="mb-3">
+                    <label for="event-description" class="form-label">Deskripsi (Opsional)</label>
+                    <textarea class="form-control" id="event-description" rows="2"></textarea>
+                </div>
+                <input type="hidden" id="event-start-date">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+              <button type="submit" class="btn btn-success">Simpan</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Bootstrap JS Bundle CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- ELEMENTS ---
+            const calendarEl = document.getElementById('calendar');
+            const sidePanelEl = document.getElementById('side-panel');
+            const sidePanel = new bootstrap.Offcanvas(sidePanelEl);
+            const sidePanelTitle = document.getElementById('side-panel-label');
+            const sidePanelContent = document.getElementById('side-panel-content');
+            const addEventFromPanelBtn = document.getElementById('add-event-from-panel');
+
+            const addEventModalEl = document.getElementById('add-event-modal');
+            const addEventModal = new bootstrap.Modal(addEventModalEl);
+            const addEventForm = document.getElementById('add-event-form');
+
+            // --- DATE HELPERS ---
+            const today = new Date();
+            const getDate = (dayOffset = 0, time = null) => {
+                const date = new Date();
+                date.setDate(today.getDate() + dayOffset);
+                const dateString = date.toISOString().slice(0, 10);
+                return time ? `${dateString}T${time}` : dateString;
+            };
+
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                // --- CONFIGURATION ---
+                themeSystem: 'bootstrap5',
+                headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek,listWeek' },
+                initialView: 'dayGridMonth',
+                locale: 'id',
+                navLinks: true,
+                editable: true,
+                dayMaxEvents: true,
+                selectable: true,
+
+                // --- EVENTS DATA ---
+                events: [
+                    { title: 'Kick-off Talent Mapping', start: getDate(-7, '09:00:00'), clientName: 'Internal', zoomLink: 'https://zoom.us/j/123456789', className: 'event-blue' },
+                    { title: 'FGD - Level Manajer', start: getDate(-5, '10:00:00'), clientName: 'Internal', zoomLink: 'https://zoom.us/j/123456789', className: 'event-blue' },
+                    { title: 'Analisis & Pemetaan', start: getDate(-4), end: getDate(-1), className: 'event-cyan' },
+                    { title: 'Presentasi Hasil Talent Mapping', start: getDate(2, '14:00:00'), clientName: 'Direksi', zoomLink: 'https://zoom.us/j/123456789', className: 'event-indigo' },
+                    { title: 'Daily Stand-up', start: getDate(0, '09:00:00'), clientName: 'Tim Developer', zoomLink: 'https://zoom.us/j/987654321', className: 'event-sky' },
+                    { title: 'Development: Fitur Kalender', start: getDate(0), end: getDate(4), className: 'event-teal' },
+                    { title: 'Deployment ke Staging', start: getDate(5, '15:00:00'), className: 'event-sky' }
+                ],
+
+                // --- INTERACTIONS ---
+                dateClick: function(info) {
+                    const date = info.date;
+                    const formattedDate = date.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
+                    sidePanelTitle.textContent = `Jadwal, ${formattedDate}`;
+
+                    const eventsOnDay = calendar.getEvents().filter(event => {
+                        const eventStart = event.start;
+                        if (!eventStart) return false;
+                        return new Date(eventStart.valueOf() - eventStart.getTimezoneOffset() * 60000).toISOString().slice(0,10) === info.dateStr;
+                    });
+
+                    sidePanelContent.innerHTML = ''; // Clear previous content
+
+                    if (eventsOnDay.length > 0) {
+                        const eventList = document.createElement('div');
+                        eventList.className = 'list-group';
+                        eventsOnDay.sort((a,b) => a.start - b.start).forEach(event => {
+                            const timeFormat = { hour: '2-digit', minute: '2-digit', hour12: false };
+                            const timeString = event.allDay ? 'Seharian' : event.start.toLocaleTimeString('id-ID', timeFormat) + (event.end ? ' - ' + event.end.toLocaleTimeString('id-ID', timeFormat) : '');
+
+                            const item = document.createElement('div');
+                            item.className = 'list-group-item list-group-item-action flex-column align-items-start';
+                            item.innerHTML = `
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1 fw-bold">${event.title}</h6>
+                                </div>
+                                <p class="mb-1 text-muted"><i class="bi bi-clock me-2"></i>${timeString}</p>
+                                ${ event.extendedProps.clientName ? `<small class="text-muted"><i class="bi bi-person me-2"></i>${event.extendedProps.clientName}</small>` : '' }
+                                ${ event.extendedProps.zoomLink ? `<br><a href="${event.extendedProps.zoomLink}" target="_blank" class="card-link small"><i class="bi bi-camera-video me-2"></i>Buka Link Zoom</a>` : '' }
+                            `;
+                            eventList.appendChild(item);
+                        });
+                         sidePanelContent.appendChild(eventList);
+                    } else {
+                        sidePanelContent.innerHTML = `<p class="text-center text-muted mt-5">Tidak ada acara untuk tanggal ini.</p>`;
+                    }
+
+                    sidePanelEl.dataset.selectedDate = info.dateStr;
+                    sidePanel.show();
+                },
+
+                eventClick: function(info) {
+                    info.jsEvent.preventDefault(); // prevent browser navigation
+                    calendar.trigger('dateClick', {
+                        date: info.event.start,
+                        dateStr: info.event.start.toISOString().substring(0, 10),
+                        dayEl: info.el,
+                        jsEvent: info.jsEvent,
+                        view: info.view
+                    });
+                }
+            });
+            calendar.render();
+
+            // --- MODAL & PANEL CONTROLS ---
+            addEventFromPanelBtn.addEventListener('click', () => {
+                const selectedDate = sidePanelEl.dataset.selectedDate;
+                if (selectedDate) {
+                    addEventForm.reset();
+                    document.getElementById('event-start-date').value = selectedDate;
+                    addEventModal.show();
+                }
+            });
+
+            addEventForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const title = document.getElementById('event-title').value;
+                const description = document.getElementById('event-description').value;
+                const startDate = document.getElementById('event-start-date').value;
+                const startTime = document.getElementById('event-start-time').value;
+                const endTime = document.getElementById('event-end-time').value;
+                const clientName = document.getElementById('event-client').value;
+                const zoomLink = document.getElementById('event-zoom').value;
+
+                if (title) {
+                    const newEvent = {
+                        title, description, clientName, zoomLink,
+                        className: 'event-sky'
+                    };
+
+                    if (startTime) {
+                        newEvent.start = `${startDate}T${startTime}`;
+                        newEvent.allDay = false;
+                        if (endTime) { newEvent.end = `${startDate}T${endTime}`; }
+                    } else {
+                        newEvent.start = startDate;
+                        newEvent.allDay = true;
+                    }
+
+                    calendar.addEvent(newEvent);
+                    addEventModal.hide();
+                    sidePanel.hide();
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

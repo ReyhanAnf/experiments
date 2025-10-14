@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalender Interaktif | FullCalendar + Tailwind CSS</title>
+
+    <!-- Google Fonts: Nunito -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FullCalendar Core and Plugins CDN -->
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+
+    <style>
+        /* Custom styles with a light sky blue theme */
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f0f9ff; /* sky-50 background */
+        }
+
+        /* Override FullCalendar's default button styles */
+        .fc .fc-button {
+            background-color: #ffffff;
+            border-color: #bae6fd; /* sky-200 border */
+            color: #0ea5e9; /* sky-500 text */
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease-in-out;
+            border-radius: 9999px; /* Pill shape */
+            padding: 0.5rem 1.25rem;
+            text-transform: capitalize;
+            font-weight: 600;
+        }
+
+        .fc .fc-button:hover, .fc .fc-button:focus {
+            background-color: #e0f2fe; /* sky-100 bg */
+            border-color: #7dd3fc; /* sky-300 */
+        }
+
+        .fc .fc-button-primary:not(:disabled).fc-button-active,
+        .fc .fc-button-primary:not(:disabled):active {
+            background-color: #0ea5e9; /* sky-500 */
+            border-color: #0ea5e9;
+            color: white;
+        }
+
+        .fc .fc-toolbar-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 700; /* font-bold */
+            color: #0369a1; /* sky-700 */
+        }
+
+        /* Light event style */
+        .fc-daygrid-event {
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 600;
+            cursor: pointer;
+            padding: 2px 5px;
+            border: 1px solid transparent;
+            border-left-width: 4px;
+        }
+
+        .fc-h-event {
+             background-color: #f0f9ff !important; /* bg-sky-50 */
+        }
+
+        .fc-event-title {
+            padding-left: 4px;
+        }
+
+        .fc-day-today {
+            background-color: #e0f2fe !important; /* sky-100 */
+        }
+
+        .fc-daygrid-day:hover {
+            background-color: #f5f5f5; /* bg-neutral-100 */
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="text-gray-700">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <h1 class="mx-auto text-4xl font-bold text-slate-800 text-center my-5">Reyhan Anf</h1>
+        <div class="bg-white rounded-3xl shadow-lg p-6 border-4 border-white ring-2 ring-sky-100">
+            <div id='calendar'></div>
+        </div>
+    </div>
+
+    <!-- Side Panel for daily schedule -->
+    <div id="side-panel" class="fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-xl transform translate-x-full transition-transform duration-300 ease-in-out z-50 flex flex-col">
+        <!-- Header -->
+        <div class="p-4 border-b flex justify-between items-center bg-sky-50">
+            <h2 id="side-panel-title" class="text-lg font-bold text-sky-800">Jadwal Acara</h2>
+            <button id="side-panel-close" class="text-gray-500 hover:text-sky-600">
+                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        <!-- Content -->
+        <div id="side-panel-content" class="p-4 overflow-y-auto flex-grow">
+            <!-- Event list will be injected here -->
+        </div>
+        <!-- Footer -->
+        <div class="p-4 border-t bg-gray-50">
+             <button id="add-event-from-panel" class="w-full text-white bg-sky-500 hover:bg-sky-600 font-bold py-2 px-4 rounded-full transition-colors">
+                 Tambah Acara Baru
+             </button>
+        </div>
+    </div>
+
+    <!-- Modal for adding new event -->
+    <div id="add-event-modal" class="fixed inset-0 bg-black bg-opacity-50 z-[60] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md transform transition-all scale-95 opacity-0" id="add-modal-content">
+            <form id="add-event-form">
+                <div class="p-6">
+                    <h3 class="text-2xl font-bold text-gray-900">Buat Acara Baru 🗓️</h3>
+                    <div class="mt-4">
+                        <label for="event-title" class="block text-sm font-medium text-gray-700">Judul Acara</label>
+                        <input type="text" id="event-title" placeholder="Contoh: Rapat Proyek Penting" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 sm:text-sm" required>
+                    </div>
+                     <div class="mt-4 grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="event-start-time" class="block text-sm font-medium text-gray-700">Jam Mulai</label>
+                            <input type="time" id="event-start-time" name="event-start-time" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label for="event-end-time" class="block text-sm font-medium text-gray-700">Jam Selesai</label>
+                            <input type="time" id="event-end-time" name="event-end-time" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 sm:text-sm">
+                        </div>
+                    </div>
+                     <div class="mt-4">
+                        <label for="event-client" class="block text-sm font-medium text-gray-700">Nama Klien</label>
+                        <input type="text" id="event-client" placeholder="Contoh: PT Maju Mundur" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 sm:text-sm">
+                    </div>
+                     <div class="mt-4">
+                        <label for="event-zoom" class="block text-sm font-medium text-gray-700">Link Zoom</label>
+                        <input type="url" id="event-zoom" placeholder="https://zoom.us/j/..." class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 sm:text-sm">
+                    </div>
+                    <div class="mt-4">
+                        <label for="event-description" class="block text-sm font-medium text-gray-700">Deskripsi (Opsional)</label>
+                        <textarea id="event-description" placeholder="Jelaskan acaramu di sini..." rows="2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 sm:text-sm"></textarea>
+                    </div>
+                    <input type="hidden" id="event-start-date" name="event-start-date">
+                </div>
+                <div class="bg-gray-50 px-6 py-3 flex justify-end space-x-3 rounded-b-2xl">
+                    <button type="button" id="add-modal-cancel" class="rounded-full border border-gray-300 bg-white py-2 px-4 text-sm font-bold text-gray-700 shadow-sm hover:bg-gray-50">Batal</button>
+                    <button type="submit" class="inline-flex justify-center rounded-full border border-transparent bg-green-500 py-2 px-4 text-sm font-bold text-white shadow-sm hover:bg-green-600">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- ELEMENTS ---
+            const calendarEl = document.getElementById('calendar');
+            const sidePanel = document.getElementById('side-panel');
+            const sidePanelTitle = document.getElementById('side-panel-title');
+            const sidePanelContent = document.getElementById('side-panel-content');
+            const sidePanelCloseBtn = document.getElementById('side-panel-close');
+            const addEventFromPanelBtn = document.getElementById('add-event-from-panel');
+
+            const addEventModal = document.getElementById('add-event-modal');
+            const addEventModalContent = document.getElementById('add-modal-content');
+            const addEventForm = document.getElementById('add-event-form');
+            const addModalCancelButton = document.getElementById('add-modal-cancel');
+
+            // --- DATE HELPERS ---
+            const today = new Date();
+            const getDate = (dayOffset = 0, time = null) => {
+                const date = new Date();
+                date.setDate(today.getDate() + dayOffset);
+                const dateString = date.toISOString().slice(0, 10);
+                return time ? `${dateString}T${time}` : dateString;
+            };
+
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                // --- CONFIGURATION ---
+                headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek,listWeek' },
+                initialView: 'dayGridMonth',
+                locale: 'id',
+                navLinks: true,
+                editable: true,
+                dayMaxEvents: true,
+                selectable: true,
+
+                // --- EVENTS DATA ---
+                events: [
+                    {
+                        title: 'Kick-off Talent Mapping',
+                        start: getDate(-7, '09:00:00'),
+                        description: 'Meeting awal bersama tim HR dan Kepala Divisi.',
+                        clientName: 'Internal',
+                        zoomLink: 'https://zoom.us/j/123456789',
+                        className: 'bg-sky-400/50 border-blue-400 text-blue-700'
+                    },
+                    {
+                        title: 'FGD - Level Manajer',
+                        start: getDate(-5, '10:00:00'),
+                        clientName: 'Internal',
+                        zoomLink: 'https://zoom.us/j/123456789',
+                        className: 'bg-sky-400/50 border-blue-400 text-blue-700'
+                    },
+                     {
+                        title: 'Presentasi Hasil Talent Mapping',
+                        start: getDate(2, '14:00:00'),
+                        clientName: 'Direksi',
+                        zoomLink: 'https://zoom.us/j/123456789',
+                        className: 'bg-sky-400/50 border-indigo-400 text-indigo-700'
+                    },
+                    {
+                        title: 'Daily Stand-up',
+                        start: getDate(0, '09:00:00'),
+                        clientName: 'Tim Developer',
+                        zoomLink: 'https://zoom.us/j/987654321',
+                        className: 'bg-sky-400/50 border-sky-400 text-sky-700'
+                    },
+                    {
+                        title: 'Deployment ke Staging',
+                        start: getDate(5, '15:00:00'),
+                        className: 'bg-sky-400/50 border-sky-500 text-sky-700'
+                    }
+                ],
+
+                // --- INTERACTIONS ---
+                dateClick: function(info) {
+                    const date = info.date;
+                    const formattedDate = date.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                    sidePanelTitle.textContent = `Jadwal untuk ${formattedDate}`;
+
+                    const eventsOnDay = calendar.getEvents().filter(event => {
+                        const eventStart = event.start;
+                        if (!eventStart) return false;
+                        return new Date(eventStart.valueOf() - eventStart.getTimezoneOffset() * 60000).toISOString().slice(0,10) === info.dateStr;
+                    });
+
+                    sidePanelContent.innerHTML = ''; // Clear previous content
+
+                    if (eventsOnDay.length > 0) {
+                        eventsOnDay.sort((a,b) => a.start - b.start).forEach(event => {
+                            const timeFormat = { hour: '2-digit', minute: '2-digit', hour12: false };
+                            const timeString = event.allDay ? 'Seharian' : event.start.toLocaleTimeString('id-ID', timeFormat) + (event.end ? ' - ' + event.end.toLocaleTimeString('id-ID', timeFormat) : '');
+
+                            const eventHTML = `
+                                <div class="mb-3 p-3 rounded-lg border border-gray-200 bg-white hover:shadow-md transition-shadow">
+                                    <p class="font-bold text-sky-800">${event.title}</p>
+                                    <p class="text-sm text-gray-500 my-1">${timeString}</p>
+                                    ${ event.extendedProps.clientName ? `<p class="text-sm text-gray-600"><strong>Klien:</strong> ${event.extendedProps.clientName}</p>` : '' }
+                                    ${ event.extendedProps.zoomLink ? `<a href="${event.extendedProps.zoomLink}" target="_blank" class="text-sm text-blue-500 hover:underline">Buka Link Zoom</a>` : '' }
+                                </div>
+                            `;
+                            sidePanelContent.innerHTML += eventHTML;
+                        });
+                    } else {
+                        sidePanelContent.innerHTML = `<p class="text-center text-gray-500 mt-8">Tidak ada acara untuk tanggal ini.</p>`;
+                    }
+
+                    sidePanel.dataset.selectedDate = info.dateStr;
+                    sidePanel.classList.remove('translate-x-full');
+                },
+
+                eventClick: function(info) {
+                    info.jsEvent.preventDefault(); // prevent browser navigation
+                    // Trigger dateClick to open the panel for that day
+                    calendar.trigger('dateClick', {
+                        date: info.event.start,
+                        dateStr: info.event.start.toISOString().substring(0, 10),
+                        dayEl: info.el,
+                        jsEvent: info.jsEvent,
+                        view: info.view
+                    });
+                }
+            });
+
+            calendar.render();
+
+            // --- MODAL & PANEL CONTROLS ---
+            function openModal(modal, content) {
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    content.classList.remove('scale-95', 'opacity-0');
+                    content.classList.add('scale-100', 'opacity-100');
+                }, 10);
+            }
+
+            function closeModal(modal, content) {
+                content.classList.remove('scale-100', 'opacity-100');
+                content.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 200);
+            }
+
+            // Side Panel Listeners
+            sidePanelCloseBtn.addEventListener('click', () => sidePanel.classList.add('translate-x-full'));
+            addEventFromPanelBtn.addEventListener('click', () => {
+                const selectedDate = sidePanel.dataset.selectedDate;
+                if (selectedDate) {
+                    addEventForm.reset();
+                    document.getElementById('event-start-date').value = selectedDate;
+                    openModal(addEventModal, addEventModalContent);
+                }
+            });
+
+            // Add Event Modal Listeners
+            addModalCancelButton.addEventListener('click', () => closeModal(addEventModal, addEventModalContent));
+            addEventForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const title = document.getElementById('event-title').value;
+                const description = document.getElementById('event-description').value;
+                const startDate = document.getElementById('event-start-date').value;
+                const startTime = document.getElementById('event-start-time').value;
+                const endTime = document.getElementById('event-end-time').value;
+                const clientName = document.getElementById('event-client').value;
+                const zoomLink = document.getElementById('event-zoom').value;
+
+                if (title) {
+                    const newEvent = {
+                        title: title,
+                        description: description,
+                        clientName: clientName,
+                        zoomLink: zoomLink,
+                        className: 'bg-sky-400/50 border-sky-400 text-sky-700'
+                    };
+
+                    if (startTime) {
+                        newEvent.start = `${startDate}T${startTime}`;
+                        newEvent.allDay = false;
+                        if (endTime) { newEvent.end = `${startDate}T${endTime}`; }
+                    } else {
+                        newEvent.start = startDate;
+                        newEvent.allDay = true;
+                    }
+
+                    calendar.addEvent(newEvent);
+                    closeModal(addEventModal, addEventModalContent);
+                    sidePanel.classList.add('translate-x-full'); // Hide panel after adding event
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
+
