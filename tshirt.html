@@ -310,31 +310,68 @@
       color: var(--accent);
     }
 
-    .color-swatches {
+    /* Focus Mode styles */
+    body.focus-mode .story-card,
+    body.focus-mode .hero-card,
+    body.focus-mode .finale-card,
+    body.focus-mode .story-nav,
+    body.focus-mode .hero-scroll-prompt {
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+      transform: translateY(20px) scale(0.96) !important;
+      transition: opacity 0.35s ease, transform 0.35s ease, visibility 0.35s !important;
+    }
+
+    .focus-mode-banner {
+      position: fixed;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-25px);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      z-index: 55;
+      background: rgba(11, 17, 30, 0.92);
+      border: 1px solid rgba(56, 189, 248, 0.45);
+      border-radius: 9999px;
+      padding: 7px 16px;
+      font-size: 0.74rem;
+      color: #e0f2fe;
       display: flex;
       align-items: center;
-      gap: 7px;
+      gap: 12px;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(56, 189, 248, 0.25);
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .swatch {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      border: 2px solid transparent;
+    body.focus-mode .focus-mode-banner {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .focus-mode-banner button {
+      background: linear-gradient(135deg, #0284c7, #38bdf8);
+      color: #04101d;
+      border: none;
+      font-weight: 700;
+      font-size: 0.7rem;
+      padding: 4px 10px;
+      border-radius: 9999px;
       cursor: pointer;
-      transition: all 0.2s ease;
-      outline: none;
-      box-shadow: inset 0 0 4px rgba(255, 255, 255, 0.15);
+      transition: all 0.2s;
     }
 
-    .swatch:hover {
-      transform: scale(1.18);
-    }
-
-    .swatch.active {
-      border-color: #38bdf8;
-      box-shadow: 0 0 10px #38bdf8;
-      transform: scale(1.22);
+    .btn.active-focus,
+    .studio-chip.active-focus {
+      background: rgba(56, 189, 248, 0.2) !important;
+      border-color: var(--accent) !important;
+      color: var(--accent) !important;
+      box-shadow: 0 0 16px var(--accent-glow) !important;
     }
 
     .studio-divider {
@@ -689,8 +726,31 @@
        6. MOBILE RESPONSIVE
        ========================================================================= */
     @media (max-width: 900px) {
+      .bg-light-orb {
+        width: 320px;
+        height: 320px;
+      }
+
       .header-bar {
-        padding: 16px 20px;
+        padding: 12px 16px;
+      }
+
+      .brand-title {
+        font-size: 1.15rem;
+      }
+
+      .brand-badge {
+        display: none;
+      }
+
+      .header-actions {
+        gap: 6px;
+      }
+
+      .header-actions .btn {
+        padding: 7px 10px;
+        font-size: 0.74rem;
+        gap: 5px;
       }
 
       .story-nav {
@@ -698,17 +758,28 @@
       }
 
       .studio-dock {
-        left: 12px;
-        right: 12px;
+        left: 0;
+        right: 0;
         bottom: 12px;
+        padding: 0 10px;
         gap: 6px;
+        display: flex;
+        justify-content: center;
       }
 
       .studio-card {
-        padding: 8px 12px;
-        gap: 10px;
+        padding: 6px 12px;
+        gap: 6px;
         overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
         justify-content: flex-start;
+        border-radius: 9999px;
+        max-width: calc(100vw - 20px);
+      }
+
+      .studio-card::-webkit-scrollbar {
+        display: none;
       }
 
       .studio-label {
@@ -719,25 +790,75 @@
         display: none;
       }
 
+      .studio-chip {
+        flex-shrink: 0;
+        white-space: nowrap;
+        padding: 5px 9px;
+        font-size: 0.68rem;
+        gap: 4px;
+      }
+
+      .studio-divider {
+        height: 18px;
+        flex-shrink: 0;
+      }
+
       .story-section {
         justify-content: center;
-        padding: 60px 16px 80px;
-        min-height: 85vh;
+        align-items: flex-end;
+        padding: 70px 14px 85px;
+        min-height: 90vh;
       }
 
       .story-card {
         width: 100%;
-        max-width: 480px;
-        padding: 24px;
+        max-width: 440px;
+        padding: 20px 18px;
+        border-radius: 20px;
+        background: rgba(11, 17, 30, 0.90);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.75);
+      }
+
+      .hero-card {
+        padding: 32px 20px;
+        border-radius: 22px;
+        max-width: 460px;
       }
 
       .hero-title {
-        font-size: 2.2rem;
+        font-size: 1.9rem;
+      }
+
+      .finale-card {
+        padding: 30px 18px;
+        border-radius: 22px;
+        max-width: 460px;
       }
 
       .specs-grid {
         grid-template-columns: 1fr;
         gap: 8px;
+        margin: 18px 0;
+      }
+
+      .focus-mode-banner {
+        top: 68px;
+        font-size: 0.68rem;
+        padding: 6px 12px;
+        gap: 8px;
+        max-width: 90vw;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .header-actions .btn-text-sm-hide {
+        display: none;
+      }
+      .header-bar {
+        padding: 10px 12px;
+      }
+      .brand-title {
+        font-size: 1.05rem;
       }
     }
   </style>
@@ -746,6 +867,12 @@
 
   <!-- Top Scroll Progress Line Indicator -->
   <div id="scroll-progress-line"></div>
+
+  <!-- Floating Focus Mode Active Notification -->
+  <div id="focus-mode-banner" class="focus-mode-banner">
+    <span>✨ Mode Fokus: Teks disembunyikan. Bebas putar &amp; zoom model 3D.</span>
+    <button id="banner-exit-focus">Tampilkan Teks</button>
+  </div>
 
   <!-- Loading Bar Overlay -->
   <div id="loader">
@@ -795,17 +922,22 @@
       <div class="brand-title">IAM TO YOGYA</div>
     </div>
     <div class="header-actions">
+      <!-- Toggle Focus Mode (Hide Descriptions) -->
+      <button class="btn" id="btn-toggle-focus" title="Sembunyikan deskripsi teks agar fokus melihat desain kaos 3D">
+        <svg id="focus-icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        <span id="focus-btn-text">Fokus Desain</span>
+      </button>
       <a class="btn" href="./" title="Kembali ke Hub Eksperimen">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
-        <span>Hub Eksperimen</span>
+        <span class="btn-text-sm-hide">Hub Eksperimen</span>
       </a>
       <button class="btn" id="btn-reset-view" title="Kembalikan kamera ke sudut pandang penuh">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-        Reset Sudut
+        <span class="btn-text-sm-hide">Reset Sudut</span>
       </button>
       <a class="btn btn-accent" href="design-flat.png" download="IAM_TO_YOGYA_Design.png" title="Unduh gambar desain 2D flat">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Unduh Desain
+        <span>Unduh Desain</span>
       </a>
     </div>
   </header>
@@ -857,24 +989,11 @@
       <span>Tarik mouse untuk memutar 3D bebas • Scroll untuk ikuti cerita</span>
     </div>
     <div class="studio-card">
-      <!-- Lighting Atmosphere -->
-      <div class="studio-group">
-        <span class="studio-label">Atmosfer Studio</span>
-        <div class="studio-btn-group" id="lighting-modes">
-          <button class="studio-chip active" data-light="cyber" title="Neon Cyan & Blue">
-            <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#38bdf8; box-shadow:0 0 6px #38bdf8;"></span>
-            Cyber Sky
-          </button>
-          <button class="studio-chip" data-light="sunset" title="Warm Sunset Amber">
-            <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#f59e0b; box-shadow:0 0 6px #f59e0b;"></span>
-            Sunset Yogya
-          </button>
-          <button class="studio-chip" data-light="studio" title="Clean Daylight Neutral">
-            <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#f8fafc; box-shadow:0 0 6px #ffffff;"></span>
-            Studio Putih
-          </button>
-        </div>
-      </div>
+      <!-- Mode Fokus Desain (Zen) -->
+      <button class="studio-chip" id="dock-btn-focus" title="Sembunyikan semua teks agar fokus melihat desain kaos 3D">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        <span id="dock-focus-text">Fokus Desain</span>
+      </button>
 
       <div class="studio-divider"></div>
 
@@ -1412,9 +1531,11 @@
     // =========================================================================
     let currentActiveKey = 'hero';
 
-    function transitionToSection(key) {
-      if (currentActiveKey === key) return;
+    function transitionToSection(key, force = false) {
+      if (!force && currentActiveKey === key) return;
       currentActiveKey = key;
+
+      if (isFocusMode && !force) return;
 
       const cfg = CAMERA_CONFIGS[key];
       if (!cfg) return;
@@ -1530,56 +1651,63 @@
     };
 
     // =========================================================================
-    // 5.1 FITUR INTERAKTIF 3D STUDIO (GANTI WARNA, SUDUT, AUTO-SPIN, WIREFRAME)
+    // 5.1 MODE FOKUS DESAIN (HAPUS DESKRIPSI & TEKS - ZEN 3D VIEW)
     // =========================================================================
-    // Preset Pencahayaan Studio
-    const LIGHTING_PRESETS = {
-      cyber: {
-        key: '#f0f9ff',
-        fill: '#38bdf8',
-        rim: '#ffffff',
-        ambient: '#ffffff'
-      },
-      sunset: {
-        key: '#ffedd5',
-        fill: '#f59e0b',
-        rim: '#fb923c',
-        ambient: '#fed7aa'
-      },
-      studio: {
-        key: '#ffffff',
-        fill: '#94a3b8',
-        rim: '#cbd5e1',
-        ambient: '#f8fafc'
+    let isFocusMode = false;
+    const btnToggleFocus = document.getElementById('btn-toggle-focus');
+    const dockBtnFocus = document.getElementById('dock-btn-focus');
+    const bannerExitFocus = document.getElementById('banner-exit-focus');
+    const focusBtnText = document.getElementById('focus-btn-text');
+    const dockFocusText = document.getElementById('dock-focus-text');
+    const focusIconSvg = document.getElementById('focus-icon-svg');
+
+    const EYE_OPEN_PATH = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+    const EYE_OFF_PATH = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+
+    function toggleFocusMode(forceState) {
+      isFocusMode = (typeof forceState === 'boolean') ? forceState : !isFocusMode;
+      document.body.classList.toggle('focus-mode', isFocusMode);
+
+      if (btnToggleFocus) btnToggleFocus.classList.toggle('active-focus', isFocusMode);
+      if (dockBtnFocus) dockBtnFocus.classList.toggle('active-focus', isFocusMode);
+
+      if (focusBtnText) {
+        focusBtnText.textContent = isFocusMode ? 'Tampilkan Teks' : 'Fokus Desain';
       }
-    };
+      if (dockFocusText) {
+        dockFocusText.textContent = isFocusMode ? 'Tampilkan Teks' : 'Fokus Desain';
+      }
+      if (focusIconSvg) {
+        focusIconSvg.innerHTML = isFocusMode ? EYE_OFF_PATH : EYE_OPEN_PATH;
+      }
 
-    function setLightingPreset(presetKey) {
-      const p = LIGHTING_PRESETS[presetKey];
-      if (!p) return;
+      if (isFocusMode) {
+        // Sembunyikan cincin hotspot saat fokus melihat desain
+        highlightGroup.visible = false;
 
-      const dur = 0.8;
-      const keyCol = new THREE.Color(p.key);
-      const fillCol = new THREE.Color(p.fill);
-      const rimCol = new THREE.Color(p.rim);
-      const ambCol = new THREE.Color(p.ambient);
-
-      gsap.to(keyLight.color, { r: keyCol.r, g: keyCol.g, b: keyCol.b, duration: dur, ease: 'power2.out' });
-      gsap.to(fillLight.color, { r: fillCol.r, g: fillCol.g, b: fillCol.b, duration: dur, ease: 'power2.out' });
-      gsap.to(rimLight.color, { r: rimCol.r, g: rimCol.g, b: rimCol.b, duration: dur, ease: 'power2.out' });
-      gsap.to(ambientLight.color, { r: ambCol.r, g: ambCol.g, b: ambCol.b, duration: dur, ease: 'power2.out' });
+        // Posisikan kamera presisi di tengah layar
+        gsap.killTweensOf(camera.position);
+        gsap.killTweensOf(controls.target);
+        gsap.to(camera.position, {
+          x: 0,
+          duration: 0.9,
+          ease: 'power2.out'
+        });
+        gsap.to(controls.target, {
+          x: 0,
+          duration: 0.9,
+          ease: 'power2.out',
+          onUpdate: () => controls.update()
+        });
+      } else {
+        // Kembalikan sudut pandang sesuai section yang sedang aktif
+        transitionToSection(currentActiveKey, true);
+      }
     }
 
-    const lightingChips = document.querySelectorAll('#lighting-modes .studio-chip');
-    lightingChips.forEach(chip => {
-      chip.addEventListener('click', (e) => {
-        e.stopPropagation();
-        lightingChips.forEach(c => c.classList.remove('active'));
-        chip.classList.add('active');
-        const mode = chip.getAttribute('data-light');
-        setLightingPreset(mode);
-      });
-    });
+    if (btnToggleFocus) btnToggleFocus.addEventListener('click', () => toggleFocusMode());
+    if (dockBtnFocus) dockBtnFocus.addEventListener('click', () => toggleFocusMode());
+    if (bannerExitFocus) bannerExitFocus.addEventListener('click', () => toggleFocusMode(false));
 
     // Preset Sudut Pandang Kamera
     const btnViewFront = document.getElementById('btn-view-front');
