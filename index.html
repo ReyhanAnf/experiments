@@ -1,350 +1,448 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalender Interaktif | FullCalendar + Tailwind CSS</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reyhan Anf | Experiments & Creative Lab</title>
+  <meta name="description" content="Koleksi eksperimen interaktif, 3D WebGL, komponen UI, dan prototipe kreatif oleh Reyhan Anf.">
 
-    <!-- Google Fonts: Nunito -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- FullCalendar Core and Plugins CDN -->
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
-
-    <style>
-        /* Custom styles with a light sky blue theme */
-        body {
-            font-family: 'Nunito', sans-serif;
-            background-color: #f0f9ff; /* sky-50 background */
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+            }
+          }
         }
+      }
+    }
+  </script>
 
-        /* Override FullCalendar's default button styles */
-        .fc .fc-button {
-            background-color: #ffffff;
-            border-color: #bae6fd; /* sky-200 border */
-            color: #0ea5e9; /* sky-500 text */
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            transition: all 0.2s ease-in-out;
-            border-radius: 9999px; /* Pill shape */
-            padding: 0.5rem 1.25rem;
-            text-transform: capitalize;
-            font-weight: 600;
-        }
-
-        .fc .fc-button:hover, .fc .fc-button:focus {
-            background-color: #e0f2fe; /* sky-100 bg */
-            border-color: #7dd3fc; /* sky-300 */
-        }
-
-        .fc .fc-button-primary:not(:disabled).fc-button-active,
-        .fc .fc-button-primary:not(:disabled):active {
-            background-color: #0ea5e9; /* sky-500 */
-            border-color: #0ea5e9;
-            color: white;
-        }
-
-        .fc .fc-toolbar-title {
-            font-size: 1.875rem; /* text-3xl */
-            font-weight: 700; /* font-bold */
-            color: #0369a1; /* sky-700 */
-        }
-
-        /* Light event style */
-        .fc-daygrid-event {
-            border-radius: 0.375rem; /* rounded-md */
-            font-weight: 600;
-            cursor: pointer;
-            padding: 2px 5px;
-            border: 1px solid transparent;
-            border-left-width: 4px;
-        }
-
-        .fc-h-event {
-             background-color: #f0f9ff !important; /* bg-sky-50 */
-        }
-
-        .fc-event-title {
-            padding-left: 4px;
-        }
-
-        .fc-day-today {
-            background-color: #e0f2fe !important; /* sky-100 */
-        }
-
-        .fc-daygrid-day:hover {
-            background-color: #f5f5f5; /* bg-neutral-100 */
-            cursor: pointer;
-        }
-    </style>
+  <style>
+    body {
+      background-color: #0b0f19;
+      color: #f1f5f9;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(14, 165, 233, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.10) 0px, transparent 50%),
+        radial-gradient(at 50% 50%, rgba(15, 23, 42, 0.5) 0px, transparent 100%);
+      background-attachment: fixed;
+    }
+    .glass-card {
+      background: rgba(17, 24, 39, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-card:hover {
+      border-color: rgba(56, 189, 248, 0.4);
+      transform: translateY(-3px);
+      box-shadow: 0 20px 35px -10px rgba(14, 165, 233, 0.15);
+    }
+    .tag-badge {
+      font-size: 0.7rem;
+      letter-spacing: 0.02em;
+    }
+  </style>
 </head>
-<body class="text-gray-700">
+<body class="min-h-screen flex flex-col antialiased selection:bg-sky-500 selection:text-white">
 
-    <div class="container mx-auto p-4 md:p-8">
-        <h1 class="mx-auto text-4xl font-bold text-slate-800 text-center my-5">Reyhan Anf</h1>
-        <div class="bg-white rounded-3xl shadow-lg p-6 border-4 border-white ring-2 ring-sky-100">
-            <div id='calendar'></div>
+  <!-- TOP HEADER / NAV -->
+  <header class="border-b border-white/5 bg-slate-950/60 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="https://reyhananf.web.id" class="flex items-center gap-2 group">
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-sky-500 to-indigo-500 flex items-center justify-center font-bold text-white text-sm shadow-md group-hover:scale-105 transition-transform">
+            R
+          </div>
+          <div>
+            <span class="text-sm font-bold text-white group-hover:text-sky-400 transition-colors">Reyhan Anf</span>
+            <span class="text-xs text-slate-400 block -mt-1 font-mono">reyhananf.web.id</span>
+          </div>
+        </a>
+        <span class="text-slate-600 font-light">/</span>
+        <span class="text-xs font-semibold uppercase tracking-wider text-sky-400 bg-sky-950/60 border border-sky-800/50 px-2 py-0.5 rounded-full">
+          Experiments
+        </span>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <a href="https://github.com/ReyhanAnf/experiments" target="_blank" rel="noopener noreferrer" 
+           class="inline-flex items-center gap-2 text-xs font-medium text-slate-300 hover:text-white bg-slate-900/80 hover:bg-slate-800 border border-white/10 px-3 py-1.5 rounded-lg transition-all">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path>
+          </svg>
+          <span class="hidden sm:inline">GitHub Repo</span>
+        </a>
+        <a href="https://reyhananf.web.id" 
+           class="inline-flex items-center gap-1.5 text-xs font-semibold text-sky-400 hover:text-sky-300 bg-sky-950/40 hover:bg-sky-950/70 border border-sky-800/60 px-3 py-1.5 rounded-lg transition-all">
+          <span>Website Utama</span>
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <main class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-14 w-full">
+    <div class="mb-10 sm:mb-12">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 border border-white/10 text-xs font-medium text-slate-300 mb-4">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        Creative Sandbox &amp; Interactive Web Lab
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-3">
+        Eksperimen <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-teal-300 to-indigo-400">Reyhan Anf</span>
+      </h1>
+      <p class="text-slate-400 text-sm sm:text-base max-w-2xl leading-relaxed">
+        Pintu masuk ke seluruh kumpulan eksperimen kode, visualisasi 3D WebGL, scrollytelling, dan prototipe antarmuka web mandiri (standalone HTML).
+      </p>
+
+      <!-- STATS / META -->
+      <div class="mt-6 flex flex-wrap items-center gap-4 text-xs font-mono text-slate-400">
+        <div class="flex items-center gap-1.5 bg-slate-900/60 border border-white/5 px-3 py-1.5 rounded-lg">
+          <span class="text-sky-400 font-semibold" id="count-display">3</span> Eksperimen
         </div>
+        <div class="flex items-center gap-1.5 bg-slate-900/60 border border-white/5 px-3 py-1.5 rounded-lg">
+          <span class="text-emerald-400">●</span> Zero-Build / Pure HTML
+        </div>
+        <div class="flex items-center gap-1.5 bg-slate-900/60 border border-white/5 px-3 py-1.5 rounded-lg">
+          <span class="text-indigo-400">📍</span> reyhananf.web.id/experiments
+        </div>
+      </div>
     </div>
 
-    <!-- Side Panel for daily schedule -->
-    <div id="side-panel" class="fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-xl transform translate-x-full transition-transform duration-300 ease-in-out z-50 flex flex-col">
-        <!-- Header -->
-        <div class="p-4 border-b flex justify-between items-center bg-sky-50">
-            <h2 id="side-panel-title" class="text-lg font-bold text-sky-800">Jadwal Acara</h2>
-            <button id="side-panel-close" class="text-gray-500 hover:text-sky-600">
-                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </button>
-        </div>
-        <!-- Content -->
-        <div id="side-panel-content" class="p-4 overflow-y-auto flex-grow">
-            <!-- Event list will be injected here -->
-        </div>
-        <!-- Footer -->
-        <div class="p-4 border-t bg-gray-50">
-             <button id="add-event-from-panel" class="w-full text-white bg-sky-500 hover:bg-sky-600 font-bold py-2 px-4 rounded-full transition-colors">
-                 Tambah Acara Baru
-             </button>
-        </div>
+    <!-- FILTER & SEARCH CONTROLS -->
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 mb-8 pb-4 border-b border-white/5">
+      <!-- Category Tabs -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0" id="filter-tabs">
+        <button data-filter="all" class="filter-btn active px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all bg-sky-500 text-white shadow-sm shadow-sky-500/30">
+          Semua
+        </button>
+        <button data-filter="3d" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-900/80">
+          3D &amp; WebGL
+        </button>
+        <button data-filter="ui" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-900/80">
+          UI &amp; Komponen
+        </button>
+      </div>
+
+      <!-- Search Input -->
+      <div class="relative w-full sm:w-72">
+        <input type="text" id="search-input" placeholder="Cari eksperimen atau teknologi..." 
+               class="w-full bg-slate-900/90 text-xs text-white placeholder-slate-500 border border-white/10 rounded-lg pl-9 pr-3 py-2 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all">
+        <svg class="w-4 h-4 text-slate-500 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+      </div>
     </div>
 
-    <!-- Modal for adding new event -->
-    <div id="add-event-modal" class="fixed inset-0 bg-black bg-opacity-50 z-[60] hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md transform transition-all scale-95 opacity-0" id="add-modal-content">
-            <form id="add-event-form">
-                <div class="p-6">
-                    <h3 class="text-2xl font-bold text-gray-900">Buat Acara Baru 🗓️</h3>
-                    <div class="mt-4">
-                        <label for="event-title" class="block text-sm font-medium text-gray-700">Judul Acara</label>
-                        <input type="text" id="event-title" placeholder="Contoh: Rapat Proyek Penting" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 sm:text-sm" required>
-                    </div>
-                     <div class="mt-4 grid grid-cols-2 gap-4">
-                        <div>
-                            <label for="event-start-time" class="block text-sm font-medium text-gray-700">Jam Mulai</label>
-                            <input type="time" id="event-start-time" name="event-start-time" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 sm:text-sm">
-                        </div>
-                        <div>
-                            <label for="event-end-time" class="block text-sm font-medium text-gray-700">Jam Selesai</label>
-                            <input type="time" id="event-end-time" name="event-end-time" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 sm:text-sm">
-                        </div>
-                    </div>
-                     <div class="mt-4">
-                        <label for="event-client" class="block text-sm font-medium text-gray-700">Nama Klien</label>
-                        <input type="text" id="event-client" placeholder="Contoh: PT Maju Mundur" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 sm:text-sm">
-                    </div>
-                     <div class="mt-4">
-                        <label for="event-zoom" class="block text-sm font-medium text-gray-700">Link Zoom</label>
-                        <input type="url" id="event-zoom" placeholder="https://zoom.us/j/..." class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 sm:text-sm">
-                    </div>
-                    <div class="mt-4">
-                        <label for="event-description" class="block text-sm font-medium text-gray-700">Deskripsi (Opsional)</label>
-                        <textarea id="event-description" placeholder="Jelaskan acaramu di sini..." rows="2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 sm:text-sm"></textarea>
-                    </div>
-                    <input type="hidden" id="event-start-date" name="event-start-date">
-                </div>
-                <div class="bg-gray-50 px-6 py-3 flex justify-end space-x-3 rounded-b-2xl">
-                    <button type="button" id="add-modal-cancel" class="rounded-full border border-gray-300 bg-white py-2 px-4 text-sm font-bold text-gray-700 shadow-sm hover:bg-gray-50">Batal</button>
-                    <button type="submit" class="inline-flex justify-center rounded-full border border-transparent bg-green-500 py-2 px-4 text-sm font-bold text-white shadow-sm hover:bg-green-600">Simpan</button>
-                </div>
-            </form>
+    <!-- EXPERIMENTS GRID -->
+    <div id="experiments-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <!-- CARD 1: 3D T-SHIRT SHOWCASE (Featured) -->
+      <div class="experiment-card glass-card rounded-2xl p-6 flex flex-col justify-between group relative overflow-hidden" 
+           data-category="3d" 
+           data-title="IAM TO YOGYA - 3D T-Shirt Scrollytelling" 
+           data-tags="threejs webgl gltf 3d scrollytelling orbitcontrols canvas showcase">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-sky-500/10 rounded-full blur-2xl group-hover:bg-sky-500/20 transition-all pointer-events-none"></div>
+
+        <div>
+          <!-- Top Badges -->
+          <div class="flex items-center justify-between mb-4">
+            <span class="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-sky-400 bg-sky-950/70 border border-sky-800/60 px-2.5 py-0.5 rounded-full">
+              <span class="w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse"></span>
+              3D &amp; WebGL
+            </span>
+            <span class="text-[11px] font-semibold text-amber-300 bg-amber-950/40 border border-amber-800/40 px-2 py-0.5 rounded-md">
+              Featured 🌟
+            </span>
+          </div>
+
+          <!-- Preview Mockup Banner -->
+          <div class="w-full h-36 mb-4 rounded-xl bg-gradient-to-br from-slate-900 via-slate-800 to-sky-950 border border-white/5 flex items-center justify-center relative overflow-hidden group-hover:border-sky-500/30 transition-colors">
+            <div class="absolute inset-0 opacity-25 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:16px_16px]"></div>
+            <div class="text-center z-10 p-3">
+              <div class="w-10 h-10 mx-auto mb-2 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center font-bold text-lg border border-sky-400/30 shadow-lg shadow-sky-500/20">
+                👕
+              </div>
+              <div class="text-xs font-bold text-white tracking-wide">IAM TO YOGYA</div>
+              <div class="text-[10px] text-sky-400/80 font-mono">Interactive 3D Three.js</div>
+            </div>
+          </div>
+
+          <!-- Title & Description -->
+          <h2 class="text-lg font-bold text-white mb-2 group-hover:text-sky-300 transition-colors flex items-center gap-1.5">
+            IAM TO YOGYA — 3D Showcase
+          </h2>
+          <p class="text-slate-400 text-xs leading-relaxed mb-4">
+            Showcase produk kaos 3D interaktif bertema Yogyakarta dengan alur cerita (scrollytelling) sinematik, rotasi 360° interaktif, hotspot detail motif, color switcher, dan download aset 3D.
+          </p>
+
+          <!-- Tech Stack Pills -->
+          <div class="flex flex-wrap gap-1.5 mb-6">
+            <span class="tag-badge font-mono text-slate-300 bg-slate-900 border border-white/5 px-2 py-0.5 rounded">Three.js</span>
+            <span class="tag-badge font-mono text-slate-300 bg-slate-900 border border-white/5 px-2 py-0.5 rounded">WebGL</span>
+            <span class="tag-badge font-mono text-slate-300 bg-slate-900 border border-white/5 px-2 py-0.5 rounded">GLTF 3D</span>
+            <span class="tag-badge font-mono text-slate-300 bg-slate-900 border border-white/5 px-2 py-0.5 rounded">Scrollytelling</span>
+          </div>
         </div>
+
+        <!-- Launch Button -->
+        <a href="tshirt.html" 
+           class="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white text-xs font-bold py-2.5 px-4 rounded-xl shadow-md shadow-sky-500/20 transition-all">
+          <span>Buka Eksperimen 3D</span>
+          <svg class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+        </a>
+      </div>
+
+      <!-- CARD 2: INTERACTIVE CALENDAR - TAILWIND CSS -->
+      <div class="experiment-card glass-card rounded-2xl p-6 flex flex-col justify-between group relative overflow-hidden" 
+           data-category="ui" 
+           data-title="Kalender Interaktif - Tailwind CSS" 
+           data-tags="calendar fullcalendar tailwind schedule meeting agenda modal">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-teal-500/10 rounded-full blur-2xl group-hover:bg-teal-500/20 transition-all pointer-events-none"></div>
+
+        <div>
+          <!-- Top Badges -->
+          <div class="flex items-center justify-between mb-4">
+            <span class="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-teal-400 bg-teal-950/70 border border-teal-800/60 px-2.5 py-0.5 rounded-full">
+              UI &amp; Komponen
+            </span>
+            <span class="text-[11px] font-semibold text-slate-400 bg-slate-900 border border-white/10 px-2 py-0.5 rounded-md">
+              FullCalendar 6
+            </span>
+          </div>
+
+          <!-- Preview Mockup Banner -->
+          <div class="w-full h-36 mb-4 rounded-xl bg-gradient-to-br from-slate-900 via-sky-950 to-slate-900 border border-white/5 flex items-center justify-center relative overflow-hidden group-hover:border-teal-500/30 transition-colors">
+            <div class="text-center z-10 p-3">
+              <div class="w-10 h-10 mx-auto mb-2 rounded-xl bg-teal-500/20 text-teal-400 flex items-center justify-center font-bold text-lg border border-teal-400/30 shadow-lg shadow-teal-500/20">
+                🗓️
+              </div>
+              <div class="text-xs font-bold text-white tracking-wide">Kalender Interaktif</div>
+              <div class="text-[10px] text-teal-400/80 font-mono">Tailwind CSS + Sky Theme</div>
+            </div>
+          </div>
+
+          <!-- Title & Description -->
+          <h2 class="text-lg font-bold text-white mb-2 group-hover:text-teal-300 transition-colors flex items-center gap-1.5">
+            Kalender — Tailwind CSS
+          </h2>
+          <p class="text-slate-400 text-xs leading-relaxed mb-4">
+            Implementasi kalender jadwal interaktif bertema sky-blue yang modern. Dilengkapi side panel detail agenda harian, modal penambahan jadwal rapat/klien, serta navigasi multi-view.
+          </p>
+
+          <!-- Tech Stack Pills -->
+          <div class="flex flex-wrap gap-1.5 mb-6">
+            <span class="tag-badge font-mono text-slate-300 bg-slate-900 border border-white/5 px-2 py-0.5 rounded">FullCalendar 6</span>
+            <span class="tag-badge font-mono text-slate-300 bg-slate-900 border border-white/5 px-2 py-0.5 rounded">Tailwind CSS</span>
+            <span class="tag-badge font-mono text-slate-300 bg-slate-900 border border-white/5 px-2 py-0.5 rounded">Side Drawer</span>
+            <span class="tag-badge font-mono text-slate-300 bg-slate-900 border border-white/5 px-2 py-0.5 rounded">Vanilla JS</span>
+          </div>
+        </div>
+
+        <!-- Launch Button -->
+        <a href="calendar-tailwind.html" 
+           class="w-full inline-flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white text-xs font-bold py-2.5 px-4 rounded-xl border border-white/10 hover:border-teal-500/50 transition-all">
+          <span>Buka Kalender Tailwind</span>
+          <svg class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+        </a>
+      </div>
+
+      <!-- CARD 3: INTERACTIVE CALENDAR - BOOTSTRAP 5 -->
+      <div class="experiment-card glass-card rounded-2xl p-6 flex flex-col justify-between group relative overflow-hidden" 
+           data-category="ui" 
+           data-title="Kalender Interaktif - Bootstrap 5" 
+           data-tags="calendar fullcalendar bootstrap bootstrap5 ui modal offcanvas">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl group-hover:bg-indigo-500/20 transition-all pointer-events-none"></div>
+
+        <div>
+          <!-- Top Badges -->
+          <div class="flex items-center justify-between mb-4">
+            <span class="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-indigo-400 bg-indigo-950/70 border border-indigo-800/60 px-2.5 py-0.5 rounded-full">
+              UI &amp; Komponen
+            </span>
+            <span class="text-[11px] font-semibold text-slate-400 bg-slate-900 border border-white/10 px-2 py-0.5 rounded-md">
+              Bootstrap 5
+            </span>
+          </div>
+
+          <!-- Preview Mockup Banner -->
+          <div class="w-full h-36 mb-4 rounded-xl bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 border border-white/5 flex items-center justify-center relative overflow-hidden group-hover:border-indigo-500/30 transition-colors">
+            <div class="text-center z-10 p-3">
+              <div class="w-10 h-10 mx-auto mb-2 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-lg border border-indigo-400/30 shadow-lg shadow-indigo-500/20">
+                📅
+              </div>
+              <div class="text-xs font-bold text-white tracking-wide">Kalender Interaktif</div>
+              <div class="text-[10px] text-indigo-400/80 font-mono">Bootstrap 5 + Offcanvas</div>
+            </div>
+          </div>
+
+          <!-- Title & Description -->
+          <h2 class="text-lg font-bold text-white mb-2 group-hover:text-indigo-300 transition-colors flex items-center gap-1.5">
+            Kalender — Bootstrap 5
+          </h2>
+          <p class="text-slate-400 text-xs leading-relaxed mb-4">
+            Implementasi kalender jadwal interaktif berbasis native components Bootstrap 5. Menggunakan Bootstrap Offcanvas untuk drawer daftar jadwal dan Bootstrap Modal untuk pembuatan acara baru.
+          </p>
+
+          <!-- Tech Stack Pills -->
+          <div class="flex flex-wrap gap-1.5 mb-6">
+            <span class="tag-badge font-mono text-slate-300 bg-slate-900 border border-white/5 px-2 py-0.5 rounded">FullCalendar 6</span>
+            <span class="tag-badge font-mono text-slate-300 bg-slate-900 border border-white/5 px-2 py-0.5 rounded">Bootstrap 5</span>
+            <span class="tag-badge font-mono text-slate-300 bg-slate-900 border border-white/5 px-2 py-0.5 rounded">Bootstrap Icons</span>
+            <span class="tag-badge font-mono text-slate-300 bg-slate-900 border border-white/5 px-2 py-0.5 rounded">Offcanvas</span>
+          </div>
+        </div>
+
+        <!-- Launch Button -->
+        <a href="bootstrap.html" 
+           class="w-full inline-flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white text-xs font-bold py-2.5 px-4 rounded-xl border border-white/10 hover:border-indigo-500/50 transition-all">
+          <span>Buka Kalender Bootstrap</span>
+          <svg class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+        </a>
+      </div>
+
     </div>
 
+    <!-- EMPTY STATE FOR SEARCH -->
+    <div id="empty-state" class="hidden text-center py-16">
+      <div class="w-12 h-12 rounded-full bg-slate-900 border border-white/10 flex items-center justify-center mx-auto mb-3 text-slate-400 text-lg">
+        🔍
+      </div>
+      <h3 class="text-base font-bold text-white mb-1">Eksperimen tidak ditemukan</h3>
+      <p class="text-xs text-slate-400 max-w-sm mx-auto">
+        Tidak ada eksperimen yang cocok dengan pencarian atau filter yang Anda pilih. Coba gunakan kata kunci lain.
+      </p>
+    </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // --- ELEMENTS ---
-            const calendarEl = document.getElementById('calendar');
-            const sidePanel = document.getElementById('side-panel');
-            const sidePanelTitle = document.getElementById('side-panel-title');
-            const sidePanelContent = document.getElementById('side-panel-content');
-            const sidePanelCloseBtn = document.getElementById('side-panel-close');
-            const addEventFromPanelBtn = document.getElementById('add-event-from-panel');
+    <!-- HOW TO ADD EXPERIMENTS GUIDE -->
+    <section class="mt-16 pt-10 border-t border-white/5">
+      <div class="glass-card rounded-2xl p-6 sm:p-8">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
+          <div>
+            <span class="text-xs font-mono text-sky-400 uppercase tracking-wider font-semibold">Struktur Repositori</span>
+            <h3 class="text-lg font-bold text-white mt-0.5">Cara Menambahkan Eksperimen Baru</h3>
+          </div>
+          <span class="px-3 py-1 rounded-lg bg-slate-900 border border-white/10 text-[11px] font-mono text-slate-300">
+            git clone &amp; static deploy
+          </span>
+        </div>
+        <p class="text-slate-400 text-xs leading-relaxed mb-4">
+          Repositori ini dirancang sebagai katalog file HTML mandiri (tanpa build tools yang rumit). Setiap eksperimen cukup berbentuk satu file <code class="text-sky-300 bg-slate-900 px-1 py-0.5 rounded font-mono">.html</code> beserta asetnya:
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+          <div class="bg-slate-900/80 border border-white/5 rounded-xl p-3">
+            <div class="font-bold text-white mb-1">1. Buat File HTML</div>
+            <div class="text-slate-400 text-[11px]">Tambahkan file seperti <code class="text-slate-300">game.html</code> atau <code class="text-slate-300">canvas.html</code> langsung di folder root.</div>
+          </div>
+          <div class="bg-slate-900/80 border border-white/5 rounded-xl p-3">
+            <div class="font-bold text-white mb-1">2. Pasang Navigasi Kembali</div>
+            <div class="text-slate-400 text-[11px]">Tambahkan link <code class="text-slate-300">&lt;a href="./"&gt;Hub&lt;/a&gt;</code> di bagian atas agar pengunjung mudah kembali.</div>
+          </div>
+          <div class="bg-slate-900/80 border border-white/5 rounded-xl p-3">
+            <div class="font-bold text-white mb-1">3. Daftarkan di Index</div>
+            <div class="text-slate-400 text-[11px]">Tambahkan kartu eksperimen baru ke dalam <code class="text-slate-300">index.html</code> lalu commit &amp; push!</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
 
-            const addEventModal = document.getElementById('add-event-modal');
-            const addEventModalContent = document.getElementById('add-modal-content');
-            const addEventForm = document.getElementById('add-event-form');
-            const addModalCancelButton = document.getElementById('add-modal-cancel');
+  <!-- FOOTER -->
+  <footer class="border-t border-white/5 bg-slate-950/80 py-8 text-center text-xs text-slate-500">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        © 2026 <a href="https://reyhananf.web.id" class="text-slate-400 hover:text-white font-medium transition-colors">Reyhan Anf</a>. All experiments are open-source.
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="https://reyhananf.web.id" class="text-slate-400 hover:text-sky-400 transition-colors">Portfolio</a>
+        <span class="text-slate-700">•</span>
+        <a href="https://github.com/ReyhanAnf/experiments" target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-sky-400 transition-colors">GitHub</a>
+        <span class="text-slate-700">•</span>
+        <a href="#top" class="text-slate-400 hover:text-white transition-colors">Kembali ke Atas ↑</a>
+      </div>
+    </div>
+  </footer>
 
-            // --- DATE HELPERS ---
-            const today = new Date();
-            const getDate = (dayOffset = 0, time = null) => {
-                const date = new Date();
-                date.setDate(today.getDate() + dayOffset);
-                const dateString = date.toISOString().slice(0, 10);
-                return time ? `${dateString}T${time}` : dateString;
-            };
+  <!-- CLIENT-SIDE FILTERING & SEARCH SCRIPT -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchInput = document.getElementById('search-input');
+      const filterBtns = document.querySelectorAll('.filter-btn');
+      const cards = document.querySelectorAll('.experiment-card');
+      const countDisplay = document.getElementById('count-display');
+      const emptyState = document.getElementById('empty-state');
 
-            const calendar = new FullCalendar.Calendar(calendarEl, {
-                // --- CONFIGURATION ---
-                headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek,listWeek' },
-                initialView: 'dayGridMonth',
-                locale: 'id',
-                navLinks: true,
-                editable: true,
-                dayMaxEvents: true,
-                selectable: true,
+      let currentFilter = 'all';
+      let currentQuery = '';
 
-                // --- EVENTS DATA ---
-                events: [
-                    {
-                        title: 'Kick-off Talent Mapping',
-                        start: getDate(-7, '09:00:00'),
-                        description: 'Meeting awal bersama tim HR dan Kepala Divisi.',
-                        clientName: 'Internal',
-                        zoomLink: 'https://zoom.us/j/123456789',
-                        className: 'bg-sky-400/50 border-blue-400 text-blue-700'
-                    },
-                    {
-                        title: 'FGD - Level Manajer',
-                        start: getDate(-5, '10:00:00'),
-                        clientName: 'Internal',
-                        zoomLink: 'https://zoom.us/j/123456789',
-                        className: 'bg-sky-400/50 border-blue-400 text-blue-700'
-                    },
-                     {
-                        title: 'Presentasi Hasil Talent Mapping',
-                        start: getDate(2, '14:00:00'),
-                        clientName: 'Direksi',
-                        zoomLink: 'https://zoom.us/j/123456789',
-                        className: 'bg-sky-400/50 border-indigo-400 text-indigo-700'
-                    },
-                    {
-                        title: 'Daily Stand-up',
-                        start: getDate(0, '09:00:00'),
-                        clientName: 'Tim Developer',
-                        zoomLink: 'https://zoom.us/j/987654321',
-                        className: 'bg-sky-400/50 border-sky-400 text-sky-700'
-                    },
-                    {
-                        title: 'Deployment ke Staging',
-                        start: getDate(5, '15:00:00'),
-                        className: 'bg-sky-400/50 border-sky-500 text-sky-700'
-                    }
-                ],
+      function updateGrid() {
+        let visibleCount = 0;
 
-                // --- INTERACTIONS ---
-                dateClick: function(info) {
-                    const date = info.date;
-                    const formattedDate = date.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-                    sidePanelTitle.textContent = `Jadwal untuk ${formattedDate}`;
+        cards.forEach(card => {
+          const category = card.getAttribute('data-category');
+          const title = (card.getAttribute('data-title') || '').toLowerCase();
+          const tags = (card.getAttribute('data-tags') || '').toLowerCase();
 
-                    const eventsOnDay = calendar.getEvents().filter(event => {
-                        const eventStart = event.start;
-                        if (!eventStart) return false;
-                        return new Date(eventStart.valueOf() - eventStart.getTimezoneOffset() * 60000).toISOString().slice(0,10) === info.dateStr;
-                    });
+          const matchesCategory = (currentFilter === 'all') || (category === currentFilter);
+          const matchesSearch = !currentQuery || title.includes(currentQuery) || tags.includes(currentQuery);
 
-                    sidePanelContent.innerHTML = ''; // Clear previous content
-
-                    if (eventsOnDay.length > 0) {
-                        eventsOnDay.sort((a,b) => a.start - b.start).forEach(event => {
-                            const timeFormat = { hour: '2-digit', minute: '2-digit', hour12: false };
-                            const timeString = event.allDay ? 'Seharian' : event.start.toLocaleTimeString('id-ID', timeFormat) + (event.end ? ' - ' + event.end.toLocaleTimeString('id-ID', timeFormat) : '');
-
-                            const eventHTML = `
-                                <div class="mb-3 p-3 rounded-lg border border-gray-200 bg-white hover:shadow-md transition-shadow">
-                                    <p class="font-bold text-sky-800">${event.title}</p>
-                                    <p class="text-sm text-gray-500 my-1">${timeString}</p>
-                                    ${ event.extendedProps.clientName ? `<p class="text-sm text-gray-600"><strong>Klien:</strong> ${event.extendedProps.clientName}</p>` : '' }
-                                    ${ event.extendedProps.zoomLink ? `<a href="${event.extendedProps.zoomLink}" target="_blank" class="text-sm text-blue-500 hover:underline">Buka Link Zoom</a>` : '' }
-                                </div>
-                            `;
-                            sidePanelContent.innerHTML += eventHTML;
-                        });
-                    } else {
-                        sidePanelContent.innerHTML = `<p class="text-center text-gray-500 mt-8">Tidak ada acara untuk tanggal ini.</p>`;
-                    }
-
-                    sidePanel.dataset.selectedDate = info.dateStr;
-                    sidePanel.classList.remove('translate-x-full');
-                },
-
-                eventClick: function(info) {
-                    info.jsEvent.preventDefault(); // prevent browser navigation
-                    // Trigger dateClick to open the panel for that day
-                    calendar.trigger('dateClick', {
-                        date: info.event.start,
-                        dateStr: info.event.start.toISOString().substring(0, 10),
-                        dayEl: info.el,
-                        jsEvent: info.jsEvent,
-                        view: info.view
-                    });
-                }
-            });
-
-            calendar.render();
-
-            // --- MODAL & PANEL CONTROLS ---
-            function openModal(modal, content) {
-                modal.classList.remove('hidden');
-                setTimeout(() => {
-                    content.classList.remove('scale-95', 'opacity-0');
-                    content.classList.add('scale-100', 'opacity-100');
-                }, 10);
-            }
-
-            function closeModal(modal, content) {
-                content.classList.remove('scale-100', 'opacity-100');
-                content.classList.add('scale-95', 'opacity-0');
-                setTimeout(() => {
-                    modal.classList.add('hidden');
-                }, 200);
-            }
-
-            // Side Panel Listeners
-            sidePanelCloseBtn.addEventListener('click', () => sidePanel.classList.add('translate-x-full'));
-            addEventFromPanelBtn.addEventListener('click', () => {
-                const selectedDate = sidePanel.dataset.selectedDate;
-                if (selectedDate) {
-                    addEventForm.reset();
-                    document.getElementById('event-start-date').value = selectedDate;
-                    openModal(addEventModal, addEventModalContent);
-                }
-            });
-
-            // Add Event Modal Listeners
-            addModalCancelButton.addEventListener('click', () => closeModal(addEventModal, addEventModalContent));
-            addEventForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const title = document.getElementById('event-title').value;
-                const description = document.getElementById('event-description').value;
-                const startDate = document.getElementById('event-start-date').value;
-                const startTime = document.getElementById('event-start-time').value;
-                const endTime = document.getElementById('event-end-time').value;
-                const clientName = document.getElementById('event-client').value;
-                const zoomLink = document.getElementById('event-zoom').value;
-
-                if (title) {
-                    const newEvent = {
-                        title: title,
-                        description: description,
-                        clientName: clientName,
-                        zoomLink: zoomLink,
-                        className: 'bg-sky-400/50 border-sky-400 text-sky-700'
-                    };
-
-                    if (startTime) {
-                        newEvent.start = `${startDate}T${startTime}`;
-                        newEvent.allDay = false;
-                        if (endTime) { newEvent.end = `${startDate}T${endTime}`; }
-                    } else {
-                        newEvent.start = startDate;
-                        newEvent.allDay = true;
-                    }
-
-                    calendar.addEvent(newEvent);
-                    closeModal(addEventModal, addEventModalContent);
-                    sidePanel.classList.add('translate-x-full'); // Hide panel after adding event
-                }
-            });
+          if (matchesCategory && matchesSearch) {
+            card.style.display = 'flex';
+            visibleCount++;
+          } else {
+            card.style.display = 'none';
+          }
         });
-    </script>
 
+        countDisplay.textContent = visibleCount;
+
+        if (visibleCount === 0) {
+          emptyState.classList.remove('hidden');
+        } else {
+          emptyState.classList.add('hidden');
+        }
+      }
+
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          filterBtns.forEach(b => {
+            b.classList.remove('active', 'bg-sky-500', 'text-white', 'shadow-sm', 'shadow-sky-500/30');
+            b.classList.add('text-slate-400');
+          });
+          btn.classList.add('active', 'bg-sky-500', 'text-white', 'shadow-sm', 'shadow-sky-500/30');
+          btn.classList.remove('text-slate-400');
+
+          currentFilter = btn.getAttribute('data-filter');
+          updateGrid();
+        });
+      });
+
+      searchInput.addEventListener('input', (e) => {
+        currentQuery = e.target.value.trim().toLowerCase();
+        updateGrid();
+      });
+    });
+  </script>
 </body>
 </html>
-

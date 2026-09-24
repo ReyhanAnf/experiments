@@ -1,0 +1,1696 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>IAM TO YOGYA - Interactive 3D Scrollytelling Showcase</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-dark: #07090e;
+      --bg-radial: #0f1728;
+      --card-bg: rgba(11, 17, 30, 0.78);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-border-active: rgba(56, 189, 248, 0.4);
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.35);
+      --accent-dim: rgba(56, 189, 248, 0.12);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-sub: #64748b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text);
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* Scroll Progress Indicator Line */
+    #scroll-progress-line {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      width: 0%;
+      background: linear-gradient(90deg, #0284c7, #38bdf8, #818cf8);
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.9);
+      z-index: 100;
+      transition: width 0.1s ease-out;
+      pointer-events: none;
+    }
+
+    /* =========================================================================
+       1. STICKY / FIXED 3D VIEWPORT CANVAS
+       ========================================================================= */
+    #canvas-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+      pointer-events: auto; /* Pengunjung tetap bisa drag/putar model 3D kapan saja */
+      background: radial-gradient(circle at 40% 45%, var(--bg-radial) 0%, var(--bg-dark) 100%);
+    }
+
+    /* Ambient Spotlight Overlay */
+    .bg-light-orb {
+      position: fixed;
+      width: 650px;
+      height: 650px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(14, 165, 233, 0.08) 0%, rgba(0, 0, 0, 0) 70%);
+      top: 35%;
+      left: 25%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* =========================================================================
+       2. TOP BAR & NAVIGATION HEADER
+       ========================================================================= */
+    .header-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 20px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 50;
+      pointer-events: none;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: linear-gradient(180deg, rgba(7, 9, 14, 0.85) 0%, rgba(7, 9, 14, 0) 100%);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .brand-wrap {
+      pointer-events: auto;
+      cursor: pointer;
+    }
+
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 3px;
+    }
+
+    .brand-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+      animation: pulseDot 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.4); }
+    }
+
+    .brand-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #fff 40%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      pointer-events: auto;
+    }
+
+    .btn {
+      appearance: none;
+      border: 1px solid var(--card-border);
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: var(--text);
+      padding: 9px 18px;
+      border-radius: 9999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      text-decoration: none;
+      transition: all 0.22s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 0 16px var(--accent-glow);
+      transform: translateY(-2px);
+    }
+
+    .btn-accent {
+      background: linear-gradient(135deg, #0284c7, #38bdf8);
+      color: #03101b;
+      border: none;
+      font-weight: 700;
+    }
+
+    .btn-accent:hover {
+      color: #000;
+      filter: brightness(1.1);
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.6);
+    }
+
+    /* =========================================================================
+       3. VERTICAL STORY STEP TRACKER (DESKTOP)
+       ========================================================================= */
+    .story-nav {
+      position: fixed;
+      left: 36px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 40;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      pointer-events: auto;
+    }
+
+    .story-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      opacity: 0.4;
+      transition: all 0.25s ease;
+      background: transparent;
+      border: none;
+      color: #fff;
+      padding: 4px 0;
+      text-align: left;
+    }
+
+    .story-nav-line {
+      width: 18px;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 2px;
+      transition: all 0.25s ease;
+    }
+
+    .story-nav-text {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      text-transform: uppercase;
+      display: none;
+    }
+
+    .story-nav-item:hover, .story-nav-item.active {
+      opacity: 1;
+    }
+
+    .story-nav-item.active .story-nav-line {
+      width: 32px;
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent);
+    }
+
+    .story-nav-item.active .story-nav-text {
+      display: inline-block;
+      color: var(--accent);
+    }
+
+    /* =========================================================================
+       3D INTERACTIVE STUDIO DOCK
+       ========================================================================= */
+    .studio-dock {
+      position: fixed;
+      bottom: 24px;
+      left: 36px;
+      z-index: 45;
+      pointer-events: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .studio-hint {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      background: rgba(10, 15, 26, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 5px 13px;
+      border-radius: 9999px;
+      width: fit-content;
+      pointer-events: none;
+    }
+
+    .studio-card {
+      background: rgba(11, 17, 30, 0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 9px 16px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6), 0 0 25px rgba(56, 189, 248, 0.08);
+    }
+
+    .studio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .studio-label {
+      font-size: 0.62rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+    }
+
+    .color-swatches {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .swatch {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      outline: none;
+      box-shadow: inset 0 0 4px rgba(255, 255, 255, 0.15);
+    }
+
+    .swatch:hover {
+      transform: scale(1.18);
+    }
+
+    .swatch.active {
+      border-color: #38bdf8;
+      box-shadow: 0 0 10px #38bdf8;
+      transform: scale(1.22);
+    }
+
+    .studio-divider {
+      width: 1px;
+      height: 30px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .studio-btn-group {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .studio-chip {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 5px 11px;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .studio-chip:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .studio-chip.active {
+      background: rgba(56, 189, 248, 0.18);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* =========================================================================
+       4. SCROLL STORY CONTAINER & FLOATING CARDS
+       ========================================================================= */
+    .story-scroll-container {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      pointer-events: none; /* Biarkan klik tembus ke 3D canvas di area kosong */
+    }
+
+    .story-section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end; /* Taruh kartu di sisi kanan agar baju terlihat leluasa di kiri */
+      padding: 100px 8vw 100px 4vw;
+      position: relative;
+    }
+
+    /* Hero Section (Center Alignment) */
+    .story-section.hero-section {
+      justify-content: center;
+      text-align: center;
+      padding: 100px 20px;
+    }
+
+    .hero-card {
+      pointer-events: auto;
+      max-width: 680px;
+      background: rgba(11, 17, 30, 0.72);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-radius: 28px;
+      padding: 44px 36px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    .hero-tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .hero-title {
+      font-size: 3.2rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #ffffff 40%, #bae6fd 70%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-desc {
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: #cbd5e1;
+      margin-bottom: 28px;
+      font-weight: 400;
+    }
+
+    .hero-scroll-prompt {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.74rem;
+      color: var(--accent);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      animation: bouncePrompt 2s infinite ease-in-out;
+    }
+
+    @keyframes bouncePrompt {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(8px); }
+    }
+
+    /* Story Narrative Card (Floating Side Panel) */
+    .story-card {
+      pointer-events: auto;
+      width: 440px;
+      max-width: 90vw;
+      background: var(--card-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 32px 32px;
+      box-shadow: 0 24px 50px rgba(0, 0, 0, 0.55), 0 0 25px rgba(56, 189, 248, 0.06);
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .story-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--accent);
+      opacity: 0.3;
+      transition: opacity 0.3s;
+    }
+
+    .story-section.is-active .story-card {
+      border-color: var(--card-border-active);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65), 0 0 35px rgba(56, 189, 248, 0.18);
+      transform: translateX(-8px);
+    }
+
+    .story-section.is-active .story-card::before {
+      opacity: 1;
+      box-shadow: 0 0 15px var(--accent);
+    }
+
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .card-num {
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: var(--accent);
+      font-family: monospace;
+      letter-spacing: 0.05em;
+    }
+
+    .card-tag {
+      font-size: 0.68rem;
+      font-weight: 800;
+      color: var(--accent);
+      background: var(--accent-dim);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      padding: 4px 10px;
+      border-radius: 9999px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .card-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 14px;
+      letter-spacing: -0.01em;
+    }
+
+    .card-desc {
+      font-size: 0.94rem;
+      line-height: 1.72;
+      color: #cbd5e1;
+      margin-bottom: 20px;
+    }
+
+    .card-action-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding-top: 14px;
+    }
+
+    .btn-focus {
+      background: transparent;
+      border: none;
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 0;
+      transition: gap 0.2s ease;
+    }
+
+    .btn-focus:hover {
+      gap: 8px;
+      color: #fff;
+    }
+
+    /* Finale Download & T-Shirt Specs Section */
+    .story-section.finale-section {
+      justify-content: center;
+      padding: 120px 20px;
+    }
+
+    .finale-card {
+      pointer-events: auto;
+      max-width: 650px;
+      width: 100%;
+      background: rgba(11, 17, 30, 0.88);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border: 1px solid var(--card-border-active);
+      border-radius: 30px;
+      padding: 44px 38px;
+      text-align: center;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(56, 189, 248, 0.15);
+    }
+
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 26px 0;
+      text-align: left;
+    }
+
+    .spec-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .spec-label {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .spec-value {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .finale-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    /* =========================================================================
+       5. LOADING SCREEN
+       ========================================================================= */
+    #loader {
+      position: fixed;
+      inset: 0;
+      background: var(--bg-dark);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.5s ease;
+    }
+
+    .loader-brand {
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #fff 40%, var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .loader-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .progress-bar-bg {
+      width: 260px;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #0284c7, var(--accent));
+      box-shadow: 0 0 14px var(--accent);
+      transition: width 0.2s ease-out;
+      border-radius: 999px;
+    }
+
+    .progress-text {
+      margin-top: 10px;
+      font-size: 0.74rem;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* =========================================================================
+       6. MOBILE RESPONSIVE
+       ========================================================================= */
+    @media (max-width: 900px) {
+      .header-bar {
+        padding: 16px 20px;
+      }
+
+      .story-nav {
+        display: none; /* Sembunyikan vertical rail di layar kecil */
+      }
+
+      .studio-dock {
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        gap: 6px;
+      }
+
+      .studio-card {
+        padding: 8px 12px;
+        gap: 10px;
+        overflow-x: auto;
+        justify-content: flex-start;
+      }
+
+      .studio-label {
+        display: none;
+      }
+
+      .studio-hint {
+        display: none;
+      }
+
+      .story-section {
+        justify-content: center;
+        padding: 60px 16px 80px;
+        min-height: 85vh;
+      }
+
+      .story-card {
+        width: 100%;
+        max-width: 480px;
+        padding: 24px;
+      }
+
+      .hero-title {
+        font-size: 2.2rem;
+      }
+
+      .specs-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Scroll Progress Line Indicator -->
+  <div id="scroll-progress-line"></div>
+
+  <!-- Loading Bar Overlay -->
+  <div id="loader">
+    <div class="loader-brand">IAM TO YOGYA</div>
+    <div class="loader-title">Memuat Pengalaman 3D...</div>
+    <div class="progress-bar-bg">
+      <div id="progress-bar" class="progress-bar-fill"></div>
+    </div>
+    <div class="progress-text" id="progress-text">0%</div>
+  </div>
+
+  <!-- CORS / Local File Notice Overlay -->
+  <div id="cors-notice" style="display:none; position: fixed; bottom: 24px; right: 24px; max-width: 440px; background: rgba(15, 23, 42, 0.96); border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 20px; padding: 20px 24px; z-index: 999; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: 0 20px 40px rgba(0,0,0,0.6); font-family: inherit; color: #f1f5f9;">
+    <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 8px;">
+      <div style="font-weight: 700; color: #38bdf8; font-size: 0.88rem; display: flex; align-items: center; gap: 8px;">
+        <span>⚠️</span> Model 3D Tidak Ter-load Otomatis
+      </div>
+      <button id="close-cors-btn" style="background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 18px; line-height: 1; padding: 2px;">✕</button>
+    </div>
+    <p style="color: #94a3b8; font-size: 0.78rem; line-height: 1.55; margin-bottom: 14px;">
+      Jika membuka file HTML langsung (<code style="color: #f87171; background: rgba(239,68,68,0.1); padding: 1px 5px; border-radius: 4px;">file://</code>), browser memblokir request file 3D (<code style="color: #38bdf8;">shirt.glb</code>) karena aturan keamanan CORS lokal.
+    </p>
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <label style="background: #38bdf8; hover:background: #0ea5e9; color: #07090e; font-weight: 700; font-size: 0.78rem; padding: 8px 14px; border-radius: 10px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; text-align: center; transition: all 0.2s;">
+        📂 Pilih File "shirt.glb" Manual dari Komputer
+        <input type="file" id="manual-glb-input" accept=".glb,.gltf" style="display: none;">
+      </label>
+      <div style="font-size: 0.72rem; color: #64748b; text-align: center;">
+        Atau buka via <strong>Live Server</strong> di VS Code / <code style="color: #cbd5e1;">python -m http.server</code>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ambient Light Orb -->
+  <div class="bg-light-orb"></div>
+
+  <!-- Sticky 3D WebGL Canvas (Tetap diam di frame saat halaman discroll) -->
+  <div id="canvas-container"></div>
+
+  <!-- Header Navigation -->
+  <header class="header-bar">
+    <div class="brand-wrap" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+      <div class="brand-badge">
+        <span class="brand-dot"></span>
+        3D Scrollytelling
+      </div>
+      <div class="brand-title">IAM TO YOGYA</div>
+    </div>
+    <div class="header-actions">
+      <a class="btn" href="./" title="Kembali ke Hub Eksperimen">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+        <span>Hub Eksperimen</span>
+      </a>
+      <button class="btn" id="btn-reset-view" title="Kembalikan kamera ke sudut pandang penuh">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        Reset Sudut
+      </button>
+      <a class="btn btn-accent" href="design-flat.png" download="IAM_TO_YOGYA_Design.png" title="Unduh gambar desain 2D flat">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Unduh Desain
+      </a>
+    </div>
+  </header>
+
+  <!-- Left Side Vertical Chapter Progress Indicator -->
+  <nav class="story-nav" id="story-nav">
+    <button class="story-nav-item active" data-target="sec-hero">
+      <span class="story-nav-line"></span>
+      <span class="story-nav-text">Overview</span>
+    </button>
+    <button class="story-nav-item" data-target="sec-judul">
+      <span class="story-nav-line"></span>
+      <span class="story-nav-text">01. Judul</span>
+    </button>
+    <button class="story-nav-item" data-target="sec-tugu">
+      <span class="story-nav-line"></span>
+      <span class="story-nav-text">02. Tugu</span>
+    </button>
+    <button class="story-nav-item" data-target="sec-bulan">
+      <span class="story-nav-line"></span>
+      <span class="story-nav-text">03. Bulan</span>
+    </button>
+    <button class="story-nav-item" data-target="sec-awan">
+      <span class="story-nav-line"></span>
+      <span class="story-nav-text">04. Awan</span>
+    </button>
+    <button class="story-nav-item" data-target="sec-pesawat">
+      <span class="story-nav-line"></span>
+      <span class="story-nav-text">05. Pesawat</span>
+    </button>
+    <button class="story-nav-item" data-target="sec-batik">
+      <span class="story-nav-line"></span>
+      <span class="story-nav-text">06. Batik</span>
+    </button>
+    <button class="story-nav-item" data-target="sec-koordinat">
+      <span class="story-nav-line"></span>
+      <span class="story-nav-text">07. Koordinat</span>
+    </button>
+    <button class="story-nav-item" data-target="sec-finale">
+      <span class="story-nav-line"></span>
+      <span class="story-nav-text">Koleksi</span>
+    </button>
+  </nav>
+
+  <!-- 3D Interactive Studio Toolbar & Controls -->
+  <div class="studio-dock" id="studio-dock">
+    <div class="studio-hint">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+      <span>Tarik mouse untuk memutar 3D bebas • Scroll untuk ikuti cerita</span>
+    </div>
+    <div class="studio-card">
+      <!-- Lighting Atmosphere -->
+      <div class="studio-group">
+        <span class="studio-label">Atmosfer Studio</span>
+        <div class="studio-btn-group" id="lighting-modes">
+          <button class="studio-chip active" data-light="cyber" title="Neon Cyan & Blue">
+            <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#38bdf8; box-shadow:0 0 6px #38bdf8;"></span>
+            Cyber Sky
+          </button>
+          <button class="studio-chip" data-light="sunset" title="Warm Sunset Amber">
+            <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#f59e0b; box-shadow:0 0 6px #f59e0b;"></span>
+            Sunset Yogya
+          </button>
+          <button class="studio-chip" data-light="studio" title="Clean Daylight Neutral">
+            <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#f8fafc; box-shadow:0 0 6px #ffffff;"></span>
+            Studio Putih
+          </button>
+        </div>
+      </div>
+
+      <div class="studio-divider"></div>
+
+      <!-- Camera Angles -->
+      <div class="studio-group">
+        <span class="studio-label">Sudut Pandang</span>
+        <div class="studio-btn-group">
+          <button class="studio-chip active" id="btn-view-front">Depan</button>
+          <button class="studio-chip" id="btn-view-back">Belakang</button>
+          <button class="studio-chip" id="btn-view-motif">Motif</button>
+        </div>
+      </div>
+
+      <div class="studio-divider"></div>
+
+      <!-- Mode 3D Toggles -->
+      <div class="studio-group">
+        <span class="studio-label">Mode 3D</span>
+        <div class="studio-btn-group">
+          <button class="studio-chip" id="btn-auto-rotate" title="Putar Otomatis 360°">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+            <span id="label-auto-rotate">Auto Spin</span>
+          </button>
+          <button class="studio-chip" id="btn-wireframe" title="Lihat Struktur Poligon 3D">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+            <span id="label-wireframe">Wireframe</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       SCROLL STORYLINE CONTAINER
+       (Baju tetap di frame, kartu penjelasan berpindah saat discroll)
+       ========================================================================= -->
+  <main class="story-scroll-container">
+
+    <!-- 0. HERO OVERVIEW SECTION -->
+    <section class="story-section hero-section is-active" id="sec-hero" data-key="hero">
+      <div class="hero-card">
+        <span class="hero-tag">KOLEKSI EKSKLUSIF • YOGYAKARTA HERITAGE</span>
+        <h1 class="hero-title">IAM TO YOGYA</h1>
+        <p class="hero-desc">
+          Perjalanan visual menyusuri poros spiritual, romantika malam, dan impian perantau yang terpatri abadi dalam desain kaos ikonik Yogyakarta.
+        </p>
+        <div class="hero-scroll-prompt">
+          <span>Scroll ke bawah untuk eksplorasi filosofi</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1. HOTSPOT JUDUL: "IAM TO YOGYA" -->
+    <section class="story-section" id="sec-judul" data-key="hotspot_judul">
+      <div class="story-card">
+        <div class="card-meta">
+          <span class="card-num">01 / 07</span>
+          <span class="card-tag">Tipografi & Identitas</span>
+        </div>
+        <h2 class="card-title">IAM TO YOGYA</h2>
+        <p class="card-desc">
+          Pernyataan rasa memiliki dan kelekatan emosional: <em>"I am to Yogya"</em>. Goresan tipografi ekspresif bergaya kuas berani merefleksikan gelora jiwa muda yang merdeka, dinamis, serta kerinduan mendalam untuk senantiasa kembali pulang ke pelukan Yogyakarta.
+        </p>
+        <div class="card-action-bar">
+          <button class="btn-focus" onclick="focusHotspotDirect('hotspot_judul')">
+            Fokuskan Bagian Ini
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. HOTSPOT TUGU: "TUGU YOGYAKARTA" -->
+    <section class="story-section" id="sec-tugu" data-key="hotspot_tugu">
+      <div class="story-card">
+        <div class="card-meta">
+          <span class="card-num">02 / 07</span>
+          <span class="card-tag">Sumbu Filosofis Kosmis</span>
+        </div>
+        <h2 class="card-title">Tugu Yogyakarta</h2>
+        <p class="card-desc">
+          Poros agung <em>Golong Gilig</em> (Tugu Pal Putih) yang menghubungkan Gunung Merapi di utara, Keraton di tengah, hingga Laut Selatan. Monumen ini melambangkan keteguhan tekad bulat menuju keluhuran budi pekerti serta keselarasan antara manusia, alam semesta, dan Sang Pencipta.
+        </p>
+        <div class="card-action-bar">
+          <button class="btn-focus" onclick="focusHotspotDirect('hotspot_tugu')">
+            Fokuskan Bagian Ini
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. HOTSPOT BULAN: "PURNAMA ANGGUN" -->
+    <section class="story-section" id="sec-bulan" data-key="hotspot_bulan">
+      <div class="story-card">
+        <div class="card-meta">
+          <span class="card-num">03 / 07</span>
+          <span class="card-tag">Romantika Malam Kota</span>
+        </div>
+        <h2 class="card-title">Purnama Anggun</h2>
+        <p class="card-desc">
+          Cahaya bulan purnama temaram yang merepresentasikan keteduhan malam Yogyakarta. Kota yang selalu menghidupkan kenangan puitis—dari petikan dawai akustik musisi trotoar Malioboro hingga hangatnya obrolan persahabatan di sudut angkringan kopi joss.
+        </p>
+        <div class="card-action-bar">
+          <button class="btn-focus" onclick="focusHotspotDirect('hotspot_bulan')">
+            Fokuskan Bagian Ini
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. HOTSPOT AWAN: "AWAN PENGELANA" -->
+    <section class="story-section" id="sec-awan" data-key="hotspot_awan">
+      <div class="story-card">
+        <div class="card-meta">
+          <span class="card-num">04 / 07</span>
+          <span class="card-tag">Ketenangan & Waktu</span>
+        </div>
+        <h2 class="card-title">Awan Pengelana</h2>
+        <p class="card-desc">
+          Siluet awan dinamis yang mengitari Tugu melambangkan kedamaian batin dan kebebasan imajinasi. Menggambarkan falsafah hidup masyarakat Yogya yang bersahaja, adaptif mengalir selaras zaman, namun teguh menjaga akar kesantunan dan ketenangan jiwa.
+        </p>
+        <div class="card-action-bar">
+          <button class="btn-focus" onclick="focusHotspotDirect('hotspot_awan')">
+            Fokuskan Bagian Ini
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. HOTSPOT PESAWAT: "PESAWAT KERTAS" -->
+    <section class="story-section" id="sec-pesawat" data-key="hotspot_pesawat">
+      <div class="story-card">
+        <div class="card-meta">
+          <span class="card-num">05 / 07</span>
+          <span class="card-tag">Asa & Mimpi Perantau</span>
+        </div>
+        <h2 class="card-title">Pesawat Kertas</h2>
+        <p class="card-desc">
+          Simbol nostalgia sederhana tentang keberanian menerbangkan cita-cita setinggi angkasa. Yogyakarta sebagai Kota Pelajar menjadi rahim perjuangan bagi jutaan pemuda dari segenap pelosok Nusantara untuk merajut masa depan dan menorehkan jejak kebanggaan.
+        </p>
+        <div class="card-action-bar">
+          <button class="btn-focus" onclick="focusHotspotDirect('hotspot_pesawat')">
+            Fokuskan Bagian Ini
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. HOTSPOT BATIK: "MOTIF BATIK SEGITIGA" -->
+    <section class="story-section" id="sec-batik" data-key="hotspot_batik">
+      <div class="story-card">
+        <div class="card-meta">
+          <span class="card-num">06 / 07</span>
+          <span class="card-tag">Warisan Budaya & Grafis</span>
+        </div>
+        <h2 class="card-title">Motif Batik Segitiga</h2>
+        <p class="card-desc">
+          Ragam hias ornamen batik tradisional Jawa yang dikemas dalam bidang segitiga modern seperti layang-layang yang melayang anggun. Menyampaikan pesan bahwa setinggi apa pun kita melesat ke era modern, benang pusaka kebudayaan leluhur tetap menjadi identitas utama kita.
+        </p>
+        <div class="card-action-bar">
+          <button class="btn-focus" onclick="focusHotspotDirect('hotspot_batik')">
+            Fokuskan Bagian Ini
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. HOTSPOT KOORDINAT: "07°47'S 110°22'E" -->
+    <section class="story-section" id="sec-koordinat" data-key="hotspot_koordinat">
+      <div class="story-card">
+        <div class="card-meta">
+          <span class="card-num">07 / 07</span>
+          <span class="card-tag">Titik Geografis & Memori</span>
+        </div>
+        <h2 class="card-title">07°47'S 110°22'E</h2>
+        <p class="card-desc">
+          Koordinat lintang dan bujur presisi Daerah Istimewa Yogyakarta di bentang bumi nusantara. Bagi siapa pun yang pernah menapaki jalanan kota ini, baris angka ini bukan sekadar tanda peta, melainkan kompas kerinduan abadi yang selalu memanggil untuk berpulang.
+        </p>
+        <div class="card-action-bar">
+          <button class="btn-focus" onclick="focusHotspotDirect('hotspot_koordinat')">
+            Fokuskan Bagian Ini
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. FINALE & DOWNLOAD SECTION -->
+    <section class="story-section finale-section" id="sec-finale" data-key="finale">
+      <div class="finale-card">
+        <span class="hero-tag">ARSIP KARYA & DOKUMENTASI</span>
+        <h2 class="hero-title" style="font-size: 2.3rem;">Spesifikasi & Unduh Artwork</h2>
+        <p class="card-desc" style="max-width: 520px; margin: 0 auto 16px;">
+          Dokumentasi spesifikasi material kaos dan arsip karya desain grafis resolusi tinggi. Unduh berkas gambar flat 2D untuk keperluan referensi dan apresiasi visual.
+        </p>
+
+        <div class="specs-grid">
+          <div class="spec-item">
+            <div class="spec-label">Bahan Kain</div>
+            <div class="spec-value">Heavyweight Cotton 24s</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Teknik Cetak</div>
+            <div class="spec-value">Plastisol High Density</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Potongan</div>
+            <div class="spec-value">Boxy Regular Fit</div>
+          </div>
+        </div>
+
+        <div class="finale-buttons">
+          <a class="btn btn-accent" href="design-flat.png" download="IAM_TO_YOGYA_Design.png" style="padding: 12px 28px; font-size: 0.9rem;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Unduh Artwork 2D (.PNG)
+          </a>
+          <button class="btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" style="padding: 12px 22px;">
+            Kembali ke Atas ↑
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =========================================================================
+       THREE.JS & SCROLLYTELLING LOGIC (CDN)
+       ========================================================================= -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+    // =========================================================================
+    // 1. DATA POSISI KAMERA & HOTSPOT SCROLLYTELLING
+    // =========================================================================
+    // Setiap hotspot memiliki:
+    // - pos: Titik pusat 3D elemen pada permukaan kaos
+    // - camZ: Jarak zoom kamera saat bagian ini sedang difokuskan
+    // =========================================================================
+    const CAMERA_CONFIGS = {
+      // 0. Tampilan Awal / Hero (Kaos terlihat penuh dan anggun)
+      "hero": {
+        pos: new THREE.Vector3(0, -0.05, 0),
+        camZ: 2.25,
+        offsetX: 0, // Kaos pas di tengah layar
+        offsetY: 0.04
+      },
+
+      // 1. Tipografi "IAM TO YOGYA"
+      "hotspot_judul": {
+        pos: new THREE.Vector3(0, 0.08, 0.145),
+        camZ: 0.82,
+        offsetX: 0.12, // Geser target sedikit ke kanan agar baju tampak di sebelah kiri kartu
+        offsetY: 0
+      },
+
+      // 2. Tugu Yogyakarta
+      "hotspot_tugu": {
+        pos: new THREE.Vector3(0, -0.22, 0.145),
+        camZ: 0.84,
+        offsetX: 0.12,
+        offsetY: 0
+      },
+
+      // 3. Bulan Purnama
+      "hotspot_bulan": {
+        pos: new THREE.Vector3(-0.09, -0.21, 0.142),
+        camZ: 0.76,
+        offsetX: 0.06,
+        offsetY: 0
+      },
+
+      // 4. Awan Pengelana
+      "hotspot_awan": {
+        pos: new THREE.Vector3(-0.21, -0.21, 0.140),
+        camZ: 0.78,
+        offsetX: 0.04,
+        offsetY: 0
+      },
+
+      // 5. Pesawat Kertas
+      "hotspot_pesawat": {
+        pos: new THREE.Vector3(0.18, -0.115, 0.140),
+        camZ: 0.76,
+        offsetX: 0.20,
+        offsetY: 0
+      },
+
+      // 6. Motif Batik Segitiga
+      "hotspot_batik": {
+        pos: new THREE.Vector3(0.17, -0.27, 0.142),
+        camZ: 0.78,
+        offsetX: 0.20,
+        offsetY: 0
+      },
+
+      // 7. Koordinat
+      "hotspot_koordinat": {
+        pos: new THREE.Vector3(0, -0.44, 0.145),
+        camZ: 0.80,
+        offsetX: 0.12,
+        offsetY: 0
+      },
+
+      // 8. Finale
+      "finale": {
+        pos: new THREE.Vector3(0, -0.05, 0),
+        camZ: 2.15,
+        offsetX: 0,
+        offsetY: 0.04
+      }
+    };
+
+    // =========================================================================
+    // 2. INISIALISASI SCENE THREE.JS, KAMERA & RENDERER
+    // =========================================================================
+    const container = document.getElementById('canvas-container');
+    const scene = new THREE.Scene();
+
+    const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 50);
+    const initialCfg = CAMERA_CONFIGS["hero"];
+    camera.position.set(initialCfg.pos.x + initialCfg.offsetX, initialCfg.pos.y + initialCfg.offsetY, initialCfg.camZ);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.15;
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    container.appendChild(renderer.domElement);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.minDistance = 0.55;
+    controls.maxDistance = 3.6;
+    controls.maxPolarAngle = Math.PI * 0.82;
+    controls.minPolarAngle = Math.PI * 0.18;
+    controls.target.set(initialCfg.pos.x + initialCfg.offsetX, initialCfg.pos.y + initialCfg.offsetY, initialCfg.pos.z);
+
+    // Studio Lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.95);
+    scene.add(ambientLight);
+
+    const keyLight = new THREE.DirectionalLight(0xf0f9ff, 1.6);
+    keyLight.position.set(3, 4, 4);
+    scene.add(keyLight);
+
+    const fillLight = new THREE.DirectionalLight(0x38bdf8, 0.85);
+    fillLight.position.set(-3.5, 1, 3);
+    scene.add(fillLight);
+
+    const rimLight = new THREE.DirectionalLight(0xffffff, 1.25);
+    rimLight.position.set(0, 5, -3);
+    scene.add(rimLight);
+
+    // =========================================================================
+    // 3. PENANDA HIGHLIGHT 3D YANG BERKILAU
+    // =========================================================================
+    const highlightGroup = new THREE.Group();
+    highlightGroup.visible = false;
+    scene.add(highlightGroup);
+
+    // Cincin dalam berkilau
+    const ringInnerGeom = new THREE.RingGeometry(0.038, 0.048, 32);
+    const ringInnerMat = new THREE.MeshBasicMaterial({
+      color: 0x38bdf8,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0.95
+    });
+    const ringInnerMesh = new THREE.Mesh(ringInnerGeom, ringInnerMat);
+    highlightGroup.add(ringInnerMesh);
+
+    // Cincin luar berdenyut lembut
+    const ringOuterGeom = new THREE.RingGeometry(0.054, 0.060, 32);
+    const ringOuterMat = new THREE.MeshBasicMaterial({
+      color: 0xbae6fd,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0.55
+    });
+    const ringOuterMesh = new THREE.Mesh(ringOuterGeom, ringOuterMat);
+    highlightGroup.add(ringOuterMesh);
+
+    // =========================================================================
+    // 4. LOAD MODEL KAOS 3D (shirt.glb / scene.glb)
+    // =========================================================================
+    let shirtModel = null;
+    const loader = new GLTFLoader();
+    const progressBar = document.getElementById('progress-bar');
+    const progressText = document.getElementById('progress-text');
+    const loaderElem = document.getElementById('loader');
+    const corsNotice = document.getElementById('cors-notice');
+    const closeCorsBtn = document.getElementById('close-cors-btn');
+    const manualGlbInput = document.getElementById('manual-glb-input');
+
+    if (closeCorsBtn) {
+      closeCorsBtn.addEventListener('click', () => {
+        corsNotice.style.display = 'none';
+      });
+    }
+
+    if (manualGlbInput) {
+      manualGlbInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          loader.parse(
+            event.target.result,
+            '',
+            (gltf) => {
+              setupModel(gltf, file.name);
+            },
+            (err) => {
+              console.error("Gagal parse GLB file:", err);
+              alert("Gagal membaca model 3D: " + err.message);
+            }
+          );
+        };
+        reader.readAsArrayBuffer(file);
+      });
+    }
+
+    function setupModel(gltf, srcName = "Model") {
+      if (shirtModel) {
+        scene.remove(shirtModel);
+      }
+
+      shirtModel = gltf.scene;
+
+      // Verifikasi node names di konsol
+      console.group(`GLB Loaded: ${srcName}`);
+      shirtModel.traverse((child) => {
+        if (child.isMesh) {
+          console.log(`Node Mesh: "${child.name}"`, child);
+          if (child.material) {
+            child.material.roughness = Math.min(child.material.roughness ?? 0.7, 0.85);
+          }
+        }
+      });
+      console.groupEnd();
+
+      // Normalisasi skala & posisi ke pusat tampilan
+      const box = new THREE.Box3().setFromObject(shirtModel);
+      const center = box.getCenter(new THREE.Vector3());
+      const size = box.getSize(new THREE.Vector3());
+      const maxDim = Math.max(size.x, size.y, size.z);
+      const targetScale = 1.55 / maxDim;
+
+      shirtModel.scale.setScalar(targetScale);
+      shirtModel.position.sub(center.clone().multiplyScalar(targetScale));
+      scene.add(shirtModel);
+      window.shirtModel = shirtModel;
+
+      hideLoader();
+      if (corsNotice) corsNotice.style.display = 'none';
+    }
+
+    const modelSources = ['shirt.glb', 'scene.glb'];
+
+    function loadModel(idx = 0) {
+      if (idx >= modelSources.length) {
+        console.warn("Model GLB tidak dapat dimuat otomatis (CORS / File Not Found). Menampilkan panduan...");
+        createFallbackShirt();
+        hideLoader();
+        if (corsNotice) corsNotice.style.display = 'block';
+        return;
+      }
+
+      const src = modelSources[idx];
+      loader.load(
+        src,
+        (gltf) => {
+          setupModel(gltf, src);
+        },
+        (xhr) => {
+          if (xhr.total > 0) {
+            const percent = Math.round((xhr.loaded / xhr.total) * 100);
+            progressBar.style.width = `${percent}%`;
+            progressText.innerText = `${percent}%`;
+          }
+        },
+        (err) => {
+          console.warn(`Gagal memuat ${src}, mencoba fallback...`, err);
+          loadModel(idx + 1);
+        }
+      );
+    }
+
+    // Jika dibuka langsung via file://, browser memblokir fetch otomatis
+    if (window.location.protocol === 'file:') {
+      console.info("Protokol file:// terdeteksi. Bersiap menampilkan fallback CORS jika request diblokir.");
+    }
+
+    loadModel(0);
+
+    function hideLoader() {
+      gsap.to(loaderElem, {
+        opacity: 0,
+        duration: 0.45,
+        ease: 'power2.out',
+        onComplete: () => loaderElem.style.display = 'none'
+      });
+    }
+
+    function createFallbackShirt() {
+      if (shirtModel) return;
+      const geom = new THREE.CylinderGeometry(0.5, 0.45, 1.25, 32);
+      const mat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.6 });
+      shirtModel = new THREE.Mesh(geom, mat);
+      scene.add(shirtModel);
+    }
+
+    // =========================================================================
+    // 5. SISTEM SCROLLYTELLING: TRANSISI KAMERA SAAT SCROLL
+    // =========================================================================
+    let currentActiveKey = 'hero';
+
+    function transitionToSection(key) {
+      if (currentActiveKey === key) return;
+      currentActiveKey = key;
+
+      const cfg = CAMERA_CONFIGS[key];
+      if (!cfg) return;
+
+      const isMobile = window.innerWidth <= 900;
+
+      // Pada mobile, kartu berada di tengah/bawah, sehingga offset X tidak diperlukan
+      const offsetX = isMobile ? 0 : (cfg.offsetX || 0);
+      const offsetY = isMobile ? (key === 'hero' || key === 'finale' ? 0.04 : -0.06) : (cfg.offsetY || 0);
+
+      const targetX = cfg.pos.x + offsetX;
+      const targetY = cfg.pos.y + offsetY;
+      const targetZ = cfg.pos.z;
+
+      const camX = targetX;
+      const camY = targetY;
+      const camZ = isMobile ? Math.min(cfg.camZ + 0.15, 1.1) : cfg.camZ;
+
+      // Atur highlight ring
+      if (key === 'hero' || key === 'finale') {
+        highlightGroup.visible = false;
+      } else {
+        highlightGroup.position.copy(cfg.pos);
+        highlightGroup.position.z += 0.005;
+        highlightGroup.visible = true;
+
+        // Animasi denyut highlight
+        gsap.killTweensOf(ringInnerMesh.scale);
+        ringInnerMesh.scale.set(1, 1, 1);
+        gsap.to(ringInnerMesh.scale, {
+          x: 1.2,
+          y: 1.2,
+          duration: 0.8,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut'
+        });
+      }
+
+      // Animasi Kamera Halus & Mantap (GSAP)
+      gsap.killTweensOf(camera.position);
+      gsap.killTweensOf(controls.target);
+
+      gsap.to(camera.position, {
+        x: camX,
+        y: camY,
+        z: camZ,
+        duration: 1.2,
+        ease: 'power3.out'
+      });
+
+      gsap.to(controls.target, {
+        x: targetX,
+        y: targetY,
+        z: targetZ,
+        duration: 1.2,
+        ease: 'power3.out',
+        onUpdate: () => controls.update()
+      });
+
+      // Update Nav Rail Indicator
+      document.querySelectorAll('.story-nav-item').forEach(item => {
+        const targetId = item.dataset.target;
+        const sectionElem = document.getElementById(targetId);
+        item.classList.toggle('active', sectionElem && sectionElem.dataset.key === key);
+      });
+    }
+
+    // IntersectionObserver untuk mendeteksi section yang aktif di layar saat scroll
+    const sections = document.querySelectorAll('.story-section');
+    const observerOptions = {
+      root: null,
+      rootMargin: '-30% 0px -30% 0px', // Aktif ketika elemen berada di sepertiga tengah viewport
+      threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          sections.forEach(s => s.classList.remove('is-active'));
+          entry.target.classList.add('is-active');
+
+          const key = entry.target.dataset.key;
+          transitionToSection(key);
+        }
+      });
+    }, observerOptions);
+
+    sections.forEach((sec) => observer.observe(sec));
+
+    // Nav Item Click -> Smooth Scroll
+    document.querySelectorAll('.story-nav-item').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.dataset.target;
+        const targetElem = document.getElementById(targetId);
+        if (targetElem) {
+          targetElem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      });
+    });
+
+    // Reset View Button
+    document.getElementById('btn-reset-view').addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Global helper jika tombol 'Fokuskan Bagian Ini' di kartu diklik
+    window.focusHotspotDirect = function(key) {
+      const sec = document.querySelector(`.story-section[data-key="${key}"]`);
+      if (sec) {
+        sec.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    };
+
+    // =========================================================================
+    // 5.1 FITUR INTERAKTIF 3D STUDIO (GANTI WARNA, SUDUT, AUTO-SPIN, WIREFRAME)
+    // =========================================================================
+    // Preset Pencahayaan Studio
+    const LIGHTING_PRESETS = {
+      cyber: {
+        key: '#f0f9ff',
+        fill: '#38bdf8',
+        rim: '#ffffff',
+        ambient: '#ffffff'
+      },
+      sunset: {
+        key: '#ffedd5',
+        fill: '#f59e0b',
+        rim: '#fb923c',
+        ambient: '#fed7aa'
+      },
+      studio: {
+        key: '#ffffff',
+        fill: '#94a3b8',
+        rim: '#cbd5e1',
+        ambient: '#f8fafc'
+      }
+    };
+
+    function setLightingPreset(presetKey) {
+      const p = LIGHTING_PRESETS[presetKey];
+      if (!p) return;
+
+      const dur = 0.8;
+      const keyCol = new THREE.Color(p.key);
+      const fillCol = new THREE.Color(p.fill);
+      const rimCol = new THREE.Color(p.rim);
+      const ambCol = new THREE.Color(p.ambient);
+
+      gsap.to(keyLight.color, { r: keyCol.r, g: keyCol.g, b: keyCol.b, duration: dur, ease: 'power2.out' });
+      gsap.to(fillLight.color, { r: fillCol.r, g: fillCol.g, b: fillCol.b, duration: dur, ease: 'power2.out' });
+      gsap.to(rimLight.color, { r: rimCol.r, g: rimCol.g, b: rimCol.b, duration: dur, ease: 'power2.out' });
+      gsap.to(ambientLight.color, { r: ambCol.r, g: ambCol.g, b: ambCol.b, duration: dur, ease: 'power2.out' });
+    }
+
+    const lightingChips = document.querySelectorAll('#lighting-modes .studio-chip');
+    lightingChips.forEach(chip => {
+      chip.addEventListener('click', (e) => {
+        e.stopPropagation();
+        lightingChips.forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        const mode = chip.getAttribute('data-light');
+        setLightingPreset(mode);
+      });
+    });
+
+    // Preset Sudut Pandang Kamera
+    const btnViewFront = document.getElementById('btn-view-front');
+    const btnViewBack = document.getElementById('btn-view-back');
+    const btnViewMotif = document.getElementById('btn-view-motif');
+    const viewChips = [btnViewFront, btnViewBack, btnViewMotif];
+
+    function setViewChipActive(btn) {
+      viewChips.forEach(b => b && b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+    }
+
+    if (btnViewFront) {
+      btnViewFront.addEventListener('click', () => {
+        setViewChipActive(btnViewFront);
+        gsap.killTweensOf(camera.position);
+        gsap.killTweensOf(controls.target);
+        gsap.to(camera.position, { x: 0, y: -0.05, z: 2.25, duration: 1.1, ease: 'power2.inOut' });
+        gsap.to(controls.target, { x: 0, y: -0.05, z: 0, duration: 1.1, ease: 'power2.inOut', onUpdate: () => controls.update() });
+      });
+    }
+
+    if (btnViewBack) {
+      btnViewBack.addEventListener('click', () => {
+        setViewChipActive(btnViewBack);
+        gsap.killTweensOf(camera.position);
+        gsap.killTweensOf(controls.target);
+        gsap.to(camera.position, { x: 0, y: -0.05, z: -2.25, duration: 1.1, ease: 'power2.inOut' });
+        gsap.to(controls.target, { x: 0, y: -0.05, z: 0, duration: 1.1, ease: 'power2.inOut', onUpdate: () => controls.update() });
+      });
+    }
+
+    if (btnViewMotif) {
+      btnViewMotif.addEventListener('click', () => {
+        setViewChipActive(btnViewMotif);
+        gsap.killTweensOf(camera.position);
+        gsap.killTweensOf(controls.target);
+        gsap.to(camera.position, { x: 0, y: -0.20, z: 0.76, duration: 1.1, ease: 'power2.inOut' });
+        gsap.to(controls.target, { x: 0, y: -0.20, z: 0, duration: 1.1, ease: 'power2.inOut', onUpdate: () => controls.update() });
+      });
+    }
+
+    // Toggle Auto-Rotate / Turntable
+    const btnAutoRotate = document.getElementById('btn-auto-rotate');
+    const labelAutoRotate = document.getElementById('label-auto-rotate');
+    if (btnAutoRotate) {
+      btnAutoRotate.addEventListener('click', () => {
+        controls.autoRotate = !controls.autoRotate;
+        controls.autoRotateSpeed = 2.2;
+        btnAutoRotate.classList.toggle('active', controls.autoRotate);
+        if (labelAutoRotate) {
+          labelAutoRotate.textContent = controls.autoRotate ? 'Berputar' : 'Auto Spin';
+        }
+      });
+    }
+
+    // Toggle Wireframe 3D Mesh
+    const btnWireframe = document.getElementById('btn-wireframe');
+    if (btnWireframe) {
+      btnWireframe.addEventListener('click', () => {
+        isWireframeActive = !isWireframeActive;
+        btnWireframe.classList.toggle('active', isWireframeActive);
+        if (shirtModel) {
+          shirtModel.traverse((child) => {
+            if (child.isMesh && child.material) {
+              child.material.wireframe = isWireframeActive;
+            }
+          });
+        }
+      });
+    }
+
+    // Scroll Progress Line Indicator
+    const scrollProgressLine = document.getElementById('scroll-progress-line');
+    window.addEventListener('scroll', () => {
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = maxScroll > 0 ? (window.scrollY / maxScroll) * 100 : 0;
+      if (scrollProgressLine) {
+        scrollProgressLine.style.width = `${progress}%`;
+      }
+    }, { passive: true });
+
+    // =========================================================================
+    // 6. RENDER LOOP & RESIZE HANDLER
+    // =========================================================================
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    const clock = new THREE.Clock();
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      const elapsedTime = clock.getElapsedTime();
+
+      // Highlight Ring selalu menghadap kamera (billboard effect)
+      if (highlightGroup.visible) {
+        highlightGroup.quaternion.copy(camera.quaternion);
+        const s = 1.0 + Math.sin(elapsedTime * 3) * 0.1;
+        ringOuterMesh.scale.set(s, s, 1);
+        ringOuterMesh.material.opacity = 0.45 + Math.sin(elapsedTime * 3) * 0.2;
+      }
+
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    animate();
+  </script>
+</body>
+</html>
