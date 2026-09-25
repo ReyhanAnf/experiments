@@ -283,6 +283,148 @@
       border-radius: 9999px;
     }
 
+    /* Chapter Pill Vertical Story Navigation Arrows */
+    .chapter-nav-arrows {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: 2px;
+      padding-left: 8px;
+      border-left: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .chapter-arrow-btn {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .chapter-arrow-btn:hover {
+      background: rgba(56, 189, 248, 0.2);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    /* =========================================================================
+       3.1 FLOATING VARIANT SELECTOR DOCK (HORIZONTAL NAVIGATION)
+       ========================================================================= */
+    .variant-dock {
+      position: fixed;
+      bottom: 24px;
+      right: 28px;
+      z-index: 45;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(14, 18, 27, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: 7px 10px;
+      border-radius: 9999px;
+      pointer-events: auto;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55), 0 0 20px rgba(56, 189, 248, 0.08);
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      user-select: none;
+    }
+
+    .v-arrow-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #f1f5f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      flex-shrink: 0;
+    }
+
+    .v-arrow-btn:hover {
+      background: rgba(56, 189, 248, 0.2);
+      border-color: var(--accent);
+      color: #fff;
+      transform: scale(1.08);
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
+    }
+
+    .v-arrow-btn:active {
+      transform: scale(0.94);
+    }
+
+    .v-pill-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 10px;
+      min-width: 140px;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .v-pill-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 2px;
+    }
+
+    .v-pill-badge {
+      font-size: 0.62rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-family: monospace;
+    }
+
+    .v-pill-gesture-hint {
+      font-size: 0.58rem;
+      color: #64748b;
+      letter-spacing: 0.04em;
+    }
+
+    .v-pill-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #ffffff;
+      white-space: nowrap;
+      max-width: 190px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .variant-dock.is-loading {
+      border-color: rgba(56, 189, 248, 0.45);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55), 0 0 24px rgba(56, 189, 248, 0.25);
+    }
+
+    .variant-dock.is-loading .v-arrow-btn {
+      opacity: 0.45;
+      pointer-events: none;
+    }
+
+    .variant-dock.is-loading .v-pill-gesture-hint {
+      color: var(--accent);
+      animation: pulseLoading 0.75s infinite alternate ease-in-out;
+    }
+
+    @keyframes pulseLoading {
+      0% { opacity: 0.35; transform: scale(0.96); }
+      100% { opacity: 1; transform: scale(1.04); }
+    }
+
     /* Focus Mode styles */
     body.focus-mode .story-card,
     body.focus-mode .hero-card,
@@ -639,7 +781,7 @@
       }
 
       .chapter-pill {
-        display: none; /* Sembunyikan floating chapter pill di mobile agar tidak menumpuk */
+        display: flex;
       }
 
       .story-section {
@@ -679,6 +821,40 @@
         padding: 6px 12px;
         gap: 8px;
         max-width: 92vw;
+      }
+
+      .variant-dock {
+        bottom: 16px;
+        right: 16px;
+        padding: 5px 8px;
+        gap: 6px;
+      }
+      .chapter-pill {
+        bottom: 16px;
+        left: 16px;
+        padding: 6px 12px;
+        gap: 10px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .variant-dock {
+        bottom: 68px;
+        right: 14px;
+        left: 14px;
+        justify-content: space-between;
+      }
+      .chapter-pill {
+        bottom: 14px;
+        left: 14px;
+        right: 14px;
+        justify-content: space-between;
+      }
+      .chapter-title {
+        display: none;
+      }
+      .chapter-dots {
+        display: none;
       }
     }
 
@@ -788,6 +964,31 @@
       <button class="chapter-dot" data-target="sec-koordinat" title="07. Titik Koordinat"></button>
       <button class="chapter-dot" data-target="sec-finale" title="Spesifikasi"></button>
     </div>
+    <div class="chapter-nav-arrows">
+      <button class="chapter-arrow-btn" id="btn-story-prev" title="Alur Cerita Sebelumnya (Arrow Up ↑)">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+      </button>
+      <button class="chapter-arrow-btn" id="btn-story-next" title="Alur Cerita Selanjutnya (Arrow Down ↓)">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Floating Variant Selector Dock (Bottom Right) -->
+  <div class="variant-dock" id="variant-dock">
+    <button class="v-arrow-btn" id="btn-variant-prev" title="Varian Sebelumnya (Arrow Left ← / Swipe Kanan)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div class="v-pill-info" id="v-pill-info" title="Klik untuk ganti varian">
+      <div class="v-pill-header">
+        <span class="v-pill-badge" id="v-pill-badge">Varian 1/7</span>
+        <span class="v-pill-gesture-hint" id="v-pill-gesture-hint">← Swipe →</span>
+      </div>
+      <div class="v-pill-title" id="v-pill-title">IAM TO YOGYA (Cyan Glow)</div>
+    </div>
+    <button class="v-arrow-btn" id="btn-variant-next" title="Varian Selanjutnya (Arrow Right → / Swipe Kiri)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
   </div>
 
   <!-- =========================================================================
@@ -926,12 +1127,16 @@
 
         <div class="specs-table">
           <div class="spec-row">
+            <span class="spec-key">Varian Model</span>
+            <span class="spec-val" id="spec-variant-name">IAM TO YOGYA (Cyan Glow)</span>
+          </div>
+          <div class="spec-row">
             <span class="spec-key">Bahan Kain</span>
             <span class="spec-val">Heavyweight Cotton 24s</span>
           </div>
           <div class="spec-row">
             <span class="spec-key">Sablon Grafis</span>
-            <span class="spec-val">Plastisol High Density (Cyan Glow)</span>
+            <span class="spec-val" id="spec-graphic">Plastisol High Density (Cyan Glow)</span>
           </div>
           <div class="spec-row">
             <span class="spec-key">Siluet Potongan</span>
@@ -970,6 +1175,7 @@
     import * as THREE from 'three';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 
     // =========================================================================
     // 1. DATA POSISI KAMERA & HOTSPOT SCROLLYTELLING
@@ -1125,10 +1331,72 @@
     highlightGroup.add(ringOuterMesh);
 
     // =========================================================================
-    // 4. LOAD MODEL KAOS 3D (shirt.glb / scene.glb)
+    // 4. SISTEM VARIAN MODEL KAOS 3D & GLTF/DRACO LOADER
     // =========================================================================
-    let shirtModel = null;
+    const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
+    dracoLoader.preload();
+
     const loader = new GLTFLoader();
+    loader.setDRACOLoader(dracoLoader);
+
+    const VARIANTS = [
+      {
+        id: 'a0',
+        name: 'IAM TO YOGYA (Cyan Glow)',
+        path: '3dshirt/varian_a0.glb',
+        fallback: 'shirt.glb',
+        graphic: 'Plastisol High Density (Cyan Glow)'
+      },
+      {
+        id: 'a1',
+        name: 'Ciamis to Yogya (Ed. 1)',
+        path: '3dshirt/varian_a1.glb',
+        fallback: '3dshirt/varian_a1.glb',
+        graphic: 'Plastisol Silk Screen Multi-Color (Ed. 1)'
+      },
+      {
+        id: 'a2',
+        name: 'IAM TO YOGYA (Sunset Terracotta)',
+        path: '3dshirt/varian_a2.glb',
+        fallback: '3dshirt/varian_a2.glb',
+        graphic: 'Plastisol Warm Terracotta & Charcoal Fabric'
+      },
+      {
+        id: 'a3',
+        name: 'IAM TO YOGYA (Heritage Terracotta)',
+        path: '3dshirt/varian_a3.glb',
+        fallback: '3dshirt/varian_a3.glb',
+        graphic: 'Plastisol Terracotta Print & Pattern Fabric'
+      },
+      {
+        id: 'a4',
+        name: 'IAM TO YOGYA (Monochrome White)',
+        path: '3dshirt/varian_a4.glb',
+        fallback: '3dshirt/varian_a4.glb',
+        graphic: 'Black Ink Screenprint on White Fabric'
+      },
+      {
+        id: 'a5',
+        name: 'IAM TO YOGYA (Lavender Edition)',
+        path: '3dshirt/varian_a5.glb',
+        fallback: '3dshirt/varian_a5.glb',
+        graphic: 'Black Ink Screenprint on Lavender Fabric'
+      },
+      {
+        id: 'a6',
+        name: 'IAM TO YOGYA (Ochre Clay)',
+        path: '3dshirt/varian_a6.glb',
+        fallback: '3dshirt/varian_a6.glb',
+        graphic: 'Midnight Navy Screenprint on Burnt Orange Cotton'
+      }
+    ];
+
+    let currentVariantIndex = 0;
+    let isTransitioningVariant = false;
+    let isInitialLoad = true;
+    let shirtModel = null;
+
     const progressBar = document.getElementById('progress-bar');
     const progressText = document.getElementById('progress-text');
     const loaderElem = document.getElementById('loader');
@@ -1152,7 +1420,11 @@
             event.target.result,
             '',
             (gltf) => {
-              setupModel(gltf, file.name);
+              if (shirtModel) {
+                scene.remove(shirtModel);
+                disposeModel(shirtModel);
+              }
+              setupModel(gltf, file.name, 0);
             },
             (err) => {
               console.error("Gagal parse GLB file:", err);
@@ -1164,78 +1436,206 @@
       });
     }
 
-    function setupModel(gltf, srcName = "Model") {
-      if (shirtModel) {
-        scene.remove(shirtModel);
-      }
-
-      shirtModel = gltf.scene;
-
-      // Verifikasi node names di konsol
-      console.group(`GLB Loaded: ${srcName}`);
-      shirtModel.traverse((child) => {
+    function disposeModel(obj) {
+      if (!obj) return;
+      obj.traverse((child) => {
         if (child.isMesh) {
-          console.log(`Node Mesh: "${child.name}"`, child);
+          if (child.geometry) child.geometry.dispose();
           if (child.material) {
-            child.material.roughness = Math.min(child.material.roughness ?? 0.7, 0.85);
+            const mats = Array.isArray(child.material) ? child.material : [child.material];
+            mats.forEach((m) => {
+              if (m.map) m.map.dispose();
+              if (m.normalMap) m.normalMap.dispose();
+              if (m.roughnessMap) m.roughnessMap.dispose();
+              if (m.metalnessMap) m.metalnessMap.dispose();
+              m.dispose();
+            });
           }
         }
       });
-      console.groupEnd();
+    }
+
+    function setupModel(gltf, srcName = "Model", direction = 0) {
+      shirtModel = gltf.scene;
+
+      shirtModel.traverse((child) => {
+        if (child.isMesh && child.material) {
+          const mats = Array.isArray(child.material) ? child.material : [child.material];
+          mats.forEach((m) => {
+            m.roughness = Math.min(m.roughness ?? 0.7, 0.85);
+          });
+        }
+      });
 
       // Normalisasi skala & posisi ke pusat tampilan
       const box = new THREE.Box3().setFromObject(shirtModel);
       const center = box.getCenter(new THREE.Vector3());
       const size = box.getSize(new THREE.Vector3());
-      const maxDim = Math.max(size.x, size.y, size.z);
+      const maxDim = Math.max(size.x, size.y, size.z) || 1;
       const targetScale = 1.55 / maxDim;
 
       shirtModel.scale.setScalar(targetScale);
-      shirtModel.position.sub(center.clone().multiplyScalar(targetScale));
-      scene.add(shirtModel);
-      window.shirtModel = shirtModel;
+      const basePos = new THREE.Vector3().sub(center.clone().multiplyScalar(targetScale));
 
-      hideLoader();
+      if (direction !== 0) {
+        // Animasi transisi horizontal halus saat switch varian (masuk dari arah berlawanan)
+        shirtModel.position.set(basePos.x + (direction > 0 ? 0.45 : -0.45), basePos.y, basePos.z);
+        shirtModel.rotation.y = direction > 0 ? 0.3 : -0.3;
+        scene.add(shirtModel);
+
+        gsap.to(shirtModel.position, {
+          x: basePos.x,
+          duration: 0.55,
+          ease: 'power3.out'
+        });
+        gsap.to(shirtModel.rotation, {
+          y: 0,
+          duration: 0.55,
+          ease: 'power3.out'
+        });
+      } else {
+        shirtModel.position.copy(basePos);
+        scene.add(shirtModel);
+      }
+
+      window.shirtModel = shirtModel;
       if (corsNotice) corsNotice.style.display = 'none';
     }
 
-    const modelSources = ['shirt.glb', 'scene.glb'];
+    function updateVariantUI(variant, index = currentVariantIndex) {
+      const badgeElem = document.getElementById('v-pill-badge');
+      const titleElem = document.getElementById('v-pill-title');
+      const specNameElem = document.getElementById('spec-variant-name');
+      const specGraphicElem = document.getElementById('spec-graphic');
 
-    function loadModel(idx = 0) {
-      if (idx >= modelSources.length) {
-        console.warn("Model GLB tidak dapat dimuat otomatis (CORS / File Not Found). Menampilkan panduan...");
-        createFallbackShirt();
-        hideLoader();
-        if (corsNotice) corsNotice.style.display = 'block';
-        return;
+      if (badgeElem) badgeElem.textContent = `Varian ${index + 1}/${VARIANTS.length}`;
+      if (titleElem) titleElem.textContent = variant.name;
+      if (specNameElem) specNameElem.textContent = variant.name;
+      if (specGraphicElem) specGraphicElem.textContent = variant.graphic;
+    }
+
+    function loadVariant(index, direction = 0) {
+      if (isTransitioningVariant) return;
+      if (index < 0) index = VARIANTS.length - 1;
+      if (index >= VARIANTS.length) index = 0;
+
+      currentVariantIndex = index;
+      const variant = VARIANTS[currentVariantIndex];
+      updateVariantUI(variant, currentVariantIndex);
+
+      isTransitioningVariant = true;
+
+      const variantDock = document.getElementById('variant-dock');
+      const gestureHint = document.getElementById('v-pill-gesture-hint');
+
+      // HANYA tampilkan full-screen loader saat pertama kali membuka halaman web
+      if (isInitialLoad) {
+        if (loaderElem) {
+          loaderElem.style.display = 'flex';
+          gsap.to(loaderElem, { opacity: 1, duration: 0.2 });
+        }
+        if (progressBar) progressBar.style.width = '0%';
+        if (progressText) progressText.innerText = '0%';
+      } else {
+        // Saat perpindahan varian: TIDAK ADA overlay yang menghalangi tengah layar
+        if (variantDock) variantDock.classList.add('is-loading');
+        if (gestureHint) gestureHint.textContent = 'Memuat 3D...';
       }
 
-      const src = modelSources[idx];
-      loader.load(
-        src,
-        (gltf) => {
-          setupModel(gltf, src);
-        },
-        (xhr) => {
-          if (xhr.total > 0) {
-            const percent = Math.round((xhr.loaded / xhr.total) * 100);
-            progressBar.style.width = `${percent}%`;
-            progressText.innerText = `${percent}%`;
+      const tryLoad = (sources, sIdx) => {
+        if (sIdx >= sources.length) {
+          console.warn("Gagal memuat varian:", variant.name);
+          if (variantDock) variantDock.classList.remove('is-loading');
+          if (gestureHint) gestureHint.textContent = '← Swipe →';
+          if (isInitialLoad) {
+            createFallbackShirt();
+            hideLoader();
+            isInitialLoad = false;
           }
-        },
-        (err) => {
-          console.warn(`Gagal memuat ${src}, mencoba fallback...`, err);
-          loadModel(idx + 1);
+          isTransitioningVariant = false;
+          if (corsNotice) corsNotice.style.display = 'block';
+          return;
         }
-      );
+
+        const src = sources[sIdx];
+        loader.load(
+          src,
+          (gltf) => {
+            if (variantDock) variantDock.classList.remove('is-loading');
+            if (gestureHint) gestureHint.textContent = '← Swipe →';
+
+            if (isInitialLoad) {
+              if (shirtModel) {
+                scene.remove(shirtModel);
+                disposeModel(shirtModel);
+              }
+              setupModel(gltf, variant.name, 0);
+              hideLoader();
+              isInitialLoad = false;
+              isTransitioningVariant = false;
+            } else {
+              // Transisi halus: geser keluar model lama, lalu pasang dan geser masuk model baru
+              const oldModel = shirtModel;
+              if (oldModel && direction !== 0) {
+                const exitDeltaX = direction > 0 ? -0.45 : 0.45;
+                const exitRotY = direction > 0 ? -0.3 : 0.3;
+                gsap.to(oldModel.position, {
+                  x: oldModel.position.x + exitDeltaX,
+                  duration: 0.32,
+                  ease: 'power2.in',
+                  onComplete: () => {
+                    scene.remove(oldModel);
+                    disposeModel(oldModel);
+                    setupModel(gltf, variant.name, direction);
+                    isTransitioningVariant = false;
+                  }
+                });
+                gsap.to(oldModel.rotation, {
+                  y: oldModel.rotation.y + exitRotY,
+                  duration: 0.32,
+                  ease: 'power2.in'
+                });
+              } else {
+                if (oldModel) {
+                  scene.remove(oldModel);
+                  disposeModel(oldModel);
+                }
+                setupModel(gltf, variant.name, direction);
+                isTransitioningVariant = false;
+              }
+            }
+          },
+          (xhr) => {
+            if (isInitialLoad && xhr.total > 0) {
+              const percent = Math.round((xhr.loaded / xhr.total) * 100);
+              if (progressBar) progressBar.style.width = `${percent}%`;
+              if (progressText) progressText.innerText = `${percent}%`;
+            }
+          },
+          (err) => {
+            console.warn(`Gagal memuat ${src}, mencoba fallback...`, err);
+            tryLoad(sources, sIdx + 1);
+          }
+        );
+      };
+
+      const sources = [variant.path];
+      if (variant.fallback && variant.fallback !== variant.path) {
+        sources.push(variant.fallback);
+      }
+      tryLoad(sources, 0);
     }
 
-    // Jika dibuka langsung via file://, browser memblokir fetch otomatis
-    if (window.location.protocol === 'file:') {
-      console.info("Protokol file:// terdeteksi. Bersiap menampilkan fallback CORS jika request diblokir.");
+    function nextVariant() {
+      loadVariant(currentVariantIndex + 1, 1);
     }
 
-    loadModel(0);
+    function prevVariant() {
+      loadVariant(currentVariantIndex - 1, -1);
+    }
+
+    // Inisialisasi varian pertama
+    loadVariant(0, 0);
 
     function hideLoader() {
       gsap.to(loaderElem, {
@@ -1460,6 +1860,134 @@
       const progress = maxScroll > 0 ? (window.scrollY / maxScroll) * 100 : 0;
       if (scrollProgressLine) {
         scrollProgressLine.style.width = `${progress}%`;
+      }
+    }, { passive: true });
+
+    // =========================================================================
+    // 5.2 NAVIGASI ALUR CERITA (KEYBOARD ARROW ATAS/BAWAH & TOMBOL CHAPTER)
+    // =========================================================================
+    const STORY_SECTION_IDS = [
+      'sec-hero',
+      'sec-judul',
+      'sec-tugu',
+      'sec-bulan',
+      'sec-awan',
+      'sec-pesawat',
+      'sec-batik',
+      'sec-koordinat',
+      'sec-finale'
+    ];
+
+    function getCurrentStoryIndex() {
+      const activeSec = document.querySelector('.story-section.is-active');
+      if (activeSec && STORY_SECTION_IDS.includes(activeSec.id)) {
+        return STORY_SECTION_IDS.indexOf(activeSec.id);
+      }
+      let bestIdx = 0;
+      let minDistance = Infinity;
+      const centerY = window.innerHeight / 2;
+      STORY_SECTION_IDS.forEach((id, idx) => {
+        const elem = document.getElementById(id);
+        if (elem) {
+          const rect = elem.getBoundingClientRect();
+          const elemCenter = rect.top + rect.height / 2;
+          const dist = Math.abs(elemCenter - centerY);
+          if (dist < minDistance) {
+            minDistance = dist;
+            bestIdx = idx;
+          }
+        }
+      });
+      return bestIdx;
+    }
+
+    function goToStoryIndex(idx) {
+      if (idx < 0) idx = 0;
+      if (idx >= STORY_SECTION_IDS.length) idx = STORY_SECTION_IDS.length - 1;
+      const targetElem = document.getElementById(STORY_SECTION_IDS[idx]);
+      if (targetElem) {
+        targetElem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    function nextStorySection() {
+      const current = getCurrentStoryIndex();
+      if (current < STORY_SECTION_IDS.length - 1) {
+        goToStoryIndex(current + 1);
+      }
+    }
+
+    function prevStorySection() {
+      const current = getCurrentStoryIndex();
+      if (current > 0) {
+        goToStoryIndex(current - 1);
+      }
+    }
+
+    // Tombol Panah Storyline di Chapter Pill (Atas & Bawah)
+    const btnStoryPrev = document.getElementById('btn-story-prev');
+    const btnStoryNext = document.getElementById('btn-story-next');
+    if (btnStoryPrev) btnStoryPrev.addEventListener('click', () => prevStorySection());
+    if (btnStoryNext) btnStoryNext.addEventListener('click', () => nextStorySection());
+
+    // Tombol Panah Varian di Floating Dock (Kanan & Kiri)
+    const btnVariantPrev = document.getElementById('btn-variant-prev');
+    const btnVariantNext = document.getElementById('btn-variant-next');
+    const vPillInfo = document.getElementById('v-pill-info');
+    if (btnVariantPrev) btnVariantPrev.addEventListener('click', () => prevVariant());
+    if (btnVariantNext) btnVariantNext.addEventListener('click', () => nextVariant());
+    if (vPillInfo) vPillInfo.addEventListener('click', () => nextVariant());
+
+    // =========================================================================
+    // 5.3 KONTROL KEYBOARD (ARROW KANAN/KIRI = VARIAN, ARROW ATAS/BAWAH = STORY)
+    // =========================================================================
+    window.addEventListener('keydown', (e) => {
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) return;
+
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        nextVariant();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        prevVariant();
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        nextStorySection();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        prevStorySection();
+      }
+    });
+
+    // =========================================================================
+    // 5.4 GESTUR TOUCH SWIPE (SWIPE KANAN/KIRI = GANTI VARIAN)
+    // =========================================================================
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchStartTime = 0;
+
+    window.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 1) {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        touchStartTime = Date.now();
+      }
+    }, { passive: true });
+
+    window.addEventListener('touchend', (e) => {
+      if (e.changedTouches.length === 1) {
+        const deltaX = e.changedTouches[0].clientX - touchStartX;
+        const deltaY = e.changedTouches[0].clientY - touchStartY;
+        const deltaTime = Date.now() - touchStartTime;
+
+        // Cek gestur swipe horizontal cepat (durasi < 450ms, jarak X >= 45px, dominan X dibanding Y)
+        if (deltaTime < 450 && Math.abs(deltaX) >= 45 && Math.abs(deltaX) > Math.abs(deltaY) * 1.4) {
+          if (deltaX < 0) {
+            nextVariant(); // Swipe ke kiri -> varian berikutnya
+          } else {
+            prevVariant(); // Swipe ke kanan -> varian sebelumnya
+          }
+        }
       }
     }, { passive: true });
 
