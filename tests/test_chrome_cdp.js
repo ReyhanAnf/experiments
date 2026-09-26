@@ -275,6 +275,96 @@ async function runChromeTest() {
   });
   console.log("Import JSON modal test verified:", importModalTestResult.result.value);
 
+  // Test 1b: Project Status & Multi-Link Modal Validation
+  console.log("Testing Project Status & Multi-Link Modal Validation in Chrome...");
+  const statusModalTestResult = await sendCommand('Runtime.evaluate', {
+    expression: `
+      (() => {
+        // Open status modal
+        document.getElementById('btn-quick-status').click();
+        const modalOpen = !document.getElementById('status-modal').classList.contains('hidden');
+
+        // Select "Sudah Selesai"
+        const radioCompleted = document.getElementById('radio-status-completed');
+        radioCompleted.checked = true;
+        radioCompleted.dispatchEvent(new Event('change'));
+
+        // Clear all URLs
+        document.querySelectorAll('.status-link-url').forEach(i => i.value = '');
+
+        // Click save -> should fail with error banner
+        document.getElementById('btn-save-status-modal').click();
+        const errorBannerVisible = !document.getElementById('status-error-banner').classList.contains('hidden');
+        const modalStillOpen = !document.getElementById('status-modal').classList.contains('hidden');
+
+        // Add 2 valid links
+        const titles = document.querySelectorAll('.status-link-title');
+        const urls = document.querySelectorAll('.status-link-url');
+        titles[0].value = 'Hasil Video Sora';
+        urls[0].value = 'https://sora.com/gen/sample-video-1';
+
+        document.getElementById('btn-add-status-link').click();
+        const titles2 = document.querySelectorAll('.status-link-title');
+        const urls2 = document.querySelectorAll('.status-link-url');
+        titles2[1].value = 'Google Drive Master';
+        urls2[1].value = 'https://drive.google.com/test-assets';
+
+        // Save again -> should succeed and close modal
+        document.getElementById('btn-save-status-modal').click();
+        const modalClosed = document.getElementById('status-modal').classList.contains('hidden');
+        const activeStatusText = document.getElementById('active-status-text')?.textContent.trim();
+        const linkChipsCount = document.querySelectorAll('#active-project-links-list a').length;
+
+        return {
+          modalOpen,
+          errorBannerVisible,
+          modalStillOpen,
+          modalClosed,
+          activeStatusText,
+          linkChipsCount
+        };
+      })()
+    `,
+    returnByValue: true
+  });
+  console.log("Status & Multi-link modal test verified:", statusModalTestResult.result.value);
+
+  // Test 1c: Edit Project & JSON Modal
+  console.log("Testing Edit Project & JSON Modal in Chrome...");
+  const editModalTestResult = await sendCommand('Runtime.evaluate', {
+    expression: `
+      (() => {
+        // Open edit modal
+        document.getElementById('btn-edit-active-project').click();
+        const modalOpen = !document.getElementById('edit-project-modal').classList.contains('hidden');
+
+        // Switch to JSON tab
+        document.getElementById('tab-edit-json').click();
+        const jsonContentVisible = !document.getElementById('content-edit-json').classList.contains('hidden');
+        const jsonStatus = document.getElementById('edit-json-status')?.textContent;
+
+        // Switch back to Form tab and edit title
+        document.getElementById('tab-edit-form').click();
+        document.getElementById('edit-form-name').value = 'Automated Renovated Studio';
+
+        // Save
+        document.getElementById('btn-save-edit-modal').click();
+        const modalClosed = document.getElementById('edit-project-modal').classList.contains('hidden');
+        const newTitle = document.getElementById('active-project-title')?.textContent.trim();
+
+        return {
+          modalOpen,
+          jsonContentVisible,
+          jsonStatus,
+          modalClosed,
+          newTitle
+        };
+      })()
+    `,
+    returnByValue: true
+  });
+  console.log("Edit project modal test verified:", editModalTestResult.result.value);
+
   // Test 2: Navigate to index.html and verify new card & filters
   const indexUrl = `file:///d:/07_PROJECTS/Personal/experiments/index.html`;
   console.log(`\nNavigating to ${indexUrl}...`);
