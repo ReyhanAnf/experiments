@@ -543,7 +543,7 @@ A. PROCESS MACRO & PHYSICAL CAUSALITY
 Determine the realistic real-world workflow required to transform the initial state into the final state.
 Workflow encompasses: prerequisite tasks, dependent tasks, parallel tasks, irreversible operations, curing/drying/settling, cleanup, material logistics, worker/equipment needs, temporary structures, and final staging.
 Every visual alteration must have an explicit physical cause:
-PREVIOUS STATE -> PHYSICAL ACTION -> PHYSICAL CONSEQUENCE -> NEXT STATE
+PREVIOUS STATE ⟶ PHYSICAL ACTION ⟶ PHYSICAL CONSEQUENCE ⟶ NEXT STATE
 Never describe transformation as magical visual replacement or instantaneous morphing.
 
 B. ADAPTIVE STAGE & DURATION PLANNING
@@ -564,67 +564,225 @@ WORKER REGISTRY: Persistent IDs (e.g., WORKER A, WORKER B), role, trade, PPE, ap
 EQUIPMENT REGISTRY: Persistent IDs (e.g., EQUIPMENT 1), type, color, attachments, positions (no teleportation).
 
 2. OUTPUT REQUIREMENT: STRICT JSON ONLY
-You MUST output RAW, VALID RFC 8259 JSON ONLY.`;
+You MUST output RAW, VALID RFC 8259 JSON ONLY.
+Do NOT output conversational greetings, technical preambles, or markdown notes outside the JSON block.
+Do NOT wrap with multiple codeblocks. Output one single parseable JSON object.
+
+MANDATORY JSON SCHEMA STRUCTURE
+{
+  "production_summary": {
+    "project_name": "string",
+    "target_total_duration_sec": 60,
+    "video_duration_sec": 10,
+    "total_videos": 6,
+    "total_images": 7,
+    "actual_total_runtime_sec": 60,
+    "temporal_summary": "string"
+  },
+  "sequence_map": [
+    "IMAGE 1",
+    "VIDEO 1 (IMAGE 1 -> IMAGE 2)",
+    "IMAGE 2",
+    "VIDEO 2 (IMAGE 2 -> IMAGE 3)",
+    "IMAGE 3"
+  ],
+  "core_prompt": {
+    "scene_id": "string",
+    "project_description": "string",
+    "camera_lock": "string",
+    "geometry_lock": "string",
+    "landmark_lock": "string",
+    "material_lock": "string",
+    "lighting_lock": "string",
+    "environment_lock": "string",
+    "worker_identity_registry": [
+      {
+        "worker_id": "WORKER A",
+        "role": "string",
+        "visual_profile": "string"
+      }
+    ],
+    "equipment_registry": [
+      {
+        "equipment_id": "EQUIPMENT 1",
+        "type": "string",
+        "visual_profile": "string"
+      }
+    ],
+    "global_physics_rules": "string",
+    "global_timelapse_rules": "string",
+    "global_negative_rules": "string",
+    "raw_core_text": "Complete standalone Core Continuity Instruction block..."
+  },
+  "images": [
+    {
+      "image_id": "IMAGE 1",
+      "state_id": "STATE_01",
+      "state_purpose": "string",
+      "completed_work": "string",
+      "active_work": "string",
+      "remaining_work": "string",
+      "worker_actions": "string",
+      "equipment_state": "string",
+      "material_state": "string",
+      "temporary_elements": "string",
+      "physical_evidence": "string",
+      "local_negative_prompt": "string",
+      "full_copy_ready_prompt": "[CORE CONTINUITY INSTRUCTION]\\n...\\n\\n----------------------------------------\\nAPPLY THE CORE PROMPT ABOVE WITHOUT MODIFICATION.\\nIMAGE ID: IMAGE 1\\n..."
+    }
+  ],
+  "videos": [
+    {
+      "video_id": "VIDEO 1",
+      "transition_id": "TRANSITION_01_TO_02",
+      "from_image_id": "IMAGE 1",
+      "to_image_id": "IMAGE 2",
+      "target_duration_sec": 10,
+      "temporal_compression_level": "string",
+      "physical_workload": "string",
+      "physical_action_sequence": "string",
+      "worker_actions": "string",
+      "equipment_actions": "string",
+      "material_movement": "string",
+      "temporary_element_changes": "string",
+      "timelapse_behavior": "string",
+      "end_state_convergence": "string",
+      "full_copy_ready_prompt": "[CORE CONTINUITY INSTRUCTION]\\n...\\n\\n----------------------------------------\\nAPPLY THE CORE PROMPT ABOVE WITHOUT MODIFICATION.\\nVIDEO ID: VIDEO 1 (IMAGE 1 -> IMAGE 2)\\nTARGET DURATION: 10 seconds\\n..."
+    }
+  ]
+}
+
+3. STRICT RULE FOR full_copy_ready_prompt (CRITICAL)
+The user must NEVER be required to copy the Core Prompt separately and paste it into individual assets.
+Every single item inside "images" and "videos" MUST have the property "full_copy_ready_prompt", which is PRE-COMBINED and fully self-contained.
+
+Structure of full_copy_ready_prompt for IMAGES:
+CORE CONTINUITY INSTRUCTION:
+Treat this block as the authoritative continuity source for the entire visual sequence.
+Scene ID: [SCENE_ID]
+Project: [PROJECT_DESCRIPTION]
+Camera Lock: [CAMERA_LOCK]
+Geometry & Landmarks Lock: [GEOMETRY_LOCK & LANDMARKS]
+Lighting & Environment Lock: [LIGHTING_LOCK & ENVIRONMENT_LOCK]
+Workers: [Full List of Worker IDs & Visual Descriptions]
+Equipment: [Full List of Equipment IDs & Descriptions]
+Global Negative Constraints: [GLOBAL_NEGATIVE_RULES]
+
+----------------------------------------
+APPLY THE CORE PROMPT ABOVE WITHOUT MODIFICATION.
+ASSET TYPE: STATIC IMAGE
+IMAGE ID: [IMAGE ID] | STATE ID: [STATE ID]
+STATE PURPOSE: [STATE PURPOSE]
+COMPLETED WORK: [COMPLETED WORK]
+ACTIVE WORK IN FRAME: [ACTIVE WORK]
+REMAINING WORK: [REMAINING WORK]
+WORKER ACTIONS & POSITIONS: [WORKER ACTIONS]
+EQUIPMENT STATUS: [EQUIPMENT STATE]
+MATERIAL & SUBSTRATE STATE: [MATERIAL STATE]
+TEMPORARY ELEMENTS: [TEMPORARY ELEMENTS]
+PHYSICAL EVIDENCE OF PROGRESS: [PHYSICAL EVIDENCE]
+NEGATIVE CONSTRAINTS: no geometry drift, no camera drift, no landmark movement, no worker identity drift, no clothing changes, no floating objects, no sudden disappearance, no text, no watermarks.
+
+Structure of full_copy_ready_prompt for VIDEOS:
+CORE CONTINUITY INSTRUCTION:
+Treat this block as the authoritative continuity source for the entire visual sequence.
+Scene ID: [SCENE_ID]
+Project: [PROJECT_DESCRIPTION]
+Camera Lock: [CAMERA_LOCK]
+Geometry & Landmarks Lock: [GEOMETRY_LOCK & LANDMARKS]
+Lighting & Environment Lock: [LIGHTING_LOCK & ENVIRONMENT_LOCK]
+Workers: [Full List of Worker IDs & Visual Descriptions]
+Equipment: [Full List of Equipment IDs & Descriptions]
+Global Negative Constraints: [GLOBAL_NEGATIVE_RULES]
+
+----------------------------------------
+APPLY THE CORE PROMPT ABOVE WITHOUT MODIFICATION.
+ASSET TYPE: TRANSITION VIDEO TIMELAPSE
+VIDEO ID: [VIDEO ID] ([FROM_IMAGE_ID] -> [TO_IMAGE_ID])
+TARGET DURATION: [X] seconds timelapse (Temporal Compression: [LEVEL])
+PHYSICAL WORKLOAD: [PHYSICAL WORKLOAD]
+ACTION SEQUENCE: [Step-by-step physical actions by workers and machinery]
+MATERIAL MOVEMENT & LOGISTICS: [Movement of materials, debris accumulation/removal]
+TEMPORARY ELEMENTS: [Appearance, relocation, or dismantling of tools/scaffolds]
+TIMELAPSE BEHAVIOR: Accelerated realistic human and mechanical motion, task-oriented inertia, physical interaction with surfaces.
+END STATE CONVERGENCE: Final frame smoothly and precisely matches the exact layout, geometry, and material state of [TO_IMAGE_ID].
+NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or machinery, no morphing structures, no camera position drift, no text, no watermarks.
+
+4. PRE-COMPLETION VALIDATION
+Before returning the JSON, verify:
+- images.length == videos.length + 1.
+- Every transition k connects IMAGE k to IMAGE k+1.
+- Total duration matches user request (if provided).
+- Persistent IDs for workers and machines are preserved across all entries.
+- In every entry, full_copy_ready_prompt is populated with the complete core block + asset instruction pre-combined.
+- The output is 100% valid JSON with properly escaped quotes and line breaks (\\n).`;
 
     // --- PROMPT COMPILERS ENFORCING STRICT SCHEMA RULES ---
     function formatCoreContinuityBlock(core) {
-      const workersFormatted = core.worker_identity_registry.map(w => 
-        `  - ${w.worker_id} (${w.role}): ${w.visual_profile}`
-      ).join('\n');
+      if (!core) return '';
+      const workersFormatted = Array.isArray(core.worker_identity_registry) && core.worker_identity_registry.length > 0
+        ? core.worker_identity_registry.map(w => 
+            `  - ${w.worker_id} (${w.role}): ${w.visual_profile}`
+          ).join('\n')
+        : '  - None registered';
 
-      const equipmentFormatted = core.equipment_registry.map(e => 
-        `  - ${e.equipment_id} (${e.type}): ${e.visual_profile}`
-      ).join('\n');
+      const equipmentFormatted = Array.isArray(core.equipment_registry) && core.equipment_registry.length > 0
+        ? core.equipment_registry.map(e => 
+            `  - ${e.equipment_id} (${e.type}): ${e.visual_profile}`
+          ).join('\n')
+        : '  - None registered';
 
       return `CORE CONTINUITY INSTRUCTION:
 Treat this block as the authoritative continuity source for the entire visual sequence.
-Scene ID: ${core.scene_id}
-Project: ${core.project_description}
-Camera Lock: ${core.camera_lock}
-Geometry & Landmarks Lock: ${core.geometry_lock} | Key Permanent Landmarks: ${core.landmark_lock}
-Lighting & Environment Lock: ${core.lighting_lock} | Atmospheric: ${core.environment_lock}
+Scene ID: ${core.scene_id || 'SCENE_DEFAULT'}
+Project: ${core.project_description || 'Sequential physical transformation.'}
+Camera Lock: ${core.camera_lock || 'Locked fixed tripod mount, zero drift.'}
+Geometry & Landmarks Lock: ${core.geometry_lock || 'Fixed permanent structures'} | Key Permanent Landmarks: ${core.landmark_lock || 'Reference points locked.'}
+Lighting & Environment Lock: ${core.lighting_lock || 'Consistent illumination'} | Atmospheric: ${core.environment_lock || 'Controlled environment.'}
 Workers:
 ${workersFormatted}
 Equipment:
 ${equipmentFormatted}
-Global Negative Constraints: ${core.global_negative_rules}`;
+Global Negative Constraints: ${core.global_negative_rules || 'no magical transformations, no teleporting workers or machinery, no morphing structures, no camera position drift, no text, no watermarks.'}`;
     }
 
     function compileImageCopyReadyPrompt(core, img) {
+      if (!img) return '';
       const coreBlock = formatCoreContinuityBlock(core);
       return `${coreBlock}
 
 ----------------------------------------
 APPLY THE CORE PROMPT ABOVE WITHOUT MODIFICATION.
 ASSET TYPE: STATIC IMAGE
-IMAGE ID: ${img.image_id} | STATE ID: ${img.state_id}
-STATE PURPOSE: ${img.state_purpose}
-COMPLETED WORK: ${img.completed_work}
-ACTIVE WORK IN FRAME: ${img.active_work}
-REMAINING WORK: ${img.remaining_work}
-WORKER ACTIONS & POSITIONS: ${img.worker_actions}
-EQUIPMENT STATUS: ${img.equipment_state}
-MATERIAL & SUBSTRATE STATE: ${img.material_state}
-TEMPORARY ELEMENTS: ${img.temporary_elements}
-PHYSICAL EVIDENCE OF PROGRESS: ${img.physical_evidence}
+IMAGE ID: ${img.image_id || 'IMAGE 1'} | STATE ID: ${img.state_id || 'STATE_01'}
+STATE PURPOSE: ${img.state_purpose || 'Visual milestone state'}
+COMPLETED WORK: ${img.completed_work || 'None'}
+ACTIVE WORK IN FRAME: ${img.active_work || 'None'}
+REMAINING WORK: ${img.remaining_work || 'Zero remaining work.'}
+WORKER ACTIONS & POSITIONS: ${img.worker_actions || 'Workers at station.'}
+EQUIPMENT STATUS: ${img.equipment_state || 'Equipment positioned.'}
+MATERIAL & SUBSTRATE STATE: ${img.material_state || 'Standard substrate.'}
+TEMPORARY ELEMENTS: ${img.temporary_elements || 'None'}
+PHYSICAL EVIDENCE OF PROGRESS: ${img.physical_evidence || 'Observable progress markings.'}
 NEGATIVE CONSTRAINTS: no geometry drift, no camera drift, no landmark movement, no worker identity drift, no clothing changes, no floating objects, no sudden disappearance, no text, no watermarks.`;
     }
 
     function compileVideoCopyReadyPrompt(core, vid) {
+      if (!vid) return '';
       const coreBlock = formatCoreContinuityBlock(core);
       return `${coreBlock}
 
 ----------------------------------------
 APPLY THE CORE PROMPT ABOVE WITHOUT MODIFICATION.
 ASSET TYPE: TRANSITION VIDEO TIMELAPSE
-VIDEO ID: ${vid.video_id} (${vid.from_image_id} -> ${vid.to_image_id})
-TARGET DURATION: ${vid.target_duration_sec} seconds timelapse (Temporal Compression: ${vid.temporal_compression_level})
-PHYSICAL WORKLOAD: ${vid.physical_workload}
-ACTION SEQUENCE: ${vid.physical_action_sequence}
-MATERIAL MOVEMENT & LOGISTICS: ${vid.material_movement}
-TEMPORARY ELEMENTS: ${vid.temporary_element_changes}
+VIDEO ID: ${vid.video_id || 'VIDEO 1'} (${vid.from_image_id || 'IMAGE 1'} -> ${vid.to_image_id || 'IMAGE 2'})
+TARGET DURATION: ${vid.target_duration_sec || 10} seconds timelapse (Temporal Compression: ${vid.temporal_compression_level || 'Accelerated'})
+PHYSICAL WORKLOAD: ${vid.physical_workload || 'Physical labor execution'}
+ACTION SEQUENCE: ${vid.physical_action_sequence || 'Systematic sequential labor steps'}
+MATERIAL MOVEMENT & LOGISTICS: ${vid.material_movement || 'Material staging and placement'}
+TEMPORARY ELEMENTS: ${vid.temporary_element_changes || 'Tool staging and clearance'}
 TIMELAPSE BEHAVIOR: ${vid.timelapse_behavior || 'Accelerated realistic human and mechanical motion, task-oriented inertia, physical interaction with surfaces.'}
-END STATE CONVERGENCE: ${vid.end_state_convergence || `Final frame smoothly and precisely matches the exact layout, geometry, and material state of ${vid.to_image_id}.`}
+END STATE CONVERGENCE: ${vid.end_state_convergence || `Final frame smoothly and precisely matches the exact layout, geometry, and material state of ${vid.to_image_id || 'next state'}.`}
 NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or machinery, no morphing structures, no camera position drift, no text, no watermarks.`;
     }
 
@@ -1655,16 +1813,36 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
     }
 
     function scrollToCard(identifier) {
-      const targetId = identifier.startsWith('IMAGE') 
+      const isVideo = identifier.startsWith('VIDEO');
+      const isImage = identifier.startsWith('IMAGE');
+
+      // If card would be hidden by active filter, auto-switch to 'all' so card is rendered
+      if ((isVideo && activeFilter === 'images') || (isImage && activeFilter === 'videos') || activeFilter === 'json') {
+        activeFilter = 'all';
+        document.querySelectorAll('.view-filter-btn').forEach(b => {
+          b.classList.remove('active', 'bg-emerald-500', 'text-slate-950', 'font-bold');
+          b.classList.add('text-slate-400');
+        });
+        const allBtn = document.getElementById('filter-all-assets');
+        if (allBtn) {
+          allBtn.classList.add('active', 'bg-emerald-500', 'text-slate-950', 'font-bold');
+          allBtn.classList.remove('text-slate-400');
+        }
+        renderAssets();
+      }
+
+      const targetId = isImage 
         ? `card-${identifier.replace(/\s+/g, '-').toLowerCase()}`
         : `card-${identifier.split(' ')[0].toLowerCase()}-${identifier.split(' ')[1].toLowerCase()}`;
       
-      const targetEl = document.getElementById(targetId);
-      if (targetEl) {
-        targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        targetEl.classList.add('active-card');
-        setTimeout(() => targetEl.classList.remove('active-card'), 2500);
-      }
+      setTimeout(() => {
+        const targetEl = document.getElementById(targetId);
+        if (targetEl) {
+          targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          targetEl.classList.add('active-card');
+          setTimeout(() => targetEl.classList.remove('active-card'), 2500);
+        }
+      }, 50);
     }
 
     function renderAssets() {
@@ -1844,16 +2022,16 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
       const list = document.getElementById('validation-checklist');
       list.innerHTML = '';
 
-      const images = currentData.images;
-      const videos = currentData.videos;
-      const summary = currentData.production_summary;
+      const images = currentData.images || [];
+      const videos = currentData.videos || [];
+      const summary = currentData.production_summary || {};
 
       // 1. images.length == videos.length + 1
       const rule1Passed = images.length === videos.length + 1;
       addCheckItem(list, rule1Passed, `images.length (${images.length}) == videos.length + 1 (${videos.length + 1})`);
 
       // 2. Every transition connects IMAGE k to IMAGE k+1
-      let rule2Passed = true;
+      let rule2Passed = videos.length > 0;
       for (let i = 0; i < videos.length; i++) {
         const expectedFrom = `IMAGE ${i + 1}`;
         const expectedTo = `IMAGE ${i + 2}`;
@@ -1865,26 +2043,27 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
       addCheckItem(list, rule2Passed, `Sequential Continuity: Transition k links IMAGE k ⟶ IMAGE k+1`);
 
       // 3. Duration constraint
-      const calcDuration = videos.length * summary.video_duration_sec;
-      const rule3Passed = calcDuration === summary.target_total_duration_sec;
-      addCheckItem(list, rule3Passed, `Total Duration: ${calcDuration}s matches target ${summary.target_total_duration_sec}s`);
+      const calcDuration = videos.reduce((acc, v) => acc + (Number(v.target_duration_sec) || Number(summary.video_duration_sec) || 0), 0) || (videos.length * (Number(summary.video_duration_sec) || 10));
+      const rule3Passed = (calcDuration === summary.actual_total_runtime_sec) && 
+        (summary.target_total_duration_sec ? Math.abs(calcDuration - summary.target_total_duration_sec) <= (summary.video_duration_sec || 10) : true);
+      addCheckItem(list, rule3Passed, `Total Duration: ${calcDuration}s (Runtime: ${summary.actual_total_runtime_sec}s, Target: ${summary.target_total_duration_sec}s)`);
 
       // 4. Persistent worker IDs preserved
-      const workerIds = currentData.core_prompt.worker_identity_registry.map(w => w.worker_id);
+      const workerIds = (currentData.core_prompt?.worker_identity_registry || []).map(w => w.worker_id);
       const rule4Passed = workerIds.length > 0;
       addCheckItem(list, rule4Passed, `Persistent Worker Registries (${workerIds.join(', ')}) strictly mapped`);
 
       // 5. full_copy_ready_prompt populated
-      const rule5Passed = images.every(i => i.full_copy_ready_prompt && i.full_copy_ready_prompt.includes('CORE CONTINUITY INSTRUCTION')) &&
-                          videos.every(v => v.full_copy_ready_prompt && v.full_copy_ready_prompt.includes('CORE CONTINUITY INSTRUCTION'));
+      const rule5Passed = images.length > 0 && images.every(i => i.full_copy_ready_prompt && i.full_copy_ready_prompt.includes('CORE CONTINUITY INSTRUCTION')) &&
+                          videos.length > 0 && videos.every(v => v.full_copy_ready_prompt && v.full_copy_ready_prompt.includes('CORE CONTINUITY INSTRUCTION'));
       addCheckItem(list, rule5Passed, `Every Asset has pre-combined, self-contained full_copy_ready_prompt`);
 
       // 6. RFC 8259 syntax validation
       let rule6Passed = false;
       try {
         const testStr = JSON.stringify(currentData);
-        JSON.parse(testStr);
-        rule6Passed = true;
+        const parsed = JSON.parse(testStr);
+        rule6Passed = Boolean(parsed && typeof parsed === 'object');
       } catch (e) {
         rule6Passed = false;
       }
@@ -1903,17 +2082,27 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
 
     // --- SYNTHESIZE CUSTOM CONTINUITY PLAN ---
     function synthesizeCustomPlan(projectName, totalDuration, clipDuration, initialState, finalState, cameraLock) {
-      const totalVideos = Math.max(1, Math.round(totalDuration / clipDuration));
+      const safeProjectName = (projectName || "Custom Physical Transformation Plan").trim();
+      const safeInitial = (initialState || "Raw baseline state prior to renovation.").trim();
+      const safeFinal = (finalState || "Pristine completed architectural space.").trim();
+      const safeCamera = (cameraLock || "Locked tripod mount, rectilinear lens, eye-level framing, zero drift.").trim();
+
+      const parsedTotal = parseInt(totalDuration, 10);
+      const parsedClip = parseInt(clipDuration, 10);
+
+      const validTotal = Math.max(5, Math.min(600, isNaN(parsedTotal) ? 40 : parsedTotal));
+      const validClip = Math.max(3, Math.min(60, isNaN(parsedClip) ? 10 : parsedClip));
+      const totalVideos = Math.max(1, Math.min(100, Math.round(validTotal / validClip)));
       const totalImages = totalVideos + 1;
-      const actualTotal = totalVideos * clipDuration;
+      const actualTotal = totalVideos * validClip;
 
       const sceneId = `SCENE_CUSTOM_${Date.now().toString().slice(-4)}`;
 
       // Core Scene Bible
       const core = {
         scene_id: sceneId,
-        project_description: `Sequential realistic transformation: from "${initialState.slice(0, 100)}..." to "${finalState.slice(0, 100)}...".`,
-        camera_lock: cameraLock,
+        project_description: `Sequential realistic transformation: from "${safeInitial.slice(0, 100)}..." to "${safeFinal.slice(0, 100)}...".`,
+        camera_lock: safeCamera,
         geometry_lock: "Permanent exterior load-bearing walls, structural foundation slab, overhead primary beam framing, and outer boundary thresholds.",
         landmark_lock: "1. Primary structural corner wall; 2. Central ceiling support junction; 3. Main entrance doorway frame; 4. Fixed electrical service stack.",
         material_lock: "Specified substrate materials transitioning naturally through physical construction phases.",
@@ -1972,7 +2161,7 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
         const imgData = {
           image_id: imgId,
           state_id: stateId,
-          state_purpose: isFirst ? `Initial state: ${initialState}` : (isLast ? `Final completed state: ${finalState}` : stage.purpose),
+          state_purpose: isFirst ? `Initial state: ${safeInitial}` : (isLast ? `Final completed state: ${safeFinal}` : stage.purpose),
           completed_work: isFirst ? "None. Site in pre-construction baseline condition." : (isLast ? "100% complete. Commissioned and verified." : stage.complete),
           active_work: isLast ? "None (Project commissioned and ready for handover)." : stage.active,
           remaining_work: isLast ? "Zero remaining work." : `${totalImages - 1 - i} milestone stages remaining.`,
@@ -1997,8 +2186,8 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
             transition_id: vidTransition,
             from_image_id: imgId,
             to_image_id: `IMAGE ${i + 2}`,
-            target_duration_sec: clipDuration,
-            temporal_compression_level: `Compressed timelapse (${clipDuration}s clip)`,
+            target_duration_sec: validClip,
+            temporal_compression_level: `Compressed timelapse (${validClip}s clip)`,
             physical_workload: `Execute ${stage.action} systematically with mechanical labor.`,
             physical_action_sequence: `1. Setup tools; 2. Carry out ${stage.action}; 3. Verify tolerances; 4. Clean work area.`,
             worker_actions: "Workers move with task-oriented momentum and authentic physical interaction.",
@@ -2017,13 +2206,13 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
 
       const generatedPlan = {
         production_summary: {
-          project_name: projectName,
-          target_total_duration_sec: actualTotal,
-          video_duration_sec: clipDuration,
+          project_name: safeProjectName,
+          target_total_duration_sec: validTotal,
+          video_duration_sec: validClip,
           total_videos: totalVideos,
           total_images: totalImages,
           actual_total_runtime_sec: actualTotal,
-          temporal_summary: `${actualTotal}-second accelerated transformation across ${totalVideos} videos (${clipDuration}s each) connecting ${totalImages} states.`
+          temporal_summary: `${actualTotal}-second accelerated transformation across ${totalVideos} videos (${validClip}s each) connecting ${totalImages} states.`
         },
         sequence_map: sequenceMap,
         core_prompt: core,
