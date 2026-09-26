@@ -114,13 +114,15 @@ scenarioKeys.forEach(key => {
 
   // 6. full_copy_ready_prompt verification
   scen.images.forEach(img => {
-    if (!img.full_copy_ready_prompt || !img.full_copy_ready_prompt.includes("CORE CONTINUITY INSTRUCTION") || !img.full_copy_ready_prompt.includes(img.image_id)) {
+    const hasCore = img.full_copy_ready_prompt && (img.full_copy_ready_prompt.includes("CORE CONTINUITY INSTRUCTION") || img.full_copy_ready_prompt.includes("KONTINUITAS"));
+    if (!img.full_copy_ready_prompt || !hasCore || !img.full_copy_ready_prompt.includes(img.image_id)) {
       console.error(`  [✗] Image ${img.image_id} missing pre-combined full_copy_ready_prompt!`);
       process.exit(1);
     }
   });
   scen.videos.forEach(vid => {
-    if (!vid.full_copy_ready_prompt || !vid.full_copy_ready_prompt.includes("CORE CONTINUITY INSTRUCTION") || !vid.full_copy_ready_prompt.includes(vid.video_id)) {
+    const hasCore = vid.full_copy_ready_prompt && (vid.full_copy_ready_prompt.includes("CORE CONTINUITY INSTRUCTION") || vid.full_copy_ready_prompt.includes("KONTINUITAS"));
+    if (!vid.full_copy_ready_prompt || !hasCore || !vid.full_copy_ready_prompt.includes(vid.video_id)) {
       console.error(`  [✗] Video ${vid.video_id} missing pre-combined full_copy_ready_prompt!`);
       process.exit(1);
     }

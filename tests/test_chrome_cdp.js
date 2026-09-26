@@ -229,7 +229,51 @@ async function runChromeTest() {
     `,
     returnByValue: true
   });
-  console.log("View filter tabs verified:", filterTabsResult.result.value);
+  // Test Import JSON Modal & Custom Payload Loading
+  console.log("Testing Import JSON Modal & Custom Payload Loading in Chrome...");
+  const importModalTestResult = await sendCommand('Runtime.evaluate', {
+    expression: `
+      (() => {
+        // Open modal
+        document.getElementById('btn-open-importer').click();
+        const modalOpen = !document.getElementById('import-modal').classList.contains('hidden');
+
+        // Load Dapur Tradisional sample
+        document.getElementById('btn-import-load-dapur-sample').click();
+        const textareaVal = document.getElementById('import-json-textarea').value;
+        const statusText = document.getElementById('import-json-status').textContent;
+
+        // Submit import
+        document.getElementById('btn-submit-import').click();
+        const modalClosed = document.getElementById('import-modal').classList.contains('hidden');
+
+        // Verify loaded plan
+        const cur = window.getCurrentData();
+        const cardsCount = document.querySelectorAll('#assets-list-container > div').length;
+        const shortPromptBtns = document.querySelectorAll('.btn-copy-short-prompt').length;
+        const fullPromptBtns = document.querySelectorAll('.btn-copy-prompt').length;
+        const importedBtnVisible = !document.getElementById('scenario-btn-imported').classList.contains('hidden');
+        const importedLabel = document.getElementById('imported-scenario-label').textContent;
+
+        return {
+          modalOpen,
+          modalClosed,
+          textareaLength: textareaVal.length,
+          statusText,
+          projectName: cur.production_summary.project_name,
+          totalVideos: cur.production_summary.total_videos,
+          totalImages: cur.production_summary.total_images,
+          cardsCount,
+          shortPromptBtns,
+          fullPromptBtns,
+          importedBtnVisible,
+          importedLabel
+        };
+      })()
+    `,
+    returnByValue: true
+  });
+  console.log("Import JSON modal test verified:", importModalTestResult.result.value);
 
   // Test 2: Navigate to index.html and verify new card & filters
   const indexUrl = `file:///d:/07_PROJECTS/Personal/experiments/index.html`;

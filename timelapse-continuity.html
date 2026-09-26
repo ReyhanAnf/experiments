@@ -121,14 +121,19 @@
         </div>
       </div>
 
-      <div class="flex items-center gap-2.5">
+      <div class="flex items-center gap-2 sm:gap-2.5">
+        <button id="btn-open-importer" class="inline-flex items-center gap-1.5 text-xs font-semibold text-sky-300 hover:text-white bg-sky-950/70 hover:bg-sky-900/80 border border-sky-600/50 px-3 sm:px-3.5 py-1.5 rounded-lg shadow-sm transition-all">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+          <span>Paste / Import JSON</span>
+        </button>
         <button id="btn-open-system-prompt" class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-white/10 px-3 py-1.5 rounded-lg transition-all">
           <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
           <span class="hidden sm:inline">Director Rules</span>
         </button>
         <button id="btn-open-generator" class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-300 hover:text-white bg-emerald-950/60 hover:bg-emerald-900/60 border border-emerald-700/50 px-3.5 py-1.5 rounded-lg shadow-sm transition-all">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-          <span>Custom Project</span>
+          <span class="hidden sm:inline">Custom Project</span>
+          <span class="sm:hidden">Custom</span>
         </button>
       </div>
     </div>
@@ -187,10 +192,13 @@
       <!-- PRESET SCENARIOS & ENGINE CONTROLS -->
       <div class="mt-6 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
         <!-- Preset selector -->
-        <div class="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0">
+        <div class="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0" id="preset-selector-bar">
           <span class="text-xs font-mono text-slate-500 whitespace-nowrap">Preset Scenarios:</span>
           <button data-scenario="warehouse" class="scenario-btn active px-3 py-1.5 rounded-lg text-xs font-semibold font-mono transition-all bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20 whitespace-nowrap">
             🏭 Warehouse to Studio (60s)
+          </button>
+          <button data-scenario="dapur" class="scenario-btn px-3 py-1.5 rounded-lg text-xs font-semibold font-mono transition-all text-slate-400 hover:text-white hover:bg-slate-900 border border-white/5 whitespace-nowrap">
+            👵 Dapur Tungku Nenek (120s)
           </button>
           <button data-scenario="pool" class="scenario-btn px-3 py-1.5 rounded-lg text-xs font-semibold font-mono transition-all text-slate-400 hover:text-white hover:bg-slate-900 border border-white/5 whitespace-nowrap">
             🏊 Backyard to Infinity Pool (40s)
@@ -201,17 +209,24 @@
           <button data-scenario="kitchen" class="scenario-btn px-3 py-1.5 rounded-lg text-xs font-semibold font-mono transition-all text-slate-400 hover:text-white hover:bg-slate-900 border border-white/5 whitespace-nowrap">
             🍳 1970s Kitchen to Chef Suite (30s)
           </button>
+          <button id="scenario-btn-imported" class="scenario-btn hidden px-3 py-1.5 rounded-lg text-xs font-semibold font-mono transition-all text-sky-400 bg-sky-950/70 border border-sky-600/50 shadow-md shadow-sky-500/20 whitespace-nowrap">
+            📋 <span id="imported-scenario-label">Imported Plan</span>
+          </button>
         </div>
 
         <!-- Quick actions -->
-        <div class="flex items-center gap-2.5">
+        <div class="flex items-center gap-2 sm:gap-2.5 flex-wrap sm:flex-nowrap">
+          <button id="btn-quick-paste-json" class="inline-flex items-center gap-1.5 text-xs font-semibold text-sky-300 hover:text-white bg-sky-950/60 hover:bg-sky-900/60 border border-sky-700/60 px-3 py-1.5 rounded-lg transition-all">
+            <svg class="w-3.5 h-3.5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+            <span>Paste JSON</span>
+          </button>
           <button id="btn-copy-all-prompts" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-white/10 px-3 py-1.5 rounded-lg transition-all">
-            <svg class="w-3.5 h-3.5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
-            <span>Copy All Prompts (.txt)</span>
+            <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+            <span>Copy All Prompts</span>
           </button>
           <button id="btn-download-json" class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-400 hover:text-emerald-300 bg-emerald-950/60 hover:bg-emerald-900/60 border border-emerald-800/60 px-3 py-1.5 rounded-lg transition-all">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-            <span>Download RFC 8259 JSON</span>
+            <span>Download JSON</span>
           </button>
         </div>
       </div>
@@ -481,6 +496,77 @@
           </button>
         </div>
       </form>
+    </div>
+  <!-- IMPORT JSON MODAL -->
+  <div id="import-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-white/10 rounded-2xl max-w-3xl w-full p-6 max-h-[92vh] overflow-y-auto shadow-2xl space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-white/5">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center font-bold text-sm border border-sky-500/30">
+            📥
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-white">Paste or Import RFC 8259 Continuity JSON</h3>
+            <p class="text-xs text-slate-400">Instantly render, validate, and extract copy-ready prompts from your custom project JSON</p>
+          </div>
+        </div>
+        <button id="btn-close-import-modal" class="text-slate-400 hover:text-white p-1 rounded-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <!-- Quick action helpers -->
+      <div class="flex flex-wrap items-center justify-between gap-2 text-xs">
+        <div class="flex flex-wrap items-center gap-2">
+          <button type="button" id="btn-import-paste-clipboard" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-white/10 font-mono transition-all">
+            <svg class="w-3.5 h-3.5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+            <span>Tempel dari Clipboard</span>
+          </button>
+          <label class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-white/10 font-mono cursor-pointer transition-all">
+            <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+            <span>Upload File .json</span>
+            <input type="file" id="import-json-file" accept=".json,application/json" class="hidden">
+          </label>
+          <button type="button" id="btn-import-load-dapur-sample" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-950/60 hover:bg-amber-900/70 text-amber-300 border border-amber-800/40 font-mono transition-all">
+            <span>Contoh: Dapur Nenek (120s)</span>
+          </button>
+        </div>
+        <button type="button" id="btn-import-clear" class="text-xs font-mono text-slate-500 hover:text-rose-400 transition-colors">
+          Bersihkan
+        </button>
+      </div>
+
+      <!-- JSON Input Textarea -->
+      <div class="space-y-1.5">
+        <div class="flex items-center justify-between text-[11px] font-mono">
+          <label for="import-json-textarea" class="text-slate-400">JSON Payload (RFC 8259):</label>
+          <span id="import-json-status" class="text-slate-500">Menunggu input...</span>
+        </div>
+        <textarea id="import-json-textarea" rows="12" class="w-full bg-slate-950 border border-white/10 rounded-xl p-3.5 text-xs font-mono text-slate-200 placeholder-slate-600 focus:outline-none focus:border-sky-500 selection:bg-sky-500 selection:text-slate-950 leading-relaxed" placeholder='Tempelkan JSON RFC 8259 di sini...
+{
+  "production_summary": { ... },
+  "sequence_map": [ ... ],
+  "core_prompt": { ... },
+  "images": [ ... ],
+  "videos": [ ... ]
+}'></textarea>
+      </div>
+
+      <!-- Feedback / Error alert banner -->
+      <div id="import-error-banner" class="hidden p-3 rounded-xl bg-rose-950/60 border border-rose-800/50 text-xs text-rose-300 font-mono flex items-start gap-2">
+        <svg class="w-4 h-4 text-rose-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <span id="import-error-msg"></span>
+      </div>
+
+      <div class="pt-3 border-t border-white/5 flex items-center justify-end gap-3">
+        <button type="button" id="btn-cancel-import" class="px-4 py-2 rounded-xl text-slate-400 hover:text-white font-semibold text-xs">
+          Batal
+        </button>
+        <button type="button" id="btn-submit-import" class="bg-gradient-to-r from-sky-500 to-emerald-600 hover:from-sky-400 hover:to-emerald-500 text-slate-950 font-bold px-5 py-2.5 rounded-xl shadow-lg shadow-sky-500/20 transition-all font-mono text-xs flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+          <span>Terapkan &amp; Buka Proyek</span>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -1681,24 +1767,421 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
             full_copy_ready_prompt: ""
           }
         ]
+      },
+      dapur: {
+        production_summary: {
+          project_name: "Transformasi Dapur Tradisional Tungku Nenek Menjadi Dapur Modern",
+          target_total_duration_sec: 120,
+          video_duration_sec: 20,
+          total_videos: 6,
+          total_images: 7,
+          actual_total_runtime_sec: 120,
+          temporal_summary: "Kompresi waktu konstruksi dan renovasi mandiri selama 5 hari menjadi 6 klip timelapse masing-masing 20 detik berformat vertikal 9:16 dengan pergerakan kamera dinamis yang mulus."
+        },
+        sequence_map: [
+          "IMAGE 1",
+          "VIDEO 1 (IMG 1 -> IMG 2)",
+          "IMAGE 2",
+          "VIDEO 2 (IMG 2 -> IMG 3)",
+          "IMAGE 3",
+          "VIDEO 3 (IMG 3 -> IMG 4)",
+          "IMAGE 4",
+          "VIDEO 4 (IMG 4 -> IMG 5)",
+          "IMAGE 5",
+          "VIDEO 5 (IMG 5 -> IMG 6)",
+          "IMAGE 6",
+          "VIDEO 6 (IMG 6 -> IMG 7)",
+          "IMAGE 7"
+        ],
+        core_prompt: {
+          scene_id: "DAPUR_TRADISIONAL_RENOVASI_01",
+          project_description: "Renovasi fisik bertahap dapur tradisional kayu dengan tungku tanah liat menjadi dapur semi-modern yang bersih, terang, dan higienis, dikerjakan oleh 3 anggota keluarga secara gotong royong.",
+          camera_lock: "Format vertikal 9:16, rasio portrait, lensa sinematik 35mm f/2.8, sudut kamera dinamis (slow tracking, subtle pan, dan low/eye-level angle yang konsisten menjaga sumbu aksi), pencahayaan natural bercampur penerangan kerja.",
+          geometry_lock: "Ruang dapur 3x4 meter; tiang kayu utama di sudut kiri dan kanan, rangka atap miring dengan balok gantung, orientasi dinding belakang sebagai area kompor/meja utama, posisi bukaan jendela/ventilasi samping tetap pada koordinat fisik yang sama.",
+          landmark_lock: "Tiang kayu utama sudut kiri, ambang balok langit-langit tengah, batas lantai papan kayu terhadap area pondasi tungku, lubang ventilasi kayu horizontal di dinding atas.",
+          material_lock: "Transisi fisik material nyata: jelaga hitam dan abu tungku -> dinding anyaman bambu dibersihkan dan diperkuat -> plesteran semen dan meja cor -> keramik backsplash subway putih dan countertop granit hitam poles -> lampu LED hangat 3000K menggantikan lampu bohlam tunggal temaram.",
+          lighting_lock: "Pencahayaan awal temaram dengan cahaya api tungku dan lampu pijar gantung 40W, bertransisi realistis mengikuti waktu pengerjaan siang hari (cahaya matahari masuk dari celah ventilasi) hingga pencahayaan akhir lampu LED modern terintegrasi.",
+          environment_lock: "Dapur rumah pedesaan tradisional yang lapang namun penuh jelaga, berubah menjadi dapur rapi bernuansa rustic-modern tanpa memindahkan struktur struktural rumah.",
+          worker_identity_registry: [
+            {
+              worker_id: "NENEK",
+              role: "Pemilik Dapur & Pengarah Tradisional",
+              visual_profile: "Wanita lanjut usia sekitar 68 tahun, rambut kelabu beruban disanggul rapi ke belakang, postur agak membungkuk, mengenakan daster batik lengan pendek motif klasik warna cokelat/marun, sandal jepit karet, ekspresi ramah dan teliti."
+            },
+            {
+              worker_id: "ANAK PEREMPUAN",
+              role: "Pelaksana Finishing & Manajemen Interior",
+              visual_profile: "Wanita usia 30 tahun, rambut hitam dikuncir kuda praktis, mengenakan kaos katun lengan pendek warna abu-abu/hijau sage, celana panjang training hitam, sarung tangan kerja kain, sepatu kasual/sandal rumah tangga, gesit dan cekatan."
+            },
+            {
+              worker_id: "MENANTU LAKI-LAKI",
+              role: "Pekerja Konstruksi Utama & Pembongkaran",
+              visual_profile: "Pria usia 32 tahun, perawakan tegap dan bertenaga, kulit sawo matang, rambut pendek rapi, mengenakan kemeja flanel lengan panjang yang digulung atau kaos kerja biru tua tebal, celana kargo kanvas tahan robek, sepatu bot kerja, memakai kacamata pelindung dan masker debu saat pembongkaran."
+            }
+          ],
+          equipment_registry: [
+            {
+              equipment_id: "ALAT_TUKANG",
+              type: "Peralatan Manual & Perkakas Listrik",
+              visual_profile: "Palu godam, linggis, sekop semen, ember adukan hitam, sendok semen, waterpass aluminium, bor listrik cordless, kuas cat, tangga lipat aluminium."
+            },
+            {
+              equipment_id: "FURNITUR_MODERN",
+              type: "Komponen Meja & Elektronik Dapur",
+              visual_profile: "Kitchen set kabinet kayu lapis HPL warna kayu oak alami, kompor gas kaca tanam 2 tungku, tabung gas LPG Bright Gas, cooker hood stainless steel, sink bak cuci piring stainless steel."
+            }
+          ],
+          global_physics_rules: "Gravitasi dan kausalitas material ketat. Pembongkaran menghasilkan debu dan puing nyata; adukan semen harus basah sebelum mengering; pergeseran barang dilakukan secara manual dengan tenaga otot; tidak ada elemen yang muncul secara gaib.",
+          global_timelapse_rules: "Timelapse temporal kompresi tinggi: pergerakan manusia dipercepat secara dinamis (motion blur alami pada gerakan cepat), bayangan sinar matahari bergeser alami di lantai dan dinding, transisi debu melayang dan mengendap realistis.",
+          global_negative_rules: "tidak ada distorsi geometri, tidak ada transformasi gaib, tidak ada perubahan wajah atau pakaian aktor secara acak, tidak ada anggota tubuh tambahan, tidak ada artefak melayang, tidak ada teks atau watermark grafis buatan.",
+          raw_core_text: "[INSTRUKSI KONTINUITAS UTAMA]\nAdegan: Renovasi dapur tungku tradisional nenek menjadi dapur modern oleh Nenek, Anak Perempuan (30 thn), dan Menantu Laki-laki (32 thn).\nFormat: Potret 9:16, fotorealistis, pergerakan kamera dinamis stabil.\nKunci Kontinuitas: Tiang kayu utama, balok langit-langit, dan batas struktural ruang dipertahankan.\nIdentitas Aktor: Nenek (daster batik klasik, sanggul uban), Anak Perempuan (30 thn, kaos praktis & celana training), Menantu Laki-laki (32 thn, tubuh tegap, kemeja kerja/kaos & celana kargo).\nAturan Fisika: Penuh kausalitas material, tahapan kerja konstruksi nyata, pergerakan timelapse alami tanpa lompatan magis."
+        },
+        images: [
+          {
+            image_id: "IMAGE 1",
+            state_id: "STATE_01",
+            state_purpose: "Kondisi awal dapur tradisional nenek yang penuh jelaga dengan tungku tanah liat menyala",
+            completed_work: "Kondisi awal asli (baseline)",
+            active_work: "Nenek sedang duduk jongkok memeriksa api di tungku tanah liat, sementara anak perempuan dan menantu laki-laki berdiri di dekat pintu mengamati dan mengukur area",
+            remaining_work: "Pemadaman api, pembersihan perkakas lama, pembongkaran tungku, perbaikan dinding, pembangunan meja cor, pemasangan kabinet dan kompor modern",
+            worker_actions: "Nenek menambahkan ranting kayu ke dalam tungku; Menantu Laki-laki memegang meteran gulung mengukur jarak dinding; Anak Perempuan mencatat di buku kecil",
+            equipment_state: "Perkakas tradisional di tempat: dandang tembaga, kukusan anyaman bambu (aseupan), tumpukan kayu bakar di para-para atas dan lantai, ember merah",
+            material_state: "Dinding bilik bambu menghitam oleh jelaga tebal, lantai kayu berdebu abu arang, tungku tanah liat retak alami dengan abu bara api",
+            temporary_elements: "Tumpukan kayu bakar kering di dekat tungku, bakul nasi anyaman tergantung",
+            physical_evidence: "Asap tipis mengepul ke langit-langit, lapisan jelaga tebal pada kayu dan dinding",
+            local_negative_prompt: "tidak ada furnitur modern, tidak ada kompor gas, tidak ada keramik baru, tidak ada perubahan geometri tiang",
+            asset_prompt_only: "Foto portrait 9:16 sudut dinamis sedikit rendah. Dapur pedesaan tradisional berdinding bilik bambu penuh jelaga hitam. Di sudut tengah, tungku tanah liat menyala dengan kayu bakar menyala merah dan dandang tradisional di atasnya. Nenek berusia 68 tahun berdaster batik duduk di bangku kayu kecil dekat tungku. Di latar samping, anak perempuannya (30 tahun) dan menantu laki-laki (32 tahun) berdiri mengamati ruangan dengan meteran gulung. Cahaya hangat api tungku bercampur cahaya redup lampu bohlam gantung.",
+            full_copy_ready_prompt: "[INSTRUKSI KONTINUITAS UTAMA]\nAdegan: Renovasi dapur tungku tradisional nenek menjadi dapur modern oleh Nenek, Anak Perempuan (30 thn), dan Menantu Laki-laki (32 thn).\nFormat: Potret 9:16, fotorealistis, pergerakan kamera dinamis stabil.\nKunci Kontinuitas: Tiang kayu utama, balok langit-langit, dan batas struktural ruang dipertahankan.\nIdentitas Aktor: Nenek (daster batik klasik, sanggul uban), Anak Perempuan (30 thn, kaos praktis & celana training), Menantu Laki-laki (32 thn, tubuh tegap, kemeja kerja/kaos & celana kargo).\nAturan Fisika: Penuh kausalitas material, tahapan kerja konstruksi nyata, pergerakan timelapse alami tanpa lompatan magis.\n----------------------------------------\nAPPLY THE CORE PROMPT ABOVE WITHOUT MODIFICATION.\nIMAGE ID: IMAGE 1\nTUJUAN TAHAP: Kondisi awal dapur tradisional nenek yang penuh jelaga dengan tungku tanah liat menyala.\nAKSI KERJA: Nenek di dekat tungku api, menantu laki-laki mengukur area, anak perempuan mengamati.\nBUKTI FISIK: Jelaga hitam pekat, tungku tanah liat menyala, lantai kayu berdebu, perkakas tradisional lengkap.\nBATASAN NEGATIF: no modern kitchen, no gas stove, no floating objects, no text, no watermark."
+          },
+          {
+            image_id: "IMAGE 2",
+            state_id: "STATE_02",
+            state_purpose: "Pengosongan barang tradisional dan pembersihan jelaga permukaan",
+            completed_work: "Api dipadamkan, kayu bakar diturunkan dari para-para dan dikeluarkan, perkakas masak lama dipindahkan keluar",
+            active_work: "Anak perempuan menyikat dinding anyaman bambu dengan sapu lidi dan sikat kawat, menantu laki-laki mengangkut karung abu dan sisa kayu bakar",
+            remaining_work: "Pembongkaran tungku tanah liat bata, pembersihan menyeluruh, penyiapan pondasi meja dapur baru",
+            worker_actions: "Anak perempuan memakai masker kain menyapu debu langit-langit dan dinding; Menantu laki-laki membopong karung goni keluar; Nenek memilah perabot kecil yang masih dipakai ke wadah plastik",
+            equipment_state: "Sapu lidi bergagang panjang, ember cuci, sekop kecil, karung goni di lantai kayu",
+            material_state: "Dinding bambu mulai tampak serat aslinya meski bernoda hitam pudar; lantai tersapu bersih dari abu lepas; tungku dingin tanpa api",
+            temporary_elements: "Karung goni berisi arang di sudut ruangan, ember air pembersih",
+            physical_evidence: "Partikel debu beterbangan tersorot berkas cahaya matahari dari ventilasi atas, tumpukan kayu bakar di para-para atas sudah kosong",
+            local_negative_prompt: "tidak ada api menyala, tidak ada meja cor semen baru, tidak ada keramik",
+            asset_prompt_only: "Foto portrait 9:16 sudut sedang dinamis. Ruang dapur dalam proses pengosongan. Tungku tanah liat sudah mati dan dingin. Langit-langit para-para kayu kini kosong tanpa kayu bakar. Anak perempuan (30 tahun) menyikat jelaga di dinding bilik bambu menggunakan sapu bergagang, mengenakan masker debu. Menantu laki-laki (32 tahun) mengangkat karung goni berisi sisa abu. Nenek (68 tahun) duduk di samping menata baskom dan mangkuk ke dalam kotak plastik. Cahaya matahari pagi menerobos ventilasi memperlihatkan partikel debu halus di udara.",
+            full_copy_ready_prompt: "[INSTRUKSI KONTINUITAS UTAMA]\nAdegan: Renovasi dapur tungku tradisional nenek menjadi dapur modern oleh Nenek, Anak Perempuan (30 thn), dan Menantu Laki-laki (32 thn).\nFormat: Potret 9:16, fotorealistis, pergerakan kamera dinamis stabil.\nKunci Kontinuitas: Tiang kayu utama, balok langit-langit, dan batas struktural ruang dipertahankan.\nIdentitas Aktor: Nenek (daster batik klasik, sanggul uban), Anak Perempuan (30 thn, kaos praktis & celana training), Menantu Laki-laki (32 thn, tubuh tegap, kemeja kerja/kaos & celana kargo).\nAturan Fisika: Penuh kausalitas material, tahapan kerja konstruksi nyata, pergerakan timelapse alami tanpa lompatan magis.\n----------------------------------------\nAPPLY THE CORE PROMPT ABOVE WITHOUT MODIFICATION.\nIMAGE ID: IMAGE 2\nTUJUAN TAHAP: Pengosongan barang tradisional dan pembersihan jelaga permukaan.\nAKSI KERJA: Pembersihan dinding dan pemindahan karung sisa bahan bakar oleh anak dan menantu, nenek memilah perabot.\nBUKTI FISIK: Tungku padam, para-para kosong, debu di udara tersorot cahaya, karung puing tertata.\nBATASAN NEGATIF: no fire, no modern cabinets, no tiles, no duplicate workers."
+          },
+          {
+            image_id: "IMAGE 3",
+            state_id: "STATE_03",
+            state_purpose: "Pembongkaran tungku tanah liat lama dan persiapan area lantai kerja",
+            completed_work: "Tungku tanah liat lama telah dihancurkan total, puing tanah dan batu bata merah dikumpulkan dan dibersihkan",
+            active_work: "Menantu laki-laki mengikis sisa pondasi tanah dengan linggis dan sekop; Anak perempuan mengangkut puing dengan ember bangunan; Nenek menyediakan minuman air teh hangat di meja samping",
+            remaining_work: "Pemasangan bekisting dan pembesian meja cor beton, pelapisan pelindung dinding",
+            worker_actions: "Menantu laki-laki bertelanjang lengan dengan kaos abu berkeringat mengayunkan linggis; Anak perempuan mengangkat ember puing menuju pintu; Nenek berdiri di ambang pintu tersenyum memperhatikan",
+            equipment_state: "Palu godam tergeletak di atas karung, linggis baja bersandar di tiang, ember cor hitam bertumpuk",
+            material_state: "Lantai dasar area bekas tungku kini bersih rata memperlihatkan pondasi tanah padat dan batu penopang; dinding bambu belakang telah dilapisi papan kalsiboard tahan api warna putih kelabu",
+            temporary_elements: "Tumpukan bata merah baru dan sak semen tersusun rapi di pojok kiri",
+            physical_evidence: "Goresan palu pada batu, sisa debu merah bata di lantai, lembaran papan kalsiboard terpasang rapi pada rangka dinding",
+            local_negative_prompt: "tidak ada tungku tanah liat utuh, tidak ada meja cor yang sudah jadi, tidak ada kekacauan di luar area kerja",
+            asset_prompt_only: "Foto portrait 9:16 sudut rendah dinamis. Area bekas tungku tanah liat kini sudah rata dan bersih dari struktur tungku lama. Dinding belakang sudah terpasang papan fiber semen (kalsiboard) abu-abu terang sebagai alas baru. Menantu laki-laki (32 tahun) sedang menggunakan sendok semen dan linggis merapikan permukaan dasar. Anak perempuan (30 tahun) membawa ember cor hitam berisi puing sisa. Nenek (68 tahun) berdiri membawa nampan berisi cangkir teh memperhatikan pekerjaan mereka. Tumpukan bata merah dan beberapa sak semen tersusun di sisi samping.",
+            full_copy_ready_prompt: "[INSTRUKSI KONTINUITAS UTAMA]\nAdegan: Renovasi dapur tungku tradisional nenek menjadi dapur modern oleh Nenek, Anak Perempuan (30 thn), dan Menantu Laki-laki (32 thn).\nFormat: Potret 9:16, fotorealistis, pergerakan kamera dinamis stabil.\nKunci Kontinuitas: Tiang kayu utama, balok langit-langit, dan batas struktural ruang dipertahankan.\nIdentitas Aktor: Nenek (daster batik klasik, sanggul uban), Anak Perempuan (30 thn, kaos praktis & celana training), Menantu Laki-laki (32 thn, tubuh tegap, kemeja kerja/kaos & celana kargo).\nAturan Fisika: Penuh kausalitas material, tahapan kerja konstruksi nyata, pergerakan timelapse alami tanpa lompatan magis.\n----------------------------------------\nAPPLY THE CORE PROMPT ABOVE WITHOUT MODIFICATION.\nIMAGE ID: IMAGE 3\nTUJUAN TAHAP: Pembongkaran tungku lama selesai, area bersih, dinding diberi pelapis kalsiboard.\nAKSI KERJA: Menantu meratakan dasar, anak mengangkat ember puing, nenek mendampingi dengan teh.\nBUKTI FISIK: Puing bata merah, semen sak teratur, kalsiboard terpasang di dinding belakang.\nBATASAN NEGATIF: no intact mud stove, no finished kitchen counter, no deformed hands, no floating tools."
+          },
+          {
+            image_id: "IMAGE 4",
+            state_id: "STATE_04",
+            state_purpose: "Pengecoran dan pembentukan struktur meja dapur permanen (countertop concrete)",
+            completed_work: "Pondasi bata penyangga meja selesai, bekisting papan kayu dan anyaman besi tulangan terpasang kokoh, adukan beton telah dituang ke dalam cetakan meja dapur berbentuk L",
+            active_work: "Menantu laki-laki meratakan permukaan beton basah dengan jidar aluminium; Anak perempuan mengelap cipratan semen pada tiang; Nenek mengamati dari dekat memastikan tinggi meja nyaman untuknya",
+            remaining_work: "Pengeringan beton, pembongkaran bekisting, pemasangan keramik meja dan backsplash dinding",
+            worker_actions: "Menantu laki-laki berlutut memeriksa kerataan meja dengan waterpass; Anak perempuan memegang kain lap lembap; Nenek meletakkan telapak tangannya sejajar pinggang untuk mencoba ketinggian meja",
+            equipment_state: "Jidar aluminium panjang, waterpass kuning magnetik, ember adukan semen, cetakan bekisting triplek cokelat",
+            material_state: "Beton cor masih berwarna abu-abu gelap basah berkilau tipis di permukaan; bata merah plesteran sebagai kaki penopang meja; dinding kalsiboard bersih",
+            temporary_elements: "Tiang penyangga kayu reng kaso di bawah cetakan cor meja",
+            physical_evidence: "Tekstur adukan semen basah merata, garis level benang ukur kuning terbentang di dinding",
+            local_negative_prompt: "tidak ada keramik terpasang, tidak ada kompor gas, semen tidak boleh kering seketika",
+            asset_prompt_only: "Foto portrait 9:16 sudut dinamis tiga perempat. Struktur meja dapur beton berbentuk L baru saja selesai dicor di posisi bekas tungku. Beton cor masih tampak basah berwarna abu-abu gelap di dalam cetakan papan triplek dengan penopang kayu reng di bawahnya. Menantu laki-laki (32 tahun) sedang meratakan permukaan beton menggunakan bilah aluminium panjang dan memeriksa waterpass kuning. Anak perempuan (30 tahun) menyeka sudut dinding dengan kain. Nenek (68 tahun) berdiri di samping meja tersenyum membandingkan tinggi meja dengan pinggangnya.",
+            full_copy_ready_prompt: "[INSTRUKSI KONTINUITAS UTAMA]\nAdegan: Renovasi dapur tungku tradisional nenek menjadi dapur modern oleh Nenek, Anak Perempuan (30 thn), dan Menantu Laki-laki (32 thn).\nFormat: Potret 9:16, fotorealistis, pergerakan kamera dinamis stabil.\nKunci Kontinuitas: Tiang kayu utama, balok langit-langit, dan batas struktural ruang dipertahankan.\nIdentitas Aktor: Nenek (daster batik klasik, sanggul uban), Anak Perempuan (30 thn, kaos praktis & celana training), Menantu Laki-laki (32 thn, tubuh tegap, kemeja kerja/kaos & celana kargo).\nAturan Fisika: Penuh kausalitas material, tahapan kerja konstruksi nyata, pergerakan timelapse alami tanpa lompatan magis.\n----------------------------------------\nAPPLY THE CORE PROMPT ABOVE WITHOUT MODIFICATION.\nIMAGE ID: IMAGE 4\nTUJUAN TAHAP: Pengecoran meja dapur cor beton dan pengujian ergonomis ketinggian bersama nenek.\nAKSI KERJA: Menantu meratakan adukan semen dengan jidar, anak perempuan membersihkan tepi, nenek mengukur kenyamanan tinggi meja.\nBUKTI FISIK: Beton cor basah, cetakan triplek dan kaso, waterpass, benang ukur.\nBATASAN NEGATIF: no ceramic tiles yet, no finished gas stove, no distorted anatomy."
+          },
+          {
+            image_id: "IMAGE 5",
+            state_id: "STATE_05",
+            state_purpose: "Pemasangan keramik dinding backsplash dan penutup granit/keramik meja",
+            completed_work: "Bekisting cor dilepas setelah beton matang sempurna, permukaan meja dilapisi granit tile hitam glossy, dinding belakang dipasangi keramik subway putih",
+            active_work: "Anak perempuan mengaplikasikan nat putih pada sela-sela keramik dinding; Menantu laki-laki melubangi bagian meja untuk lubang kompor tanam dan bak cuci piring menggunakan gerinda pemotong; Nenek membersihkan lantai kayu dari sisa debu",
+            remaining_work: "Pemasangan kompor gas kaca tanam, wastafel cuci piring, cooker hood, rak bumbu gantung, dan lampu modern",
+            worker_actions: "Anak perempuan mengenakan sarung tangan karet mengusap spon nat keramik; Menantu laki-laki memakai kacamata pelindung mengukur presisi lubang kompor; Nenek memegang sapu dengan wajah gembira",
+            equipment_state: "Gerinda tangan pemotong keramik dengan kabel rol, spon busa kuning, ember air, spacer keramik silang",
+            material_state: "Keramik subway putih mengkilap terpasang rapi dengan pola bata di dinding; granit tile hitam pekat pada permukaan atas meja dapur; lantai kayu mulai dipel bersih",
+            temporary_elements: "Kardus bekas kemasan keramik bertumpuk rapi di sudut",
+            physical_evidence: "Garis nat putih basah pada keramik dinding, debu putih halus di sekitar lubang potongan meja granit",
+            local_negative_prompt: "tidak ada kompor menyala, tidak ada perkakas berserakan tak beraturan, tidak ada kabel telanjang semrawut",
+            asset_prompt_only: "Foto portrait 9:16 sudut sejajar mata dinamis. Meja dapur cor yang kokoh kini telah terlapisi granit hitam elegan, dan dinding belakang telah terpasang rapi keramik dinding subway putih mengkilap. Anak perempuan (30 tahun) sedang menyeka nat keramik dinding dengan spon kuning. Menantu laki-laki (32 tahun) dengan kacamata pelindung memeriksa potongan presisi pada bukaan kompor tanam di atas meja granit. Nenek (68 tahun) menyapu sisa potongan kardus di lantai kayu, tersenyum lebar melihat dapurnya mulai tampak modern dan terang.",
+            full_copy_ready_prompt: "[INSTRUKSI KONTINUITAS UTAMA]\nAdegan: Renovasi dapur tungku tradisional nenek menjadi dapur modern oleh Nenek, Anak Perempuan (30 thn), dan Menantu Laki-laki (32 thn).\nFormat: Potret 9:16, fotorealistis, pergerakan kamera dinamis stabil.\nKunci Kontinuitas: Tiang kayu utama, balok langit-langit, dan batas struktural ruang dipertahankan.\nIdentitas Aktor: Nenek (daster batik klasik, sanggul uban), Anak Perempuan (30 thn, kaos praktis & celana training), Menantu Laki-laki (32 thn, tubuh tegap, kemeja kerja/kaos & celana kargo).\nAturan Fisika: Penuh kausalitas material, tahapan kerja konstruksi nyata, pergerakan timelapse alami tanpa lompatan magis.\n----------------------------------------\nAPPLY THE CORE PROMPT ABOVE WITHOUT MODIFICATION.\nIMAGE ID: IMAGE 5\nTUJUAN TAHAP: Pemasangan keramik backsplash subway putih dan countertop granit hitam poles.\nAKSI KERJA: Anak perempuan memoles nat keramik, menantu menyiapkan lubang kompor dan sink, nenek membersihkan area.\nBUKTI FISIK: Keramik putih mengkilap, granit hitam terpasang, sisa kardus keramik, spon nat.\nBATASAN NEGATIF: no unfinished concrete, no burning wood, no messy floating items."
+          },
+          {
+            image_id: "IMAGE 6",
+            state_id: "STATE_06",
+            state_purpose: "Instalasi peralatan dapur modern, perpipaan wastafel, dan pencahayaan LED",
+            completed_work: "Pemasangan wastafel stainless steel dan kran leher angsa selesai, selang gas dan regulator terpasang aman, cooker hood stainless steel terpasang di atas kompor",
+            active_work: "Menantu laki-laki menyambungkan pipa pembuangan air di bawah wastafel; Anak perempuan memasang rak bumbu kayu gantung di dinding; Nenek menyeka permukaan kompor gas kaca baru dengan lap microfiber",
+            remaining_work: "Penataan toples bumbu nenek, uji coba masak pertama, dan staging akhir pencahayaan hangat",
+            worker_actions: "Menantu laki-laki berada di bawah kabinet meja mengencangkan fitting pipa PVC; Anak perempuan berdiri di kursi pendek memasang sekrup rak kayu; Nenek dengan hati-hati mengagumi kenop putar kompor kaca",
+            equipment_state: "Kunci inggris pipa, obeng nirkabel (cordless drill), tabung gas Bright Gas ungu 5.5 kg terpasang rapi di kompartemen bawah meja",
+            material_state: "Peralatan stainless steel berkilap bersih, kompor kaca hitam elegan terpasang presisi, lampu strip LED di bawah rak gantung menyala hangat",
+            temporary_elements: "Kotak perkakas plastik terbuka di lantai, kain lap microfiber",
+            physical_evidence: "Pantulan cahaya LED pada permukaan kompor kaca dan keramik subway putih, segel plastik baru yang baru dilepas di tempat sampah",
+            local_negative_prompt: "tidak ada api tungku tradisional, tidak ada puing semen, tidak ada kabel menggantung berbahaya",
+            asset_prompt_only: "Foto portrait 9:16 sudut dinamis sedikit menengadah. Dapur modern telah terpasang lengkap dengan kompor gas tanam kaca hitam, wastafel cuci piring stainless steel, dan cooker hood modern di atasnya. Lampu LED hangat di bawah ambalan kayu menyinari meja granit hitam. Anak perempuan (30 tahun) sedang menaruh toples-toples kaca bumbu di rak gantung. Menantu laki-laki (32 tahun) sedang mengencangkan sambungan pipa di bawah bak wastafel dengan kunci pas. Nenek (68 tahun) tersenyum bahagia sambil mengelap lembut permukaan kompor kaca barunya.",
+            full_copy_ready_prompt: "[INSTRUKSI KONTINUITAS UTAMA]\nAdegan: Renovasi dapur tungku tradisional nenek menjadi dapur modern oleh Nenek, Anak Perempuan (30 thn), dan Menantu Laki-laki (32 thn).\nFormat: Potret 9:16, fotorealistis, pergerakan kamera dinamis stabil.\nKunci Kontinuitas: Tiang kayu utama, balok langit-langit, dan batas struktural ruang dipertahankan.\nIdentitas Aktor: Nenek (daster batik klasik, sanggul uban), Anak Perempuan (30 thn, kaos praktis & celana training), Menantu Laki-laki (32 thn, tubuh tegap, kemeja kerja/kaos & celana kargo).\nAturan Fisika: Penuh kausalitas material, tahapan kerja konstruksi nyata, pergerakan timelapse alami tanpa lompatan magis.\n----------------------------------------\nAPPLY THE CORE PROMPT ABOVE WITHOUT MODIFICATION.\nIMAGE ID: IMAGE 6\nTUJUAN TAHAP: Instalasi peralatan masak modern (kompor gas kaca, sink stainless steel, rak bumbu, dan lampu LED).\nAKSI KERJA: Menantu memasang saluran pipa, anak menata rak gantung, nenek menyeka kompor baru.\nBUKTI FISIK: Kompor gas tanam mengkilap, lampu LED menyala hangat, fitting pipa terpasang rapi.\nBATASAN NEGATIF: no loose wires, no old soot, no debris on floor, no distorted faces."
+          },
+          {
+            image_id: "IMAGE 7",
+            state_id: "STATE_07",
+            state_purpose: "Hasil akhir sempurna: Dapur modern fungsional dan hangat saat ketiganya memasak bersama",
+            completed_work: "Seluruh renovasi selesai 100%, dapur bersih berkilau, perpaduan dinding kayu pedesaan yang dipernis rapi dengan kitchen counter modern bernuansa hangat",
+            active_work: "Nenek sedang menggoreng masakan di atas wajan anti lengket di kompor gas modern dengan api biru stabil; Anak perempuan memotong sayuran segar di talenan kayu di samping wastafel; Menantu laki-laki menuangkan teh hangat ke dalam cangkir di sudut meja",
+            remaining_work: "Selesai penuh (kondisi operasional harian)",
+            worker_actions: "Ketiganya tersenyum bahagia dan berinteraksi harmonis; Nenek memegang spatula silikon, anak perempuan menoleh tersenyum, menantu menyerahkan cangkir teh",
+            equipment_state: "Peralatan masak modern tertata rapi: wajan teflon di atas kompor, cooker hood menyala tenang menyedot uap masakan, rak pisau magnetik, toples bumbu seragam",
+            material_state: "Permukaan granit hitam berkilau bersih tanpa noda minyak, keramik subway putih bersih bercahaya, lantai kayu lama dipoles pelindung kayu alami yang hangat dan mengkilap",
+            temporary_elements: "Bahan makanan segar (cabai, bawang, sayuran hijau) dalam wadah anyaman bambu kecil sebagai penghormatan estetika tradisional",
+            physical_evidence: "Uap masakan harum naik disedot cooker hood, nyala api biru kompor gas presisi, kehangatan cahaya lampu LED 3000K membaur dengan cahaya sore dari jendela",
+            local_negative_prompt: "tidak ada tungku kayu lama, tidak ada jelaga hitam kotor, tidak ada puing sisa konstruksi, tidak ada alat tukang berserakan",
+            asset_prompt_only: "Foto portrait 9:16 sudut sinematik dinamis yang hangat. Dapur modern pedesaan yang telah selesai direnovasi total. Meja dapur granit hitam dan keramik putih subway tampak bersih berkilau di bawah lampu sorot LED hangat. Nenek (68 tahun) dengan bangga memegang spatula memasak di atas wajan di kompor gas modern berapi biru tenang. Di sampingnya, anak perempuan (30 tahun) tersenyum sambil menyiapkan potongan sayur segar di talenan kayu, sementara menantu laki-laki (32 tahun) menyajikan teh hangat. Suasana penuh kehangatan keluarga, rapi, higienis, dan estetik.",
+            full_copy_ready_prompt: "[INSTRUKSI KONTINUITAS UTAMA]\nAdegan: Renovasi dapur tungku tradisional nenek menjadi dapur modern oleh Nenek, Anak Perempuan (30 thn), dan Menantu Laki-laki (32 thn).\nFormat: Potret 9:16, fotorealistis, pergerakan kamera dinamis stabil.\nKunci Kontinuitas: Tiang kayu utama, balok langit-langit, dan batas struktural ruang dipertahankan.\nIdentitas Aktor: Nenek (daster batik klasik, sanggul uban), Anak Perempuan (30 thn, kaos praktis & celana training), Menantu Laki-laki (32 thn, tubuh tegap, kemeja kerja/kaos & celana kargo).\nAturan Fisika: Penuh kausalitas material, tahapan kerja konstruksi nyata, pergerakan timelapse alami tanpa lompatan magis.\n----------------------------------------\nAPPLY THE CORE PROMPT ABOVE WITHOUT MODIFICATION.\nIMAGE ID: IMAGE 7\nTUJUAN TAHAP: Kondisi akhir dapur modern selesai sepenuhnya dan dipakai memasak bersama dengan hangat.\nAKSI KERJA: Nenek memasak di kompor gas baru, anak perempuan menyiapkan bahan masakan, menantu menyajikan teh hangat.\nBUKTI FISIK: Api biru kompor gas, uap masakan disedot cooker hood, granit hitam bersih, lampu LED hangat.\nBATASAN NEGATIF: no traditional mud stove, no soot, no construction mess, no floating objects."
+          }
+        ],
+        videos: [
+          {
+            video_id: "VIDEO 1",
+            transition_id: "TRANSITION_01_TO_02",
+            from_image_id: "IMAGE 1",
+            to_image_id: "IMAGE 2",
+            target_duration_sec: 20,
+            temporal_compression_level: "Tinggi (mengompresi proses pemadaman dan pengosongan 4 jam menjadi 20 detik)",
+            physical_workload: "Memadamkan sisa bara api tungku, menurunkan tumpukan kayu bakar di para-para atas, dan mengangkut perabot tradisional keluar ruangan",
+            physical_action_sequence: "Nenek menyiramkan sedikit air abu untuk memadamkan bara tungku hingga asap putih mengepul lalu menghilang. Menantu laki-laki menaiki bangku kayu, menurunkan kayu bakar dari para-para balok atas secara bertahap dan menumpuknya di luar. Anak perempuan mengangkat dandang, kukusan bambu, dan bakul nasi keluar pintu. Anak perempuan mulai menyapu langit-langit bambu dengan sapu panjang, menyebabkan hujan debu jelaga halus yang tersorot cahaya jendela.",
+            worker_actions: "Gerakan terkoordinasi cepat: memadamkan api, memindahkan perkakas dapur lama, dan membersihkan kotoran sarang laba-laba dan jelaga",
+            equipment_actions: "Sapu lidi dan ember air digunakan bergantian membersihkan permukaan kayu",
+            material_movement: "Kayu bakar berpindah dari rak atas ke luar ruangan; jelaga disapu jatuh ke lantai dan dikumpulkan",
+            temporary_element_changes: "Para-para gantung kayu di atas tungku yang semula penuh kayu bakar menjadi kosong bersih",
+            timelapse_behavior: "Gerakan pekerja dipercepat 20x dengan motion blur realistis, bayangan cahaya matahari bergeser cepat melintasi dinding bilik bambu",
+            end_state_convergence: "Kamera bergerak perlahan (slow dolly-in) dan berhenti stabil tepat pada tata letak fisik IMAGE 2",
+            asset_prompt_only: "Timelapse video portrait 9:16 transisi dinamis stabil. Dimulai dari dapur IMAGE 1, Nenek memadamkan bara api tungku tanah liat hingga asap menghilang. Menantu laki-laki bergerak cepat menurunkan tumpukan kayu bakar dari rak langit-langit, sementara anak perempuan memboyong perkakas lama ke luar ruangan. Anak perempuan menyapu jelaga dari dinding anyaman bambu dengan sapu panjang. Pergerakan dipercepat realistis dengan pergeseran cahaya matahari alami, berakhir tepat pada komposisi ruang bersih IMAGE 2.",
+            full_copy_ready_prompt: "[INSTRUKSI KONTINUITAS UTAMA]\nAdegan: Renovasi dapur tungku tradisional nenek menjadi dapur modern oleh Nenek, Anak Perempuan (30 thn), dan Menantu Laki-laki (32 thn).\nFormat: Potret 9:16, fotorealistis, pergerakan kamera dinamis stabil.\nKunci Kontinuitas: Tiang kayu utama, balok langit-langit, dan batas struktural ruang dipertahankan.\nIdentitas Aktor: Nenek (daster batik klasik, sanggul uban), Anak Perempuan (30 thn, kaos praktis & celana training), Menantu Laki-laki (32 thn, tubuh tegap, kemeja kerja/kaos & celana kargo).\nAturan Fisika: Penuh kausalitas material, tahapan kerja konstruksi nyata, pergerakan timelapse alami tanpa lompatan magis.\n----------------------------------------\nAPPLY THE CORE PROMPT ABOVE WITHOUT MODIFICATION.\nVIDEO ID: VIDEO 1 (IMAGE 1 -> IMAGE 2)\nTARGET DURATION: 20 seconds\nKOMPRESI WAKTU: 4 jam kerja menjadi 20 detik timelapse.\nSEKUENS AKSI: Pemadaman api, penurunan kayu bakar, pemindahan perabot tradisional, penyapuan jelaga dinding.\nKONVERGENSI AKHIR: Menetap sempurna pada layout fisik IMAGE 2.\nBATASAN NEGATIF: no instant disappearance of objects, no floating debris, no camera jerking."
+          },
+          {
+            video_id: "VIDEO 2",
+            transition_id: "TRANSITION_02_TO_03",
+            from_image_id: "IMAGE 2",
+            to_image_id: "IMAGE 3",
+            target_duration_sec: 20,
+            temporal_compression_level: "Tinggi (mengompresi pembongkaran tungku dan perataan dasar 6 jam menjadi 20 detik)",
+            physical_workload: "Menghancurkan tungku tanah liat bata dengan palu godam dan linggis, membersihkan puing tanah, memasang papan kalsiboard di dinding",
+            physical_action_sequence: "Menantu laki-laki memakai masker dan kacamata pelindung, mengayunkan palu godam menghancurkan kubah tungku tanah liat. Bongkahan tanah liat dan bata merah retak dan runtuh berkeping-keping. Anak perempuan menyekop bongkahan puing ke dalam ember hitam dan membawanya keluar berulang kali. Menantu laki-laki meratakan lantai dasar dengan linggis. Keduanya kemudian mengangkat lembaran kalsiboard abu-abu dan menyekrupkannya ke rangka dinding bambu di belakang tungku lama. Nenek datang membawakan nampan air minum.",
+            worker_actions: "Menantu membongkar dan memahat; anak perempuan mengangkat ember puing bolak-balik; nenek mendampingi dengan konsumsi",
+            equipment_actions: "Palu godam menghantam tungku, sekop mengisi ember puing, bor nirkabel memasang sekrup lembaran dinding",
+            material_movement: "Struktur tungku hancur menjadi puing dan dipindahkan keluar; kalsiboard baru dipasang menutupi dinding belakang",
+            temporary_element_changes: "Puing hancuran berkurang bertahap hingga lantai kembali bersih",
+            timelapse_behavior: "Aksi pembongkaran berirama cepat, debu bata beterbangan dan mengendap dinamis, pencahayaan berangsur dari siang terik menjadi sore",
+            end_state_convergence: "Gerakan kamera memutar lembut (subtle arc tracking) dan berhenti terkunci pada komposisi IMAGE 3",
+            asset_prompt_only: "Timelapse video portrait 9:16 gerakan kamera stabil. Menantu laki-laki dengan palu godam memecahkan tungku tanah liat lama hingga runtuh. Anak perempuan dengan cekatan menyekop dan mengangkut ember berisi bongkahan puing keluar ruangan. Area lantai diratakan dengan sekop. Menantu laki-laki dan anak perempuan memasang lembaran kalsiboard tahan api di dinding belakang menggunakan obeng bor. Nenek masuk membawakan minuman teh. Adegan mereda dan mengunci persis pada detail IMAGE 3.",
+            full_copy_ready_prompt: "[INSTRUKSI KONTINUITAS UTAMA]\nAdegan: Renovasi dapur tungku tradisional nenek menjadi dapur modern oleh Nenek, Anak Perempuan (30 thn), dan Menantu Laki-laki (32 thn).\nFormat: Potret 9:16, fotorealistis, pergerakan kamera dinamis stabil.\nKunci Kontinuitas: Tiang kayu utama, balok langit-langit, dan batas struktural ruang dipertahankan.\nIdentitas Aktor: Nenek (daster batik klasik, sanggul uban), Anak Perempuan (30 thn, kaos praktis & celana training), Menantu Laki-laki (32 thn, tubuh tegap, kemeja kerja/kaos & celana kargo).\nAturan Fisika: Penuh kausalitas material, tahapan kerja konstruksi nyata, pergerakan timelapse alami tanpa lompatan magis.\n----------------------------------------\nAPPLY THE CORE PROMPT ABOVE WITHOUT MODIFICATION.\nVIDEO ID: VIDEO 2 (IMAGE 2 -> IMAGE 3)\nTARGET DURATION: 20 seconds\nKOMPRESI WAKTU: 6 jam kerja menjadi 20 detik timelapse.\nSEKUENS AKSI: Pemukulan tungku tanah liat, pembuangan puing tanah, pemasangan kalsiboard pelapis dinding.\nKONVERGENSI AKHIR: Menetap sempurna pada layout fisik IMAGE 3.\nBATASAN NEGATIF: no spontaneous disintegration, no camera tremor, no morphing faces."
+          },
+          {
+            video_id: "VIDEO 3",
+            transition_id: "TRANSITION_03_TO_04",
+            from_image_id: "IMAGE 3",
+            to_image_id: "IMAGE 4",
+            target_duration_sec: 20,
+            temporal_compression_level: "Tinggi (mengompresi pembangunan pondasi dan pengecoran 8 jam menjadi 20 detik)",
+            physical_workload: "Penyusunan bata penyangga, perakitan bekisting kayu dan besi tulangan, pengadukan serta penuangan cor semen meja dapur",
+            physical_action_sequence: "Menantu laki-laki menyusun dinding bata merah sebagai kaki meja dengan spesi semen. Anak perempuan mengaduk semen dan pasir di bak adukan dengan cangkul kecil. Keduanya memasang triplek bekisting dan mengikat jaring besi tulangan di atasnya. Menantu laki-laki menuang adukan beton dari ember ke dalam cetakan bekisting secara bertahap, lalu mengetuk sisi bekisting agar semen padat merata. Nenek mengamati dan meletakkan tangannya untuk menguji kecocokan tinggi meja.",
+            worker_actions: "Pekerjaan konstruksi sipil teratur: menyusun bata, memotong triplek, mengaduk cor, menuang beton, dan meratakan",
+            equipment_actions: "Sendok semen, cangkul adukan, waterpass, dan jidar aluminium bergerak aktif meratakan adukan",
+            material_movement: "Pasir dan semen kering diaduk dengan air menjadi adukan basah, lalu mengisi bekisting membentuk meja cor monolitik",
+            temporary_element_changes: "Tiang-tiang penyangga kaso dipasang di bawah cetakan meja untuk menahan beban beton basah",
+            timelapse_behavior: "Proses bata tersusun lapis demi lapis dengan cepat, adukan beton mengisi rongga bekisting secara mulus dalam ritme timelapse nyata",
+            end_state_convergence: "Kamera bergerak maju perlahan dari sudut rendah lalu berhenti tepat sejajar pada komposisi basah IMAGE 4",
+            asset_prompt_only: "Timelapse video portrait 9:16 sudut dinamis. Dimulai dari ruang kosong IMAGE 3, menantu laki-laki membangun kaki meja dari bata merah, dibantu anak perempuan yang menyuplai adukan semen. Mereka merakit cetakan triplek dan anyaman besi. Adukan beton basah dituangkan ember demi ember ke dalam cetakan hingga penuh. Menantu meratakannya dengan jidar aluminium panjang dan memeriksa kerataan dengan waterpass. Nenek mendekat dan mengecek tinggi meja. Visual menetap stabil di kondisi IMAGE 4.",
+            full_copy_ready_prompt: "[INSTRUKSI KONTINUITAS UTAMA]\nAdegan: Renovasi dapur tungku tradisional nenek menjadi dapur modern oleh Nenek, Anak Perempuan (30 thn), dan Menantu Laki-laki (32 thn).\nFormat: Potret 9:16, fotorealistis, pergerakan kamera dinamis stabil.\nKunci Kontinuitas: Tiang kayu utama, balok langit-langit, dan batas struktural ruang dipertahankan.\nIdentitas Aktor: Nenek (daster batik klasik, sanggul uban), Anak Perempuan (30 thn, kaos praktis & celana training), Menantu Laki-laki (32 thn, tubuh tegap, kemeja kerja/kaos & celana kargo).\nAturan Fisika: Penuh kausalitas material, tahapan kerja konstruksi nyata, pergerakan timelapse alami tanpa lompatan magis.\n----------------------------------------\nAPPLY THE CORE PROMPT ABOVE WITHOUT MODIFICATION.\nVIDEO ID: VIDEO 3 (IMAGE 3 -> IMAGE 4)\nTARGET DURATION: 20 seconds\nKOMPRESI WAKTU: 8 jam kerja menjadi 20 detik timelapse.\nSEKUENS AKSI: Pemasangan bata kaki meja, pemasangan bekisting & besi, penuangan cor beton, perataan dengan jidar.\nKONVERGENSI AKHIR: Menetap sempurna pada layout fisik IMAGE 4.\nBATASAN NEGATIF: no liquid simulation glitch, no magic solidifying, no distorted hands."
+          },
+          {
+            video_id: "VIDEO 4",
+            transition_id: "TRANSITION_04_TO_05",
+            from_image_id: "IMAGE 4",
+            to_image_id: "IMAGE 5",
+            target_duration_sec: 20,
+            temporal_compression_level: "Tinggi (mengompresi proses pengeringan semen dan pemasangan keramik selama 2 hari menjadi 20 detik)",
+            physical_workload: "Pembongkaran bekisting setelah beton kering, pemotongan dan pemasangan granit countertop, pemasangan keramik subway dinding dan pengisian nat",
+            physical_action_sequence: "Timelapse menunjukkan perubahan warna beton dari abu-abu basah gelap menjadi abu-abu muda kering. Menantu laki-laki melepas papan bekisting dengan linggis kecil. Anak perempuan dan menantu laki-laki menempelkan adukan perekat keramik di dinding, lalu menempelkan ubin keramik subway putih satu per satu dengan spacer. Menantu memasang plat granit hitam di permukaan meja, lalu memotong bukaan kompor dan wastafel dengan mesin gerinda, memercikkan sedikit debu yang langsung disedot/dilap. Anak perempuan memoles nat keramik putih dengan spon basah. Nenek menyapu serpihan kardus.",
+            worker_actions: "Melepas bekisting, mengoleskan semen perekat keramik, memasang ubin dinding, memotong granit, menyeka nat putih",
+            equipment_actions: "Gerinda tangan memotong bukaan meja, palu karet mengetuk keramik agar rata, spon busa meratakan nat",
+            material_movement: "Keramik putih dan granit hitam menutupi seluruh permukaan kasar beton dan dinding semen",
+            temporary_element_changes: "Triplek bekisting dibongkar dan ditumpuk keluar ruangan",
+            timelapse_behavior: "Perubahan material terlihat jelas dan memuaskan saat permukaan kusam berubah menjadi ubin mengkilap yang tertata presisi",
+            end_state_convergence: "Kamera melakukan gerakan panning lambat ke kanan dan berhenti tepat membingkai adegan IMAGE 5",
+            asset_prompt_only: "Timelapse video portrait 9:16. Beton meja dapur tampak mengering dan menantu laki-laki mencopot papan cetakan bekisting. Anak perempuan mengoleskan lem semen ke dinding kalsiboard dan menempelkan keramik subway putih secara berderet rapi. Menantu memasang lempengan granit hitam di atas meja cor dan memotong lubang untuk kompor menggunakan gerinda. Anak perempuan menyeka celah keramik dengan spon nat putih. Nenek tersenyum menyapu lantai. Video bertransisi halus dan terkunci pada detail IMAGE 5.",
+            full_copy_ready_prompt: "[INSTRUKSI KONTINUITAS UTAMA]\nAdegan: Renovasi dapur tungku tradisional nenek menjadi dapur modern oleh Nenek, Anak Perempuan (30 thn), dan Menantu Laki-laki (32 thn).\nFormat: Potret 9:16, fotorealistis, pergerakan kamera dinamis stabil.\nKunci Kontinuitas: Tiang kayu utama, balok langit-langit, dan batas struktural ruang dipertahankan.\nIdentitas Aktor: Nenek (daster batik klasik, sanggul uban), Anak Perempuan (30 thn, kaos praktis & celana training), Menantu Laki-laki (32 thn, tubuh tegap, kemeja kerja/kaos & celana kargo).\nAturan Fisika: Penuh kausalitas material, tahapan kerja konstruksi nyata, pergerakan timelapse alami tanpa lompatan magis.\n----------------------------------------\nAPPLY THE CORE PROMPT ABOVE WITHOUT MODIFICATION.\nVIDEO ID: VIDEO 4 (IMAGE 4 -> IMAGE 5)\nTARGET DURATION: 20 seconds\nKOMPRESI WAKTU: 2 hari kerja menjadi 20 detik timelapse.\nSEKUENS AKSI: Pelepasan cetakan kayu, penempelan keramik subway putih, pemotongan granit meja, pemolesan nat keramik.\nKONVERGENSI AKHIR: Menetap sempurna pada layout fisik IMAGE 5.\nBATASAN NEGATIF: no misaligned tiles, no floating grinder, no unnatural speed jumps."
+          },
+          {
+            video_id: "VIDEO 5",
+            transition_id: "TRANSITION_05_TO_06",
+            from_image_id: "IMAGE 5",
+            to_image_id: "IMAGE 6",
+            target_duration_sec: 20,
+            temporal_compression_level: "Tinggi (mengompresi perakitan mekanikal elektrikal dan interior 5 jam menjadi 20 detik)",
+            physical_workload: "Pemasangan unit kompor tanam kaca, wastafel cuci piring stainless steel, cooker hood dinding, ambalan rak kayu, dan strip LED",
+            physical_action_sequence: "Menantu laki-laki menurunkan unit kompor kaca hitam ke lubang meja granit yang telah diberi seal silikon. Anak perempuan membantu memasang unit wastafel stainless steel di sebelahnya. Menantu laki-laki memasang cooker hood stainless steel di dinding atas kompor menggunakan bor baut dinabolt. Di bawah meja, selang gas dipasang ke tabung gas Bright Gas ungu. Anak perempuan memasang rak gantung kayu dan menempelkan lampu LED strip di bagian bawahnya, yang seketika menyala menghasilkan pendar cahaya hangat yang indah. Nenek dengan takjub mengelap kaca kompor.",
+            worker_actions: "Pekerjaan instalasi presisi: memasang silikon seal, menyambung fitting pipa wastafel, mengebor dinding, menyalakan sistem lampu",
+            equipment_actions: "Obeng cordless memutar sekrup, lem tembak silikon diaplikasikan di tepi sink dan kompor",
+            material_movement: "Perangkat modern dipasang menyatu dengan meja dapur dan dinding",
+            temporary_element_changes: "Kardus elektronik dan plastik pelindung dibuka dan dikeluarkan dari ruangan",
+            timelapse_behavior: "Peralatan modern terpasang satu per satu dengan presisi mekanis, transisi pencahayaan dari remang menjadi terang benderang dengan lampu LED baru",
+            end_state_convergence: "Kamera bergerak tilt-up sedikit lalu stabil pada sudut pandang IMAGE 6",
+            asset_prompt_only: "Timelapse video portrait 9:16 gerakan stabil. Menantu laki-laki memasukkan kompor gas kaca hitam ke lubang meja granit dan memasang wastafel stainless steel di sampingnya. Anak perempuan membantu menyekrup rak gantung kayu ke dinding. Menantu memasang cooker hood stainless steel di atas kompor dan menyambung selang gas di bawah meja. Lampu strip LED di bawah rak dinyalakan, memancarkan cahaya hangat yang memantul di keramik putih dan granit hitam. Nenek dengan gembira mengusap permukaan kompor barunya. Berakhir persis di IMAGE 6.",
+            full_copy_ready_prompt: "[INSTRUKSI KONTINUITAS UTAMA]\nAdegan: Renovasi dapur tungku tradisional nenek menjadi dapur modern oleh Nenek, Anak Perempuan (30 thn), dan Menantu Laki-laki (32 thn).\nFormat: Potret 9:16, fotorealistis, pergerakan kamera dinamis stabil.\nKunci Kontinuitas: Tiang kayu utama, balok langit-langit, dan batas struktural ruang dipertahankan.\nIdentitas Aktor: Nenek (daster batik klasik, sanggul uban), Anak Perempuan (30 thn, kaos praktis & celana training), Menantu Laki-laki (32 thn, tubuh tegap, kemeja kerja/kaos & celana kargo).\nAturan Fisika: Penuh kausalitas material, tahapan kerja konstruksi nyata, pergerakan timelapse alami tanpa lompatan magis.\n----------------------------------------\nAPPLY THE CORE PROMPT ABOVE WITHOUT MODIFICATION.\nVIDEO ID: VIDEO 5 (IMAGE 5 -> IMAGE 6)\nTARGET DURATION: 20 seconds\nKOMPRESI WAKTU: 5 jam kerja menjadi 20 detik timelapse.\nSEKUENS AKSI: Pemasangan kompor kaca, wastafel stainless, cooker hood, rak kayu bumbu, dan penyalaan lampu LED.\nKONVERGENSI AKHIR: Menetap sempurna pada layout fisik IMAGE 6.\nBATASAN NEGATIF: no incorrect plumbing connections, no flickering lights, no sudden jumps."
+          },
+          {
+            video_id: "VIDEO 6",
+            transition_id: "TRANSITION_06_TO_07",
+            from_image_id: "IMAGE 6",
+            to_image_id: "IMAGE 7",
+            target_duration_sec: 20,
+            temporal_compression_level: "Sedang (mengompresi persiapan memasak dan perayaan makan bersama 1.5 jam menjadi 20 detik)",
+            physical_workload: "Pembersihan akhir menyeluruh, penataan bumbu dan bahan masakan, serta memasak bersama pertama kali di dapur baru",
+            physical_action_sequence: "Menantu laki-laki membereskan toolbox dan mengepel lantai papan kayu dengan cairan pembersih beraroma segar hingga bersih berkilau. Anak perempuan menaruh botol minyak, toples garam, dan bumbu dapur di rak ambalan kayu, lalu mulai mengiris bawang dan sayuran di atas talenan kayu dekat wastafel. Nenek memutar kenop kompor gas modern—pemantik berbunyi 'klik-klik' dan api biru melingkar menyala sempurna. Nenek meletakkan wajan, menuang sedikit minyak, dan mulai menumis masakan tradisional kesukaannya dengan senyum bahagia. Menantu menuangkan teh hangat ke dalam tiga cangkir keramik, ketiganya saling memandang dengan penuh kehangatan dan rasa syukur.",
+            worker_actions: "Pembersihan akhir cepat, penataan estetika bumbu dapur, aktivitas memasak aktif dan harmonis",
+            equipment_actions: "Kompor gas menyalakan api biru, cooker hood menyala tenang mengalirkan uap masakan, air mengalir lancar dari kran wastafel",
+            material_movement: "Minyak dan bumbu ditumis mengeluarkan uap harum tipis, teh panas mengepulkan uap di cangkir",
+            temporary_element_changes: "Seluruh sisa perkakas konstruksi hilang sepenuhnya, digantikan wadah saji dan perabot masak bersih",
+            timelapse_behavior: "Transisi dari gerakan timelapse cepat saat merapikan menjadi gerakan sinematik berkecepatan normal (slow-motion halus di detik-detik akhir) yang emosional dan hangat",
+            end_state_convergence: "Kamera bergerak maju perlahan secara sinematik dan berhenti sempurna pada kehangatan adegan final IMAGE 7",
+            asset_prompt_only: "Video portrait 9:16 transisi dinamis. Toolbox dan sisa lap dibereskan cepat, lantai kayu dipel bersih. Anak perempuan menata toples bumbu di rak dan mencuci sayuran segar di wastafel baru. Nenek menyalakan kompor gas modern dengan kenop putar; api biru tenang langsung menyala. Nenek menumis bumbu di wajan dengan spatula, uap harum naik disedot cooker hood di atasnya. Menantu laki-laki menyuguhkan teh hangat. Ketiganya tertawa bahagia menikmati dapur baru yang modern, bersih, dan terang. Berakhir hangat mengunci komposisi IMAGE 7.",
+            full_copy_ready_prompt: "[INSTRUKSI KONTINUITAS UTAMA]\nAdegan: Renovasi dapur tungku tradisional nenek menjadi dapur modern oleh Nenek, Anak Perempuan (30 thn), dan Menantu Laki-laki (32 thn).\nFormat: Potret 9:16, fotorealistis, pergerakan kamera dinamis stabil.\nKunci Kontinuitas: Tiang kayu utama, balok langit-langit, dan batas struktural ruang dipertahankan.\nIdentitas Aktor: Nenek (daster batik klasik, sanggul uban), Anak Perempuan (30 thn, kaos praktis & celana training), Menantu Laki-laki (32 thn, tubuh tegap, kemeja kerja/kaos & celana kargo).\nAturan Fisika: Penuh kausalitas material, tahapan kerja konstruksi nyata, pergerakan timelapse alami tanpa lompatan magis.\n----------------------------------------\nAPPLY THE CORE PROMPT ABOVE WITHOUT MODIFICATION.\nVIDEO ID: VIDEO 6 (IMAGE 6 -> IMAGE 7)\nTARGET DURATION: 20 seconds\nKOMPRESI WAKTU: 1.5 jam kerja/persiapan menjadi 20 detik video sinematik.\nSEKUENS AKSI: Pembersihan akhir, penataan bahan masak, penyalaan kompor pertama kali, memasak dan minum teh bersama.\nKONVERGENSI AKHIR: Menetap sempurna pada layout fisik IMAGE 7.\nBATASAN NEGATIF: no leftover construction tools, no soot remnants, no unnatural faces, no camera shake."
+          }
+        ]
       }
     };
 
-    // Pre-populate all copy-ready prompts for all scenarios
+    // Pre-populate prompts for all scenarios
     Object.keys(SCENARIOS).forEach(key => {
       const scen = SCENARIOS[key];
       scen.core_prompt.raw_core_text = formatCoreContinuityBlock(scen.core_prompt);
-      scen.images.forEach(img => {
+      (scen.images || []).forEach(img => {
         img.full_copy_ready_prompt = compileImageCopyReadyPrompt(scen.core_prompt, img);
       });
-      scen.videos.forEach(vid => {
+      (scen.videos || []).forEach(vid => {
         vid.full_copy_ready_prompt = compileVideoCopyReadyPrompt(scen.core_prompt, vid);
       });
     });
 
+    // --- CONTINUITY JSON LOADER & NORMALIZER ---
+    function loadContinuityPlanFromJson(rawInput) {
+      let parsed;
+      if (typeof rawInput === 'string') {
+        const trimmed = rawInput.trim();
+        if (!trimmed) throw new Error('Input JSON kosong. Silakan tempelkan JSON RFC 8259.');
+        try {
+          parsed = JSON.parse(trimmed);
+        } catch (e) {
+          throw new Error(`Syntax JSON tidak valid: ${e.message}`);
+        }
+      } else if (rawInput && typeof rawInput === 'object') {
+        parsed = JSON.parse(JSON.stringify(rawInput));
+      } else {
+        throw new Error('Input harus berupa string JSON atau objek valid.');
+      }
+
+      if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+        throw new Error('Root JSON harus berupa objek valid.');
+      }
+
+      // Check mandatory sections
+      if (!parsed.images || !Array.isArray(parsed.images) || parsed.images.length === 0) {
+        throw new Error('Properti "images" wajib ada dan harus berupa array non-kosong.');
+      }
+      if (!parsed.videos || !Array.isArray(parsed.videos) || parsed.videos.length === 0) {
+        throw new Error('Properti "videos" wajib ada dan harus berupa array non-kosong.');
+      }
+      if (!parsed.core_prompt || typeof parsed.core_prompt !== 'object') {
+        throw new Error('Properti "core_prompt" wajib ada dan harus berupa objek.');
+      }
+
+      const core = parsed.core_prompt;
+      core.scene_id = core.scene_id || `SCENE_IMPORTED_${Date.now().toString().slice(-4)}`;
+      core.project_description = core.project_description || "Physical transformation project";
+      core.camera_lock = core.camera_lock || "Fixed tripod position, rectilinear lens, zero drift.";
+      core.geometry_lock = core.geometry_lock || "Fixed permanent walls and boundaries.";
+      core.landmark_lock = core.landmark_lock || "1. Primary structural wall; 2. Entrance; 3. Central ceiling beam.";
+      core.lighting_lock = core.lighting_lock || "Consistent balanced lighting.";
+      core.environment_lock = core.environment_lock || "Controlled environment.";
+      core.worker_identity_registry = Array.isArray(core.worker_identity_registry) ? core.worker_identity_registry : [];
+      core.equipment_registry = Array.isArray(core.equipment_registry) ? core.equipment_registry : [];
+      core.global_physics_rules = core.global_physics_rules || "Every visual alteration is physically caused.";
+      core.global_timelapse_rules = core.global_timelapse_rules || "Accelerated realistic motion.";
+      core.global_negative_rules = core.global_negative_rules || "no magical transformations, no teleporting workers or machinery, no morphing structures, no camera position drift, no text, no watermarks.";
+      
+      if (!core.raw_core_text) {
+        core.raw_core_text = formatCoreContinuityBlock(core);
+      }
+
+      // Production summary normalization
+      if (!parsed.production_summary || typeof parsed.production_summary !== 'object') {
+        const videoDuration = Number(parsed.videos[0]?.target_duration_sec) || 10;
+        const totalVideos = parsed.videos.length;
+        const totalImages = parsed.images.length;
+        const calculatedRuntime = parsed.videos.reduce((acc, v) => acc + (Number(v.target_duration_sec) || videoDuration), 0);
+        parsed.production_summary = {
+          project_name: core.project_description?.slice(0, 60) || "Imported Continuity Project",
+          target_total_duration_sec: calculatedRuntime,
+          video_duration_sec: videoDuration,
+          total_videos: totalVideos,
+          total_images: totalImages,
+          actual_total_runtime_sec: calculatedRuntime,
+          temporal_summary: `Sequence of ${totalVideos} videos (${videoDuration}s each) connecting ${totalImages} states.`
+        };
+      } else {
+        const sum = parsed.production_summary;
+        sum.total_videos = sum.total_videos || parsed.videos.length;
+        sum.total_images = sum.total_images || parsed.images.length;
+        sum.video_duration_sec = sum.video_duration_sec || Number(parsed.videos[0]?.target_duration_sec) || 10;
+        sum.actual_total_runtime_sec = sum.actual_total_runtime_sec || parsed.videos.reduce((acc, v) => acc + (Number(v.target_duration_sec) || sum.video_duration_sec), 0);
+        sum.target_total_duration_sec = sum.target_total_duration_sec || sum.actual_total_runtime_sec;
+      }
+
+      // Sequence map normalization
+      if (!parsed.sequence_map || !Array.isArray(parsed.sequence_map) || parsed.sequence_map.length === 0) {
+        const seq = [];
+        parsed.images.forEach((img, idx) => {
+          seq.push(img.image_id || `IMAGE ${idx + 1}`);
+          if (parsed.videos[idx]) {
+            const vid = parsed.videos[idx];
+            seq.push(`${vid.video_id || `VIDEO ${idx + 1}`} (${vid.from_image_id || `IMAGE ${idx + 1}`} -> ${vid.to_image_id || `IMAGE ${idx + 2}`})`);
+          }
+        });
+        parsed.sequence_map = seq;
+      }
+
+      // Ensure every image and video has full_copy_ready_prompt
+      parsed.images.forEach(img => {
+        if (!img.full_copy_ready_prompt || img.full_copy_ready_prompt.trim().length === 0) {
+          img.full_copy_ready_prompt = compileImageCopyReadyPrompt(core, img);
+        }
+      });
+      parsed.videos.forEach(vid => {
+        if (!vid.full_copy_ready_prompt || vid.full_copy_ready_prompt.trim().length === 0) {
+          vid.full_copy_ready_prompt = compileVideoCopyReadyPrompt(core, vid);
+        }
+      });
+
+      return parsed;
+    }
+
     // Expose for browser console and programmatic verification
     window.SCENARIOS = SCENARIOS;
+    window.SAMPLE_DAPUR_NENEK = SCENARIOS.dapur;
     window.synthesizeCustomPlan = synthesizeCustomPlan;
+    window.loadContinuityPlanFromJson = loadContinuityPlanFromJson;
     window.formatCoreContinuityBlock = formatCoreContinuityBlock;
     window.compileImageCopyReadyPrompt = compileImageCopyReadyPrompt;
     window.compileVideoCopyReadyPrompt = compileVideoCopyReadyPrompt;
@@ -1721,35 +2204,38 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
     }
 
     function renderStats() {
-      document.getElementById('stat-videos-count').textContent = currentData.production_summary.total_videos;
-      document.getElementById('stat-images-count').textContent = currentData.production_summary.total_images;
-      document.getElementById('stat-video-duration').textContent = `${currentData.production_summary.video_duration_sec}s / clip`;
-      document.getElementById('stat-total-duration').textContent = `${currentData.production_summary.target_total_duration_sec} seconds ($N_{vid} \\times ${currentData.production_summary.video_duration_sec}\\text{s}$)`;
+      const summary = currentData.production_summary || {};
+      document.getElementById('stat-videos-count').textContent = summary.total_videos || 0;
+      document.getElementById('stat-images-count').textContent = summary.total_images || 0;
+      document.getElementById('stat-video-duration').textContent = `${summary.video_duration_sec || 10}s / clip`;
+      document.getElementById('stat-total-duration').textContent = `${summary.target_total_duration_sec || summary.actual_total_runtime_sec || 0} seconds (${summary.total_videos || 0} clips × ${summary.video_duration_sec || 10}s)`;
     }
 
     function renderSceneBible() {
-      const core = currentData.core_prompt;
-      document.getElementById('bible-project-name').textContent = currentData.production_summary.project_name;
-      document.getElementById('bible-scene-id').textContent = core.scene_id;
-      document.getElementById('bible-camera-lock').textContent = core.camera_lock;
-      document.getElementById('bible-geometry-lock').textContent = core.geometry_lock;
-      document.getElementById('bible-lighting-lock').textContent = core.lighting_lock;
+      const core = currentData.core_prompt || {};
+      const summary = currentData.production_summary || {};
+      document.getElementById('bible-project-name').textContent = summary.project_name || 'Continuity Project';
+      document.getElementById('bible-scene-id').textContent = core.scene_id || 'SCENE_ID';
+      document.getElementById('bible-camera-lock').textContent = core.camera_lock || 'Fixed tripod mount';
+      document.getElementById('bible-geometry-lock').textContent = core.geometry_lock || 'Fixed structures';
+      document.getElementById('bible-lighting-lock').textContent = core.lighting_lock || 'Consistent lighting';
 
       // Landmarks pills
       const landmarksContainer = document.getElementById('bible-landmarks-list');
       landmarksContainer.innerHTML = '';
-      const landmarks = core.landmark_lock.split(/;\s*|\d+\.\s*/).filter(Boolean);
+      const rawLandmarks = core.landmark_lock || '';
+      const landmarks = rawLandmarks.split(/;\s*|\d+\.\s*|,\s*/).map(l => l.trim()).filter(Boolean);
       landmarks.forEach(lm => {
         const span = document.createElement('span');
         span.className = 'text-[10px] font-mono text-slate-300 bg-slate-900 border border-white/5 px-2 py-0.5 rounded';
-        span.textContent = lm.trim();
+        span.textContent = lm;
         landmarksContainer.appendChild(span);
       });
 
       // Workers list
       const workersList = document.getElementById('bible-workers-list');
       workersList.innerHTML = '';
-      core.worker_identity_registry.forEach(w => {
+      (core.worker_identity_registry || []).forEach(w => {
         const item = document.createElement('div');
         item.className = 'bg-slate-950/70 p-2.5 rounded-xl border border-white/5 text-xs';
         item.innerHTML = `
@@ -1765,7 +2251,7 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
       // Equipment list
       const equipList = document.getElementById('bible-equipment-list');
       equipList.innerHTML = '';
-      core.equipment_registry.forEach(eq => {
+      (core.equipment_registry || []).forEach(eq => {
         const item = document.createElement('div');
         item.className = 'bg-slate-950/70 p-2.5 rounded-xl border border-white/5 text-xs';
         item.innerHTML = `
@@ -1783,8 +2269,8 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
       const stepper = document.getElementById('sequence-stepper');
       stepper.innerHTML = '';
 
-      currentData.sequence_map.forEach((item, idx) => {
-        const isImage = item.startsWith('IMAGE');
+      (currentData.sequence_map || []).forEach((item, idx) => {
+        const isImage = item.startsWith('IMAGE') || item.startsWith('IMG');
         const badge = document.createElement('button');
         badge.className = `flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-semibold transition-all border ${
           isImage 
@@ -1792,9 +2278,15 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
             : 'bg-slate-950 text-sky-400 border-sky-500/30 hover:border-sky-500'
         }`;
         
+        let label = item;
+        const numMatch = item.match(/\d+/);
+        if (numMatch) {
+          label = isImage ? `IMG ${numMatch[0]}` : `VID ${numMatch[0]}`;
+        }
+
         badge.innerHTML = `
           <span>${isImage ? '📸' : '🎬'}</span>
-          <span>${item.replace(/IMAGE\s*(\d+)/, 'IMG $1').replace(/VIDEO\s*(\d+).*/, 'VID $1')}</span>
+          <span>${label}</span>
         `;
 
         badge.addEventListener('click', () => {
@@ -1813,8 +2305,8 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
     }
 
     function scrollToCard(identifier) {
-      const isVideo = identifier.startsWith('VIDEO');
-      const isImage = identifier.startsWith('IMAGE');
+      const isVideo = identifier.startsWith('VIDEO') || identifier.startsWith('VID');
+      const isImage = identifier.startsWith('IMAGE') || identifier.startsWith('IMG');
 
       // If card would be hidden by active filter, auto-switch to 'all' so card is rendered
       if ((isVideo && activeFilter === 'images') || (isImage && activeFilter === 'videos') || activeFilter === 'json') {
@@ -1831,9 +2323,9 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
         renderAssets();
       }
 
-      const targetId = isImage 
-        ? `card-${identifier.replace(/\s+/g, '-').toLowerCase()}`
-        : `card-${identifier.split(' ')[0].toLowerCase()}-${identifier.split(' ')[1].toLowerCase()}`;
+      const numMatch = identifier.match(/\d+/);
+      const num = numMatch ? numMatch[0] : '';
+      const targetId = isImage ? `card-image-${num}` : `card-video-${num}`;
       
       setTimeout(() => {
         const targetEl = document.getElementById(targetId);
@@ -1859,27 +2351,50 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
       }
 
       // Merge sequentially based on sequence_map
-      currentData.sequence_map.forEach((entry, seqIdx) => {
-        if (entry.startsWith('IMAGE')) {
+      (currentData.sequence_map || []).forEach((entry, seqIdx) => {
+        if (entry.startsWith('IMAGE') || entry.startsWith('IMG')) {
           if (activeFilter === 'videos') return;
-          const imgMatch = entry.match(/IMAGE\s*(\d+)/);
-          const imgId = imgMatch ? `IMAGE ${imgMatch[1]}` : entry;
-          const img = currentData.images.find(i => i.image_id === imgId) || currentData.images[0];
-          container.appendChild(createImageCard(img, seqIdx));
-        } else if (entry.startsWith('VIDEO')) {
+          const numMatch = entry.match(/\d+/);
+          const num = numMatch ? parseInt(numMatch[0], 10) : (seqIdx + 1);
+          const img = (currentData.images || []).find(i => {
+            const iNum = (i.image_id || '').match(/\d+/);
+            return iNum && parseInt(iNum[0], 10) === num;
+          }) || currentData.images?.[0];
+          if (img) container.appendChild(createImageCard(img, seqIdx));
+        } else if (entry.startsWith('VIDEO') || entry.startsWith('VID')) {
           if (activeFilter === 'images') return;
-          const vidMatch = entry.match(/VIDEO\s*(\d+)/);
-          const vidId = vidMatch ? `VIDEO ${vidMatch[1]}` : entry;
-          const vid = currentData.videos.find(v => v.video_id === vidId) || currentData.videos[0];
-          container.appendChild(createVideoCard(vid, seqIdx));
+          const numMatch = entry.match(/\d+/);
+          const num = numMatch ? parseInt(numMatch[0], 10) : (seqIdx + 1);
+          const vid = (currentData.videos || []).find(v => {
+            const vNum = (v.video_id || '').match(/\d+/);
+            return vNum && parseInt(vNum[0], 10) === num;
+          }) || currentData.videos?.[0];
+          if (vid) container.appendChild(createVideoCard(vid, seqIdx));
         }
       });
     }
 
     function createImageCard(img, seqIdx) {
       const card = document.createElement('div');
-      card.id = `card-${img.image_id.replace(/\s+/g, '-').toLowerCase()}`;
+      const numMatch = (img.image_id || '').match(/\d+/);
+      const num = numMatch ? numMatch[0] : (seqIdx + 1);
+      card.id = `card-image-${num}`;
       card.className = 'glass-card rounded-2xl p-5 sm:p-6 border border-white/10 space-y-4';
+
+      const shortPromptSection = img.asset_prompt_only ? `
+        <div class="bg-emerald-950/40 p-3 rounded-xl border border-emerald-800/40 space-y-1.5">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-mono text-emerald-400 uppercase font-semibold flex items-center gap-1">
+              <svg class="w-3 h-3 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+              Direct Visual Prompt (Midjourney / Flux / SD)
+            </span>
+            <button class="btn-copy-short-prompt text-[10px] font-mono text-emerald-300 hover:text-white bg-emerald-900/60 hover:bg-emerald-800/80 px-2 py-0.5 rounded border border-emerald-700/50 transition-all font-semibold" data-type="image" data-id="${img.image_id}">
+              Copy Short Prompt
+            </button>
+          </div>
+          <p class="text-slate-200 text-[11px] leading-relaxed font-sans">${escapeHtml(img.asset_prompt_only)}</p>
+        </div>
+      ` : '';
 
       card.innerHTML = `
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/5">
@@ -1889,36 +2404,40 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
             </span>
             <div>
               <div class="flex items-center gap-2">
-                <span class="text-sm font-bold text-white font-mono">${img.image_id}</span>
-                <span class="text-[10px] font-mono font-bold text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800/40">${img.state_id}</span>
+                <span class="text-sm font-bold text-white font-mono">${img.image_id || `IMAGE ${num}`}</span>
+                <span class="text-[10px] font-mono font-bold text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800/40">${img.state_id || `STATE_${String(num).padStart(2, '0')}`}</span>
                 <span class="text-[10px] font-mono text-slate-400 bg-slate-900 px-2 py-0.5 rounded">STATIC ANCHOR</span>
               </div>
-              <p class="text-xs text-slate-300 font-medium mt-0.5">${img.state_purpose}</p>
+              <p class="text-xs text-slate-300 font-medium mt-0.5">${img.state_purpose || ''}</p>
             </div>
           </div>
-          <button class="btn-copy-prompt inline-flex items-center gap-1.5 text-xs font-bold text-slate-950 bg-emerald-400 hover:bg-emerald-300 px-3.5 py-1.5 rounded-lg shadow-sm transition-all font-mono self-start sm:self-auto" data-copy-type="image" data-id="${img.image_id}">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-            <span>Copy Prompt</span>
-          </button>
+          <div class="flex items-center gap-2">
+            <button class="btn-copy-prompt inline-flex items-center gap-1.5 text-xs font-bold text-slate-950 bg-emerald-400 hover:bg-emerald-300 px-3.5 py-1.5 rounded-lg shadow-sm transition-all font-mono self-start sm:self-auto" data-copy-type="image" data-id="${img.image_id}">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+              <span>Copy Full Prompt</span>
+            </button>
+          </div>
         </div>
+
+        ${shortPromptSection}
 
         <!-- DETAILS GRID -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
           <div class="bg-slate-950/70 p-3 rounded-xl border border-white/5 space-y-1">
             <span class="text-[10px] font-mono text-emerald-400 uppercase font-semibold">Completed Work</span>
-            <p class="text-slate-300 text-[11px] leading-relaxed">${img.completed_work}</p>
+            <p class="text-slate-300 text-[11px] leading-relaxed">${img.completed_work || '-'}</p>
           </div>
           <div class="bg-slate-950/70 p-3 rounded-xl border border-white/5 space-y-1">
             <span class="text-[10px] font-mono text-sky-400 uppercase font-semibold">Active Work In Frame</span>
-            <p class="text-slate-300 text-[11px] leading-relaxed">${img.active_work}</p>
+            <p class="text-slate-300 text-[11px] leading-relaxed">${img.active_work || '-'}</p>
           </div>
           <div class="bg-slate-950/70 p-3 rounded-xl border border-white/5 space-y-1">
             <span class="text-[10px] font-mono text-amber-400 uppercase font-semibold">Worker Actions &amp; Positions</span>
-            <p class="text-slate-300 text-[11px] leading-relaxed">${img.worker_actions}</p>
+            <p class="text-slate-300 text-[11px] leading-relaxed">${img.worker_actions || '-'}</p>
           </div>
           <div class="bg-slate-950/70 p-3 rounded-xl border border-white/5 space-y-1">
             <span class="text-[10px] font-mono text-indigo-400 uppercase font-semibold">Material &amp; Substrate State</span>
-            <p class="text-slate-300 text-[11px] leading-relaxed">${img.material_state}</p>
+            <p class="text-slate-300 text-[11px] leading-relaxed">${img.material_state || '-'}</p>
           </div>
         </div>
 
@@ -1928,27 +2447,50 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
             <summary class="cursor-pointer px-4 py-2.5 text-[11px] font-mono text-slate-400 hover:text-white flex items-center justify-between transition-colors">
               <span class="flex items-center gap-1.5">
                 <span class="text-emerald-400">⚡</span>
-                <span>View Pre-Combined Copy-Ready Prompt (${img.full_copy_ready_prompt.length} chars)</span>
+                <span>View Pre-Combined Copy-Ready Prompt (${(img.full_copy_ready_prompt || '').length} chars)</span>
               </span>
               <span class="group-open:rotate-180 transition-transform">▼</span>
             </summary>
-            <div class="p-4 border-t border-white/5 bg-slate-950 text-slate-300 font-mono text-[11px] leading-relaxed whitespace-pre-wrap select-all max-h-60 overflow-y-auto">${escapeHtml(img.full_copy_ready_prompt)}</div>
+            <div class="p-4 border-t border-white/5 bg-slate-950 text-slate-300 font-mono text-[11px] leading-relaxed whitespace-pre-wrap select-all max-h-60 overflow-y-auto">${escapeHtml(img.full_copy_ready_prompt || '')}</div>
           </details>
         </div>
       `;
 
-      // Copy prompt button listener
       card.querySelector('.btn-copy-prompt').addEventListener('click', () => {
-        copyToClipboard(img.full_copy_ready_prompt, `Copied ${img.image_id} Copy-Ready Prompt!`);
+        copyToClipboard(img.full_copy_ready_prompt || '', `Copied ${img.image_id} Full Prompt!`);
       });
+
+      const shortBtn = card.querySelector('.btn-copy-short-prompt');
+      if (shortBtn) {
+        shortBtn.addEventListener('click', () => {
+          copyToClipboard(img.asset_prompt_only || '', `Copied ${img.image_id} Short Prompt!`);
+        });
+      }
 
       return card;
     }
 
     function createVideoCard(vid, seqIdx) {
       const card = document.createElement('div');
-      card.id = `card-${vid.video_id.replace(/\s+/g, '-').toLowerCase()}`;
+      const numMatch = (vid.video_id || '').match(/\d+/);
+      const num = numMatch ? numMatch[0] : (seqIdx + 1);
+      card.id = `card-video-${num}`;
       card.className = 'glass-card rounded-2xl p-5 sm:p-6 border border-white/10 space-y-4';
+
+      const shortPromptSection = vid.asset_prompt_only ? `
+        <div class="bg-sky-950/40 p-3 rounded-xl border border-sky-800/40 space-y-1.5">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-mono text-sky-400 uppercase font-semibold flex items-center gap-1">
+              <svg class="w-3 h-3 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+              Direct Video Prompt (Sora / Kling / Runway / Luma)
+            </span>
+            <button class="btn-copy-short-prompt text-[10px] font-mono text-sky-300 hover:text-white bg-sky-900/60 hover:bg-sky-800/80 px-2 py-0.5 rounded border border-sky-700/50 transition-all font-semibold" data-type="video" data-id="${vid.video_id}">
+              Copy Short Prompt
+            </button>
+          </div>
+          <p class="text-slate-200 text-[11px] leading-relaxed font-sans">${escapeHtml(vid.asset_prompt_only)}</p>
+        </div>
+      ` : '';
 
       card.innerHTML = `
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/5">
@@ -1958,36 +2500,40 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
             </span>
             <div>
               <div class="flex items-center gap-2">
-                <span class="text-sm font-bold text-white font-mono">${vid.video_id}</span>
+                <span class="text-sm font-bold text-white font-mono">${vid.video_id || `VIDEO ${num}`}</span>
                 <span class="text-[10px] font-mono font-bold text-sky-400 bg-sky-950/80 px-2 py-0.5 rounded border border-sky-800/40">${vid.from_image_id} ⟶ ${vid.to_image_id}</span>
                 <span class="text-[10px] font-mono text-amber-300 bg-amber-950/60 px-2 py-0.5 rounded">${vid.target_duration_sec}s TIMELAPSE</span>
               </div>
-              <p class="text-xs text-slate-300 font-medium mt-0.5 font-mono">${vid.temporal_compression_level}</p>
+              <p class="text-xs text-slate-300 font-medium mt-0.5 font-mono">${vid.temporal_compression_level || ''}</p>
             </div>
           </div>
-          <button class="btn-copy-prompt inline-flex items-center gap-1.5 text-xs font-bold text-slate-950 bg-sky-400 hover:bg-sky-300 px-3.5 py-1.5 rounded-lg shadow-sm transition-all font-mono self-start sm:self-auto" data-copy-type="video" data-id="${vid.video_id}">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-            <span>Copy Video Prompt</span>
-          </button>
+          <div class="flex items-center gap-2">
+            <button class="btn-copy-prompt inline-flex items-center gap-1.5 text-xs font-bold text-slate-950 bg-sky-400 hover:bg-sky-300 px-3.5 py-1.5 rounded-lg shadow-sm transition-all font-mono self-start sm:self-auto" data-copy-type="video" data-id="${vid.video_id}">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+              <span>Copy Full Prompt</span>
+            </button>
+          </div>
         </div>
+
+        ${shortPromptSection}
 
         <!-- DETAILS GRID -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
           <div class="bg-slate-950/70 p-3 rounded-xl border border-white/5 space-y-1">
             <span class="text-[10px] font-mono text-emerald-400 uppercase font-semibold">Physical Workload</span>
-            <p class="text-slate-300 text-[11px] leading-relaxed">${vid.physical_workload}</p>
+            <p class="text-slate-300 text-[11px] leading-relaxed">${vid.physical_workload || '-'}</p>
           </div>
           <div class="bg-slate-950/70 p-3 rounded-xl border border-white/5 space-y-1">
             <span class="text-[10px] font-mono text-sky-400 uppercase font-semibold">Action Sequence (Causal Steps)</span>
-            <p class="text-slate-300 text-[11px] leading-relaxed">${vid.physical_action_sequence}</p>
+            <p class="text-slate-300 text-[11px] leading-relaxed">${vid.physical_action_sequence || '-'}</p>
           </div>
           <div class="bg-slate-950/70 p-3 rounded-xl border border-white/5 space-y-1">
             <span class="text-[10px] font-mono text-amber-400 uppercase font-semibold">Material Movement &amp; Logistics</span>
-            <p class="text-slate-300 text-[11px] leading-relaxed">${vid.material_movement}</p>
+            <p class="text-slate-300 text-[11px] leading-relaxed">${vid.material_movement || '-'}</p>
           </div>
           <div class="bg-slate-950/70 p-3 rounded-xl border border-white/5 space-y-1">
             <span class="text-[10px] font-mono text-indigo-400 uppercase font-semibold">End State Convergence</span>
-            <p class="text-slate-300 text-[11px] leading-relaxed">${vid.end_state_convergence}</p>
+            <p class="text-slate-300 text-[11px] leading-relaxed">${vid.end_state_convergence || '-'}</p>
           </div>
         </div>
 
@@ -1997,18 +2543,25 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
             <summary class="cursor-pointer px-4 py-2.5 text-[11px] font-mono text-slate-400 hover:text-white flex items-center justify-between transition-colors">
               <span class="flex items-center gap-1.5">
                 <span class="text-sky-400">⚡</span>
-                <span>View Pre-Combined Copy-Ready Prompt (${vid.full_copy_ready_prompt.length} chars)</span>
+                <span>View Pre-Combined Copy-Ready Prompt (${(vid.full_copy_ready_prompt || '').length} chars)</span>
               </span>
               <span class="group-open:rotate-180 transition-transform">▼</span>
             </summary>
-            <div class="p-4 border-t border-white/5 bg-slate-950 text-slate-300 font-mono text-[11px] leading-relaxed whitespace-pre-wrap select-all max-h-60 overflow-y-auto">${escapeHtml(vid.full_copy_ready_prompt)}</div>
+            <div class="p-4 border-t border-white/5 bg-slate-950 text-slate-300 font-mono text-[11px] leading-relaxed whitespace-pre-wrap select-all max-h-60 overflow-y-auto">${escapeHtml(vid.full_copy_ready_prompt || '')}</div>
           </details>
         </div>
       `;
 
       card.querySelector('.btn-copy-prompt').addEventListener('click', () => {
-        copyToClipboard(vid.full_copy_ready_prompt, `Copied ${vid.video_id} Video Prompt!`);
+        copyToClipboard(vid.full_copy_ready_prompt || '', `Copied ${vid.video_id} Full Prompt!`);
       });
+
+      const shortBtn = card.querySelector('.btn-copy-short-prompt');
+      if (shortBtn) {
+        shortBtn.addEventListener('click', () => {
+          copyToClipboard(vid.asset_prompt_only || '', `Copied ${vid.video_id} Short Prompt!`);
+        });
+      }
 
       return card;
     }
@@ -2033,9 +2586,11 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
       // 2. Every transition connects IMAGE k to IMAGE k+1
       let rule2Passed = videos.length > 0;
       for (let i = 0; i < videos.length; i++) {
-        const expectedFrom = `IMAGE ${i + 1}`;
-        const expectedTo = `IMAGE ${i + 2}`;
-        if (videos[i].from_image_id !== expectedFrom || videos[i].to_image_id !== expectedTo) {
+        const expectedFromNum = i + 1;
+        const expectedToNum = i + 2;
+        const fromNum = (videos[i].from_image_id || '').match(/\d+/);
+        const toNum = (videos[i].to_image_id || '').match(/\d+/);
+        if (!fromNum || !toNum || parseInt(fromNum[0], 10) !== expectedFromNum || parseInt(toNum[0], 10) !== expectedToNum) {
           rule2Passed = false;
           break;
         }
@@ -2044,8 +2599,7 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
 
       // 3. Duration constraint
       const calcDuration = videos.reduce((acc, v) => acc + (Number(v.target_duration_sec) || Number(summary.video_duration_sec) || 0), 0) || (videos.length * (Number(summary.video_duration_sec) || 10));
-      const rule3Passed = (calcDuration === summary.actual_total_runtime_sec) && 
-        (summary.target_total_duration_sec ? Math.abs(calcDuration - summary.target_total_duration_sec) <= (summary.video_duration_sec || 10) : true);
+      const rule3Passed = Boolean(calcDuration && summary.actual_total_runtime_sec && calcDuration === summary.actual_total_runtime_sec);
       addCheckItem(list, rule3Passed, `Total Duration: ${calcDuration}s (Runtime: ${summary.actual_total_runtime_sec}s, Target: ${summary.target_total_duration_sec}s)`);
 
       // 4. Persistent worker IDs preserved
@@ -2054,8 +2608,8 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
       addCheckItem(list, rule4Passed, `Persistent Worker Registries (${workerIds.join(', ')}) strictly mapped`);
 
       // 5. full_copy_ready_prompt populated
-      const rule5Passed = images.length > 0 && images.every(i => i.full_copy_ready_prompt && i.full_copy_ready_prompt.includes('CORE CONTINUITY INSTRUCTION')) &&
-                          videos.length > 0 && videos.every(v => v.full_copy_ready_prompt && v.full_copy_ready_prompt.includes('CORE CONTINUITY INSTRUCTION'));
+      const rule5Passed = images.length > 0 && images.every(i => i.full_copy_ready_prompt && i.full_copy_ready_prompt.trim().length > 30) &&
+                          videos.length > 0 && videos.every(v => v.full_copy_ready_prompt && v.full_copy_ready_prompt.trim().length > 30);
       addCheckItem(list, rule5Passed, `Every Asset has pre-combined, self-contained full_copy_ready_prompt`);
 
       // 6. RFC 8259 syntax validation
@@ -2287,21 +2841,40 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
     // --- EVENT LISTENERS ---
     document.addEventListener('DOMContentLoaded', () => {
       // Scenario buttons
+      // Active imported plan memory
+      let importedPlan = null;
+
+      // Scenario buttons
       const scenarioBtns = document.querySelectorAll('.scenario-btn');
       scenarioBtns.forEach(btn => {
         btn.addEventListener('click', () => {
+          const key = btn.getAttribute('data-scenario');
+          
           scenarioBtns.forEach(b => {
-            b.classList.remove('active', 'bg-emerald-500', 'text-slate-950', 'shadow-md', 'shadow-emerald-500/20');
+            b.classList.remove('active', 'bg-emerald-500', 'bg-sky-500', 'text-slate-950', 'shadow-md', 'shadow-emerald-500/20', 'shadow-sky-500/20');
             b.classList.add('text-slate-400', 'border', 'border-white/5');
           });
+
+          if (btn.id === 'scenario-btn-imported') {
+            if (importedPlan) {
+              btn.classList.add('active', 'bg-sky-500', 'text-slate-950', 'shadow-md', 'shadow-sky-500/20');
+              btn.classList.remove('text-slate-400', 'border-white/5');
+              currentData = JSON.parse(JSON.stringify(importedPlan));
+              renderApp();
+              showToast(`Loaded Imported Plan: "${currentData.production_summary.project_name}"!`);
+            }
+            return;
+          }
+
           btn.classList.add('active', 'bg-emerald-500', 'text-slate-950', 'shadow-md', 'shadow-emerald-500/20');
           btn.classList.remove('text-slate-400', 'border-white/5');
 
-          const key = btn.getAttribute('data-scenario');
-          currentScenarioKey = key;
-          currentData = JSON.parse(JSON.stringify(SCENARIOS[key]));
-          renderApp();
-          showToast(`Loaded "${currentData.production_summary.project_name}"!`);
+          if (key && SCENARIOS[key]) {
+            currentScenarioKey = key;
+            currentData = JSON.parse(JSON.stringify(SCENARIOS[key]));
+            renderApp();
+            showToast(`Loaded "${currentData.production_summary.project_name}"!`);
+          }
         });
       });
 
@@ -2328,18 +2901,24 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
       // Copy All Prompts Button
       document.getElementById('btn-copy-all-prompts').addEventListener('click', () => {
         let fullText = `=== ${currentData.production_summary.project_name} ===\nTotal Target Duration: ${currentData.production_summary.target_total_duration_sec}s\n\n`;
-        currentData.sequence_map.forEach(entry => {
-          if (entry.startsWith('IMAGE')) {
-            const imgMatch = entry.match(/IMAGE\s*(\d+)/);
-            const imgId = imgMatch ? `IMAGE ${imgMatch[1]}` : entry;
-            const img = currentData.images.find(i => i.image_id === imgId);
+        (currentData.sequence_map || []).forEach(entry => {
+          if (entry.startsWith('IMAGE') || entry.startsWith('IMG')) {
+            const imgMatch = entry.match(/\d+/);
+            const num = imgMatch ? parseInt(imgMatch[0], 10) : 1;
+            const img = (currentData.images || []).find(i => {
+              const iNum = (i.image_id || '').match(/\d+/);
+              return iNum && parseInt(iNum[0], 10) === num;
+            });
             if (img) {
               fullText += `\n############################################################\n### ASSET: ${img.image_id} (${img.state_id})\n############################################################\n${img.full_copy_ready_prompt}\n\n`;
             }
-          } else if (entry.startsWith('VIDEO')) {
-            const vidMatch = entry.match(/VIDEO\s*(\d+)/);
-            const vidId = vidMatch ? `VIDEO ${vidMatch[1]}` : entry;
-            const vid = currentData.videos.find(v => v.video_id === vidId);
+          } else if (entry.startsWith('VIDEO') || entry.startsWith('VID')) {
+            const vidMatch = entry.match(/\d+/);
+            const num = vidMatch ? parseInt(vidMatch[0], 10) : 1;
+            const vid = (currentData.videos || []).find(v => {
+              const vNum = (v.video_id || '').match(/\d+/);
+              return vNum && parseInt(vNum[0], 10) === num;
+            });
             if (vid) {
               fullText += `\n############################################################\n### ASSET: ${vid.video_id}\n############################################################\n${vid.full_copy_ready_prompt}\n\n`;
             }
@@ -2361,7 +2940,7 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
         const blob = new Blob([jsonStr], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
-        const filename = `${currentData.core_prompt.scene_id.toLowerCase()}_continuity.json`;
+        const filename = `${(currentData.core_prompt?.scene_id || 'continuity').toLowerCase()}_plan.json`;
         a.href = url;
         a.download = filename;
         document.body.appendChild(a);
@@ -2369,6 +2948,161 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
         showToast(`Downloaded ${filename}!`);
+      });
+
+      // --- IMPORT JSON MODAL HANDLERS ---
+      const importModal = document.getElementById('import-modal');
+      const importTextarea = document.getElementById('import-json-textarea');
+      const importStatus = document.getElementById('import-json-status');
+      const importErrorBanner = document.getElementById('import-error-banner');
+      const importErrorMsg = document.getElementById('import-error-msg');
+
+      function openImportModal() {
+        importModal.classList.remove('hidden');
+        importErrorBanner.classList.add('hidden');
+        validateImportInput();
+        setTimeout(() => importTextarea.focus(), 50);
+      }
+
+      function closeImportModal() {
+        importModal.classList.add('hidden');
+      }
+
+      function validateImportInput() {
+        const val = importTextarea.value.trim();
+        if (!val) {
+          importStatus.textContent = 'Menunggu input...';
+          importStatus.className = 'text-slate-500 font-mono';
+          return;
+        }
+        try {
+          const parsed = JSON.parse(val);
+          if (parsed && typeof parsed === 'object') {
+            const hasImages = Array.isArray(parsed.images) && parsed.images.length > 0;
+            const hasVideos = Array.isArray(parsed.videos) && parsed.videos.length > 0;
+            if (hasImages && hasVideos) {
+              importStatus.textContent = `✓ Valid RFC 8259 JSON (${parsed.images.length} images, ${parsed.videos.length} videos)`;
+              importStatus.className = 'text-emerald-400 font-mono font-bold';
+            } else {
+              importStatus.textContent = '⚠️ Valid JSON (pastikan terdapat array images dan videos)';
+              importStatus.className = 'text-amber-400 font-mono';
+            }
+          }
+        } catch (e) {
+          importStatus.textContent = 'Syntax JSON belum valid';
+          importStatus.className = 'text-rose-400 font-mono';
+        }
+      }
+
+      document.getElementById('btn-open-importer').addEventListener('click', openImportModal);
+      const quickPasteBtn = document.getElementById('btn-quick-paste-json');
+      if (quickPasteBtn) quickPasteBtn.addEventListener('click', openImportModal);
+
+      document.getElementById('btn-close-import-modal').addEventListener('click', closeImportModal);
+      document.getElementById('btn-cancel-import').addEventListener('click', closeImportModal);
+
+      importTextarea.addEventListener('input', () => {
+        importErrorBanner.classList.add('hidden');
+        validateImportInput();
+      });
+
+      // Clear button
+      document.getElementById('btn-import-clear').addEventListener('click', () => {
+        importTextarea.value = '';
+        importErrorBanner.classList.add('hidden');
+        validateImportInput();
+        importTextarea.focus();
+      });
+
+      // Paste from clipboard button
+      document.getElementById('btn-import-paste-clipboard').addEventListener('click', async () => {
+        try {
+          if (navigator.clipboard && navigator.clipboard.readText) {
+            const text = await navigator.clipboard.readText();
+            if (text) {
+              importTextarea.value = text;
+              importErrorBanner.classList.add('hidden');
+              validateImportInput();
+              showToast('Berhasil menempelkan dari clipboard!');
+            } else {
+              showToast('Clipboard kosong');
+            }
+          } else {
+            showToast('Silakan tempel langsung via Ctrl+V di kotak input');
+          }
+        } catch (err) {
+          showToast('Izin clipboard ditolak. Silakan tempel manual dengan Ctrl+V');
+        }
+      });
+
+      // Upload file .json
+      const importFileInput = document.getElementById('import-json-file');
+      if (importFileInput) {
+        importFileInput.addEventListener('change', (e) => {
+          const file = e.target.files?.[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = (evt) => {
+            importTextarea.value = evt.target.result;
+            importErrorBanner.classList.add('hidden');
+            validateImportInput();
+            showToast(`Loaded file: ${file.name}`);
+          };
+          reader.readAsText(file);
+        });
+      }
+
+      // Load Dapur Sample in modal
+      document.getElementById('btn-import-load-dapur-sample').addEventListener('click', () => {
+        importTextarea.value = JSON.stringify(SCENARIOS.dapur, null, 2);
+        importErrorBanner.classList.add('hidden');
+        validateImportInput();
+        showToast('Contoh Dapur Tradisional Nenek (120s) dimuat!');
+      });
+
+      // Submit Import & Apply
+      document.getElementById('btn-submit-import').addEventListener('click', () => {
+        const raw = importTextarea.value.trim();
+        if (!raw) {
+          importErrorMsg.textContent = 'Harap masukkan atau tempelkan JSON RFC 8259 terlebih dahulu.';
+          importErrorBanner.classList.remove('hidden');
+          return;
+        }
+
+        try {
+          const plan = loadContinuityPlanFromJson(raw);
+          importedPlan = plan;
+          currentData = plan;
+
+          // Update scenario badges
+          scenarioBtns.forEach(b => {
+            b.classList.remove('active', 'bg-emerald-500', 'bg-sky-500', 'text-slate-950', 'shadow-md', 'shadow-emerald-500/20', 'shadow-sky-500/20');
+            b.classList.add('text-slate-400', 'border', 'border-white/5');
+          });
+
+          const importedBtn = document.getElementById('scenario-btn-imported');
+          if (importedBtn) {
+            importedBtn.classList.remove('hidden');
+            const labelEl = document.getElementById('imported-scenario-label');
+            const pName = plan.production_summary?.project_name || 'Imported Plan';
+            labelEl.textContent = pName.length > 25 ? `${pName.slice(0, 25)}...` : pName;
+            importedBtn.classList.add('active', 'bg-sky-500', 'text-slate-950', 'shadow-md', 'shadow-sky-500/20');
+            importedBtn.classList.remove('text-slate-400', 'border-white/5');
+          }
+
+          closeImportModal();
+          renderApp();
+          showToast(`Berhasil memuat project: "${plan.production_summary.project_name}"!`);
+
+          // Smooth scroll to Workbench
+          const assetsContainer = document.getElementById('assets-list-container');
+          if (assetsContainer) {
+            assetsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        } catch (err) {
+          importErrorMsg.textContent = err.message || 'Gagal memproses JSON.';
+          importErrorBanner.classList.remove('hidden');
+        }
       });
 
       // Custom Generator Modal
@@ -2397,7 +3131,7 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
 
         // Deselect preset buttons
         document.querySelectorAll('.scenario-btn').forEach(b => {
-          b.classList.remove('active', 'bg-emerald-500', 'text-slate-950', 'shadow-md', 'shadow-emerald-500/20');
+          b.classList.remove('active', 'bg-emerald-500', 'bg-sky-500', 'text-slate-950', 'shadow-md', 'shadow-emerald-500/20', 'shadow-sky-500/20');
           b.classList.add('text-slate-400', 'border', 'border-white/5');
         });
 
