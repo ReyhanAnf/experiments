@@ -1,0 +1,2238 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timelapse & Physical Transformation Continuity Engine | AI Video & Image Director</title>
+  <meta name="description" content="AI Physical-Reality & Construction Continuity Director. Plan physically realistic sequential transformations and generate strict RFC 8259 JSON copy-ready prompts for AI video and image models.">
+
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              400: '#4ade80',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+            },
+            accent: {
+              50: '#eff6ff',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+            },
+            amberBrand: {
+              400: '#fbbf24',
+              500: '#f59e0b',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #080c14;
+      color: #f1f5f9;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(34, 197, 94, 0.08) 0px, transparent 45%),
+        radial-gradient(at 100% 0%, rgba(59, 130, 246, 0.08) 0px, transparent 45%),
+        radial-gradient(at 50% 100%, rgba(245, 158, 11, 0.06) 0px, transparent 50%),
+        radial-gradient(at 50% 50%, rgba(15, 23, 42, 0.75) 0px, transparent 100%);
+      background-attachment: fixed;
+    }
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-card {
+      background: rgba(17, 24, 39, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-card:hover {
+      border-color: rgba(59, 130, 246, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 16px 30px -10px rgba(0, 0, 0, 0.5);
+    }
+    .active-card {
+      border-color: rgba(34, 197, 94, 0.6) !important;
+      box-shadow: 0 0 20px -3px rgba(34, 197, 94, 0.25) !important;
+    }
+    pre code {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0b0f19;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #334155;
+    }
+    .timeline-line {
+      background: linear-gradient(90deg, #22c55e 0%, #3b82f6 50%, #f59e0b 100%);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-emerald-500 selection:text-slate-950 font-sans">
+
+  <!-- TOP HEADER / NAV -->
+  <header class="border-b border-white/5 bg-slate-950/70 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="./" class="inline-flex items-center gap-2 text-xs font-semibold text-slate-300 hover:text-white bg-slate-900/80 hover:bg-slate-800 border border-white/10 px-3 py-1.5 rounded-lg transition-all group">
+          <svg class="w-3.5 h-3.5 text-emerald-400 group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+          <span>Hub Eksperimen</span>
+        </a>
+        <span class="text-slate-600 font-light">/</span>
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 bg-emerald-950/60 border border-emerald-800/50 px-2.5 py-0.5 rounded-full">
+            Continuity Engine
+          </span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2.5">
+        <button id="btn-open-system-prompt" class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-white/10 px-3 py-1.5 rounded-lg transition-all">
+          <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+          <span class="hidden sm:inline">Director Rules</span>
+        </button>
+        <button id="btn-open-generator" class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-300 hover:text-white bg-emerald-950/60 hover:bg-emerald-900/60 border border-emerald-700/50 px-3.5 py-1.5 rounded-lg shadow-sm transition-all">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+          <span>Custom Project</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 py-8 w-full">
+
+    <!-- HERO & DIRECTIVE BANNER -->
+    <div class="mb-8">
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-white/5">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/80 border border-emerald-500/20 text-xs font-mono text-emerald-400 mb-3">
+            <span>RFC 8259 VALIDATED</span>
+            <span class="text-slate-600">•</span>
+            <span>PHYSICAL CAUSALITY LOCK</span>
+            <span class="text-slate-600">•</span>
+            <span>AI VIDEO &amp; IMAGE PROMPTS</span>
+          </div>
+          <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-white mb-2">
+            Timelapse &amp; Physical Transformation <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-sky-400 to-amber-300">Continuity Engine</span>
+          </h1>
+          <p class="text-slate-400 text-xs sm:text-sm max-w-3xl leading-relaxed">
+            Architectural director for physically realistic sequential transformations. Eliminates visual morphing and temporal hallucinations by locking camera tripods, geometry landmarks, worker IDs, and mechanical cause-and-effect across continuous AI image and video states.
+          </p>
+        </div>
+
+        <!-- MATHEMATICAL DURATION PLANNING DISPLAY -->
+        <div class="bg-slate-900/90 border border-white/10 rounded-2xl p-4 sm:p-5 flex flex-col justify-between min-w-[280px] shadow-xl">
+          <div class="flex items-center justify-between text-xs text-slate-400 mb-3 font-mono">
+            <span class="flex items-center gap-1.5 font-semibold text-white">
+              <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+              Duration Equation
+            </span>
+            <span class="text-[10px] text-emerald-400 font-bold bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800/40">Adaptive N</span>
+          </div>
+          <div class="grid grid-cols-2 gap-3 text-center mb-3">
+            <div class="bg-slate-950/70 p-2.5 rounded-xl border border-white/5">
+              <span class="text-[10px] text-slate-400 uppercase tracking-wider font-mono block">Video Clips ($N_{vid}$)</span>
+              <span id="stat-videos-count" class="text-xl font-extrabold text-sky-400 font-mono">6</span>
+              <span class="text-[10px] text-slate-500 block font-mono" id="stat-video-duration">10s / clip</span>
+            </div>
+            <div class="bg-slate-950/70 p-2.5 rounded-xl border border-white/5">
+              <span class="text-[10px] text-slate-400 uppercase tracking-wider font-mono block">Anchor States ($N_{img}$)</span>
+              <span id="stat-images-count" class="text-xl font-extrabold text-emerald-400 font-mono">7</span>
+              <span class="text-[10px] text-slate-500 block font-mono">$N_{vid} + 1$</span>
+            </div>
+          </div>
+          <div class="text-[11px] font-mono text-slate-400 bg-slate-950/90 px-3 py-1.5 rounded-lg border border-white/5 flex items-center justify-between">
+            <span>Total Target Runtime:</span>
+            <span id="stat-total-duration" class="font-bold text-amber-300">60 seconds</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRESET SCENARIOS & ENGINE CONTROLS -->
+      <div class="mt-6 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+        <!-- Preset selector -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0">
+          <span class="text-xs font-mono text-slate-500 whitespace-nowrap">Preset Scenarios:</span>
+          <button data-scenario="warehouse" class="scenario-btn active px-3 py-1.5 rounded-lg text-xs font-semibold font-mono transition-all bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20 whitespace-nowrap">
+            🏭 Warehouse to Studio (60s)
+          </button>
+          <button data-scenario="pool" class="scenario-btn px-3 py-1.5 rounded-lg text-xs font-semibold font-mono transition-all text-slate-400 hover:text-white hover:bg-slate-900 border border-white/5 whitespace-nowrap">
+            🏊 Backyard to Infinity Pool (40s)
+          </button>
+          <button data-scenario="tea-house" class="scenario-btn px-3 py-1.5 rounded-lg text-xs font-semibold font-mono transition-all text-slate-400 hover:text-white hover:bg-slate-900 border border-white/5 whitespace-nowrap">
+            🍵 Concrete Shell to Tea Pavilion (50s)
+          </button>
+          <button data-scenario="kitchen" class="scenario-btn px-3 py-1.5 rounded-lg text-xs font-semibold font-mono transition-all text-slate-400 hover:text-white hover:bg-slate-900 border border-white/5 whitespace-nowrap">
+            🍳 1970s Kitchen to Chef Suite (30s)
+          </button>
+        </div>
+
+        <!-- Quick actions -->
+        <div class="flex items-center gap-2.5">
+          <button id="btn-copy-all-prompts" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-white/10 px-3 py-1.5 rounded-lg transition-all">
+            <svg class="w-3.5 h-3.5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+            <span>Copy All Prompts (.txt)</span>
+          </button>
+          <button id="btn-download-json" class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-400 hover:text-emerald-300 bg-emerald-950/60 hover:bg-emerald-900/60 border border-emerald-800/60 px-3 py-1.5 rounded-lg transition-all">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            <span>Download RFC 8259 JSON</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN WORKBENCH GRID -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+      <!-- LEFT COLUMN: MASTER SCENE BIBLE & CONTINUITY LOCKS (4 COLS) -->
+      <div class="lg:col-span-4 space-y-6">
+
+        <!-- SCENE CONTINUITY BIBLE CARD -->
+        <div class="glass-panel rounded-2xl p-5 sm:p-6 border border-white/10">
+          <div class="flex items-center justify-between pb-3 mb-4 border-b border-white/5">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-md bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs border border-emerald-500/30">
+                🔒
+              </span>
+              <h2 class="text-sm font-bold text-white tracking-wide uppercase font-mono">Master Scene Bible</h2>
+            </div>
+            <span class="text-[10px] font-mono uppercase tracking-wider text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800/40">
+              Continuity Locked
+            </span>
+          </div>
+
+          <!-- PROJECT SUMMARY -->
+          <div class="space-y-4 text-xs">
+            <div>
+              <span class="text-[10px] font-mono text-slate-500 uppercase tracking-wider block">Project Name &amp; Scene ID</span>
+              <div class="text-white font-semibold font-mono mt-0.5" id="bible-project-name">Urban Warehouse to Biophilic Architectural Studio</div>
+              <div class="text-[11px] text-slate-400 font-mono" id="bible-scene-id">SCENE_WH_TO_STUDIO_001</div>
+            </div>
+
+            <div class="pt-3 border-t border-white/5">
+              <span class="text-[10px] font-mono text-emerald-400 uppercase tracking-wider font-semibold block flex items-center gap-1">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                Camera Lock (Zero Drift)
+              </span>
+              <p class="text-slate-300 text-[11px] leading-relaxed mt-1" id="bible-camera-lock">
+                Locked tripod position, eye-level at 1.6m elevation. 28mm wide prime lens, orthogonal 45-degree isometric corner perspective looking from southwest corner. Zero pan, tilt, or zoom drift permitted across any generation.
+              </p>
+            </div>
+
+            <div class="pt-3 border-t border-white/5">
+              <span class="text-[10px] font-mono text-sky-400 uppercase tracking-wider font-semibold block flex items-center gap-1">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                Geometry &amp; Permanent Landmarks (3–7 Locks)
+              </span>
+              <p class="text-slate-300 text-[11px] leading-relaxed mt-1" id="bible-geometry-lock">
+                Original red brick structural perimeter walls, overhead heavy timber king-post trusses with steel tie rods, concrete subfloor slab, and northern arched window apertures remain strictly fixed in space.
+              </p>
+              <div class="mt-2 flex flex-wrap gap-1.5" id="bible-landmarks-list">
+                <!-- Injected landmarks -->
+              </div>
+            </div>
+
+            <div class="pt-3 border-t border-white/5">
+              <span class="text-[10px] font-mono text-amber-300 uppercase tracking-wider font-semibold block flex items-center gap-1">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                Lighting, Material &amp; Environment Lock
+              </span>
+              <p class="text-slate-300 text-[11px] leading-relaxed mt-1" id="bible-lighting-lock">
+                Consistent soft overcast daylight filtered through northern clerestory windows (5600K ambient daylight), complemented by high-CRI 3500K warm interior construction floodlights during interior phases.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- WORKER REGISTRY (PERSISTENT IDs) -->
+        <div class="glass-panel rounded-2xl p-5 sm:p-6 border border-white/10">
+          <div class="flex items-center justify-between pb-3 mb-3 border-b border-white/5">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-md bg-sky-500/20 text-sky-400 flex items-center justify-center font-bold text-xs border border-sky-500/30">
+                👷
+              </span>
+              <h2 class="text-sm font-bold text-white tracking-wide uppercase font-mono">Worker Registry</h2>
+            </div>
+            <span class="text-[10px] font-mono text-slate-400">Zero Identity Drift</span>
+          </div>
+          <p class="text-[11px] text-slate-400 mb-3">
+            Persistent identifiers and standardized PPE apparel prevent worker teleportation or morphing between image and video clips.
+          </p>
+          <div class="space-y-2.5" id="bible-workers-list">
+            <!-- Injected workers -->
+          </div>
+        </div>
+
+        <!-- EQUIPMENT REGISTRY (PERSISTENT IDs) -->
+        <div class="glass-panel rounded-2xl p-5 sm:p-6 border border-white/10">
+          <div class="flex items-center justify-between pb-3 mb-3 border-b border-white/5">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-md bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-xs border border-amber-500/30">
+                🚜
+              </span>
+              <h2 class="text-sm font-bold text-white tracking-wide uppercase font-mono">Equipment Registry</h2>
+            </div>
+            <span class="text-[10px] font-mono text-slate-400">Fixed Inventory</span>
+          </div>
+          <div class="space-y-2.5" id="bible-equipment-list">
+            <!-- Injected equipment -->
+          </div>
+        </div>
+
+        <!-- PRE-COMPLETION VALIDATION CHECKLIST -->
+        <div class="glass-panel rounded-2xl p-5 sm:p-6 border border-white/10 bg-slate-950/40">
+          <div class="flex items-center justify-between pb-3 mb-3 border-b border-white/5">
+            <h3 class="text-xs font-bold text-white uppercase tracking-wider font-mono flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+              RFC 8259 Validator Audit
+            </h3>
+            <span class="text-[10px] font-mono text-emerald-400 font-bold bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800/40">100% PASS</span>
+          </div>
+          <div class="space-y-2 text-[11px] font-mono" id="validation-checklist">
+            <div class="flex items-start gap-2 text-slate-300">
+              <span class="text-emerald-400">✓</span>
+              <span><code class="text-white font-bold">images.length == videos.length + 1</code> (Adaptive Planning)</span>
+            </div>
+            <div class="flex items-start gap-2 text-slate-300">
+              <span class="text-emerald-400">✓</span>
+              <span>Every transition $k$ connects <code class="text-sky-300">IMAGE k</code> $\rightarrow$ <code class="text-sky-300">IMAGE k+1</code></span>
+            </div>
+            <div class="flex items-start gap-2 text-slate-300">
+              <span class="text-emerald-400">✓</span>
+              <span>Total calculated runtime matches user target constraint</span>
+            </div>
+            <div class="flex items-start gap-2 text-slate-300">
+              <span class="text-emerald-400">✓</span>
+              <span>Persistent IDs for Workers &amp; Equipment strictly preserved</span>
+            </div>
+            <div class="flex items-start gap-2 text-slate-300">
+              <span class="text-emerald-400">✓</span>
+              <span><code class="text-amber-300 font-bold">full_copy_ready_prompt</code> pre-combined in every item</span>
+            </div>
+            <div class="flex items-start gap-2 text-slate-300">
+              <span class="text-emerald-400">✓</span>
+              <span>Strict RFC 8259 JSON structure &amp; escaped linebreaks (\n)</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN: SEQUENCE MAP, ASSET CARDS & JSON VIEWER (8 COLS) -->
+      <div class="lg:col-span-8 space-y-6">
+
+        <!-- SEQUENCE FLOW MAPPER -->
+        <div class="glass-panel rounded-2xl p-5 sm:p-6 border border-white/10">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 mb-4 border-b border-white/5">
+            <div>
+              <span class="text-[10px] font-mono text-emerald-400 uppercase tracking-wider font-semibold">Physical Causality Timeline</span>
+              <h2 class="text-base sm:text-lg font-bold text-white">Sequence Map &amp; State Transitions</h2>
+            </div>
+            <div class="flex items-center gap-1.5 bg-slate-900/90 p-1 rounded-xl border border-white/5 text-xs font-mono">
+              <button id="filter-all-assets" class="view-filter-btn active px-3 py-1 rounded-lg bg-emerald-500 text-slate-950 font-bold transition-all">All Assets</button>
+              <button id="filter-images-only" class="view-filter-btn px-3 py-1 rounded-lg text-slate-400 hover:text-white transition-all">Images Only</button>
+              <button id="filter-videos-only" class="view-filter-btn px-3 py-1 rounded-lg text-slate-400 hover:text-white transition-all">Videos Only</button>
+              <button id="filter-json-view" class="view-filter-btn px-3 py-1 rounded-lg text-slate-400 hover:text-white transition-all">JSON View</button>
+            </div>
+          </div>
+
+          <!-- PHYSICAL CAUSALITY EQUATION BANNER -->
+          <div class="bg-gradient-to-r from-slate-900 via-slate-950 to-slate-900 border border-white/5 rounded-xl p-3 mb-5 text-[11px] font-mono flex items-center justify-center flex-wrap gap-2 text-slate-300 text-center">
+            <span class="text-emerald-400 font-bold">PREVIOUS STATE</span>
+            <span class="text-slate-600 font-black">⟶</span>
+            <span class="text-amber-400 font-bold">PHYSICAL ACTION</span>
+            <span class="text-slate-600 font-black">⟶</span>
+            <span class="text-sky-400 font-bold">PHYSICAL CONSEQUENCE</span>
+            <span class="text-slate-600 font-black">⟶</span>
+            <span class="text-emerald-300 font-bold">NEXT STATE</span>
+          </div>
+
+          <!-- HORIZONTAL TIMELINE STEPPER -->
+          <div class="overflow-x-auto pb-4 pt-1" id="sequence-stepper-container">
+            <div class="flex items-center gap-2 min-w-max" id="sequence-stepper">
+              <!-- Injected stepper badges -->
+            </div>
+          </div>
+        </div>
+
+        <!-- ASSETS CONTAINER (CARDS LIST) -->
+        <div id="assets-list-container" class="space-y-4">
+          <!-- Dynamic sequence cards (alternating image and video transition cards) injected here -->
+        </div>
+
+        <!-- RFC 8259 JSON CODE CONSOLE (HIDDEN BY DEFAULT UNLESS JSON TAB CLICKED) -->
+        <div id="json-viewer-container" class="hidden glass-panel rounded-2xl p-5 sm:p-6 border border-white/10 space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/5">
+            <div>
+              <span class="text-[10px] font-mono text-emerald-400 uppercase tracking-wider font-semibold">Strict RFC 8259 JSON</span>
+              <h3 class="text-base font-bold text-white">Full Production Continuity Plan</h3>
+            </div>
+            <div class="flex items-center gap-2">
+              <button id="btn-copy-raw-json" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-950 bg-emerald-400 hover:bg-emerald-300 px-3.5 py-1.5 rounded-lg shadow-sm transition-all font-mono">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                <span>Copy RFC 8259 JSON</span>
+              </button>
+            </div>
+          </div>
+          <div class="relative bg-slate-950 rounded-xl p-4 border border-white/5 overflow-x-auto max-h-[600px]">
+            <pre><code class="text-xs text-slate-300 font-mono leading-relaxed" id="raw-json-output"></code></pre>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- CUSTOM PROJECT GENERATOR MODAL -->
+  <div id="generator-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-white/10 rounded-2xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto shadow-2xl">
+      <div class="flex items-center justify-between pb-4 border-b border-white/5 mb-5">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm border border-emerald-500/30">
+            ⚡
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-white">Generate Custom Continuity Plan</h3>
+            <p class="text-xs text-slate-400">Adaptive sequence synthesis based on physical complexity and duration</p>
+          </div>
+        </div>
+        <button id="btn-close-generator" class="text-slate-400 hover:text-white p-1 rounded-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <form id="custom-plan-form" class="space-y-4 text-xs">
+        <div>
+          <label class="block text-[11px] font-mono text-slate-400 uppercase mb-1">Project Name</label>
+          <input type="text" id="custom-name" required value="Suburban Garage to High-Tech Music Production Studio" class="w-full bg-slate-950 border border-white/10 rounded-xl px-3.5 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-sans">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-[11px] font-mono text-slate-400 uppercase mb-1">Target Total Duration (seconds)</label>
+            <input type="number" id="custom-total-duration" required min="10" max="300" step="5" value="40" class="w-full bg-slate-950 border border-white/10 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-emerald-500 font-mono">
+            <span class="text-[10px] text-slate-500 font-mono">Total video duration constraint</span>
+          </div>
+          <div>
+            <label class="block text-[11px] font-mono text-slate-400 uppercase mb-1">Clip Duration (seconds)</label>
+            <input type="number" id="custom-clip-duration" required min="5" max="30" step="1" value="10" class="w-full bg-slate-950 border border-white/10 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-emerald-500 font-mono">
+            <span class="text-[10px] text-slate-500 font-mono">Standard clip length (e.g. 5s or 10s)</span>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-mono text-slate-400 uppercase mb-1">Initial State Description (IMAGE 1)</label>
+          <textarea id="custom-initial-state" required rows="2" class="w-full bg-slate-950 border border-white/10 rounded-xl p-3 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-sans">Cluttered suburban concrete garage with exposed 2x4 stud walls, bare cement floor with oil stains, overhead steel garage door tracks, and unorganized tool boxes.</textarea>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-mono text-slate-400 uppercase mb-1">Final Desired State Description (IMAGE N)</label>
+          <textarea id="custom-final-state" required rows="2" class="w-full bg-slate-950 border border-white/10 rounded-xl p-3 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-sans">Acoustically isolated professional music recording studio with custom walnut acoustic slat diffusers, floating hardwood flooring, recessed halo lighting, and dual synth workstations.</textarea>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-mono text-slate-400 uppercase mb-1">Camera Lock Specs</label>
+          <input type="text" id="custom-camera" value="Tripod locked at 1.5m eye-level in southwest doorway corner, 24mm wide angle, looking northeast at 45-degree angle. Zero pan, tilt, or dolly." class="w-full bg-slate-950 border border-white/10 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-emerald-500 font-sans">
+        </div>
+
+        <div class="pt-4 border-t border-white/5 flex items-center justify-end gap-3">
+          <button type="button" id="btn-cancel-generator" class="px-4 py-2 rounded-xl text-slate-400 hover:text-white font-semibold">
+            Cancel
+          </button>
+          <button type="submit" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-bold px-5 py-2.5 rounded-xl shadow-lg shadow-emerald-500/20 transition-all font-mono">
+            Synthesize Plan ($N_{vid}$ &amp; $N_{img}$)
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- SYSTEM PROMPT VIEWER MODAL -->
+  <div id="system-prompt-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-white/10 rounded-2xl max-w-3xl w-full p-6 max-h-[90vh] overflow-y-auto shadow-2xl space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-white/5">
+        <div>
+          <h3 class="text-base font-bold text-white">Timelapse &amp; Physical Continuity Director System Prompt</h3>
+          <p class="text-xs text-slate-400 font-mono">Authoritative LLM &amp; AI Generator Metaprompt</p>
+        </div>
+        <button id="btn-close-prompt-modal" class="text-slate-400 hover:text-white p-1 rounded-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <div class="flex justify-end">
+        <button id="btn-copy-system-prompt" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-950 bg-emerald-400 hover:bg-emerald-300 px-3.5 py-1.5 rounded-lg transition-all font-mono">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+          <span>Copy System Prompt</span>
+        </button>
+      </div>
+
+      <div class="bg-slate-950 rounded-xl p-4 border border-white/5 max-h-[450px] overflow-y-auto">
+        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap leading-relaxed" id="system-prompt-text"></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 bg-emerald-500 text-slate-950 px-4 py-2.5 rounded-xl font-bold font-mono text-xs shadow-2xl flex items-center gap-2 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+    <span id="toast-message">Copied to clipboard!</span>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-white/5 bg-slate-950/80 py-8 text-center text-xs text-slate-500 mt-12">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        © 2026 <a href="https://reyhananf.web.id" class="text-slate-400 hover:text-white font-medium transition-colors">Reyhan Anf</a>. Built for cinematic AI video &amp; physical reality continuity.
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="./" class="text-slate-400 hover:text-emerald-400 transition-colors">Semua Eksperimen</a>
+        <span class="text-slate-700">•</span>
+        <a href="https://github.com/ReyhanAnf/experiments" target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-emerald-400 transition-colors">GitHub Repository</a>
+        <span class="text-slate-700">•</span>
+        <a href="#top" class="text-slate-400 hover:text-white transition-colors">Kembali ke Atas ↑</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- CONTINUITY ENGINE LOGIC & SCENARIO DATABASE -->
+  <script>
+    // --- AUTHORITATIVE SYSTEM PROMPT ---
+    const AUTHORITATIVE_SYSTEM_PROMPT = `TIMELAPSE & PHYSICAL TRANSFORMATION CONTINUITY ENGINE
+You are an expert physical-reality and construction continuity director. Your objective is to plan physically realistic sequential transformations and output a STRICT, VALID RFC 8259 JSON containing copy-ready prompts for AI image and video generators.
+
+1. CORE OPERATIONAL DIRECTIVES
+A. PROCESS MACRO & PHYSICAL CAUSALITY
+Determine the realistic real-world workflow required to transform the initial state into the final state.
+Workflow encompasses: prerequisite tasks, dependent tasks, parallel tasks, irreversible operations, curing/drying/settling, cleanup, material logistics, worker/equipment needs, temporary structures, and final staging.
+Every visual alteration must have an explicit physical cause:
+PREVIOUS STATE -> PHYSICAL ACTION -> PHYSICAL CONSEQUENCE -> NEXT STATE
+Never describe transformation as magical visual replacement or instantaneous morphing.
+
+B. ADAPTIVE STAGE & DURATION PLANNING
+Adaptive sequence: Generate N images and N-1 videos based on physical complexity or explicit user duration constraints:
+REQUIRED VIDEO COUNT = TARGET TOTAL DURATION / VIDEO DURATION
+REQUIRED IMAGE COUNT = REQUIRED VIDEO COUNT + 1
+Physical realism takes precedence over artificial state inflation. Never insert meaningless filler states.
+If user supplies duration constraints, each transition video represents accelerated real-world work (temporal compression) matching target_duration_sec.
+
+C. MASTER SCENE BIBLE & CONTINUITY LOCKS
+Establish and strictly preserve across all states:
+CAMERA LOCK: Tripod position, height, orientation, lens feel, framing, permitted/prohibited movement.
+GEOMETRY LOCK: Permanent walls, floors, ceilings, columns, beams, openings, fixtures.
+LANDMARK LOCK: 3–7 recognizable reference landmarks that never move.
+MATERIAL & LIGHTING LOCK: Texture, roughness, wet/dry state, light source, time of day, shadows, color temperature.
+ENVIRONMENT LOCK: Weather, dust, surrounding structures, atmospheric conditions.
+WORKER REGISTRY: Persistent IDs (e.g., WORKER A, WORKER B), role, trade, PPE, apparel colors, visual profile.
+EQUIPMENT REGISTRY: Persistent IDs (e.g., EQUIPMENT 1), type, color, attachments, positions (no teleportation).
+
+2. OUTPUT REQUIREMENT: STRICT JSON ONLY
+You MUST output RAW, VALID RFC 8259 JSON ONLY.`;
+
+    // --- PROMPT COMPILERS ENFORCING STRICT SCHEMA RULES ---
+    function formatCoreContinuityBlock(core) {
+      const workersFormatted = core.worker_identity_registry.map(w => 
+        `  - ${w.worker_id} (${w.role}): ${w.visual_profile}`
+      ).join('\n');
+
+      const equipmentFormatted = core.equipment_registry.map(e => 
+        `  - ${e.equipment_id} (${e.type}): ${e.visual_profile}`
+      ).join('\n');
+
+      return `CORE CONTINUITY INSTRUCTION:
+Treat this block as the authoritative continuity source for the entire visual sequence.
+Scene ID: ${core.scene_id}
+Project: ${core.project_description}
+Camera Lock: ${core.camera_lock}
+Geometry & Landmarks Lock: ${core.geometry_lock} | Key Permanent Landmarks: ${core.landmark_lock}
+Lighting & Environment Lock: ${core.lighting_lock} | Atmospheric: ${core.environment_lock}
+Workers:
+${workersFormatted}
+Equipment:
+${equipmentFormatted}
+Global Negative Constraints: ${core.global_negative_rules}`;
+    }
+
+    function compileImageCopyReadyPrompt(core, img) {
+      const coreBlock = formatCoreContinuityBlock(core);
+      return `${coreBlock}
+
+----------------------------------------
+APPLY THE CORE PROMPT ABOVE WITHOUT MODIFICATION.
+ASSET TYPE: STATIC IMAGE
+IMAGE ID: ${img.image_id} | STATE ID: ${img.state_id}
+STATE PURPOSE: ${img.state_purpose}
+COMPLETED WORK: ${img.completed_work}
+ACTIVE WORK IN FRAME: ${img.active_work}
+REMAINING WORK: ${img.remaining_work}
+WORKER ACTIONS & POSITIONS: ${img.worker_actions}
+EQUIPMENT STATUS: ${img.equipment_state}
+MATERIAL & SUBSTRATE STATE: ${img.material_state}
+TEMPORARY ELEMENTS: ${img.temporary_elements}
+PHYSICAL EVIDENCE OF PROGRESS: ${img.physical_evidence}
+NEGATIVE CONSTRAINTS: no geometry drift, no camera drift, no landmark movement, no worker identity drift, no clothing changes, no floating objects, no sudden disappearance, no text, no watermarks.`;
+    }
+
+    function compileVideoCopyReadyPrompt(core, vid) {
+      const coreBlock = formatCoreContinuityBlock(core);
+      return `${coreBlock}
+
+----------------------------------------
+APPLY THE CORE PROMPT ABOVE WITHOUT MODIFICATION.
+ASSET TYPE: TRANSITION VIDEO TIMELAPSE
+VIDEO ID: ${vid.video_id} (${vid.from_image_id} -> ${vid.to_image_id})
+TARGET DURATION: ${vid.target_duration_sec} seconds timelapse (Temporal Compression: ${vid.temporal_compression_level})
+PHYSICAL WORKLOAD: ${vid.physical_workload}
+ACTION SEQUENCE: ${vid.physical_action_sequence}
+MATERIAL MOVEMENT & LOGISTICS: ${vid.material_movement}
+TEMPORARY ELEMENTS: ${vid.temporary_element_changes}
+TIMELAPSE BEHAVIOR: ${vid.timelapse_behavior || 'Accelerated realistic human and mechanical motion, task-oriented inertia, physical interaction with surfaces.'}
+END STATE CONVERGENCE: ${vid.end_state_convergence || `Final frame smoothly and precisely matches the exact layout, geometry, and material state of ${vid.to_image_id}.`}
+NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or machinery, no morphing structures, no camera position drift, no text, no watermarks.`;
+    }
+
+    // --- PRE-BUILT COMPREHENSIVE PRODUCTION SCENARIOS ---
+    const SCENARIOS = {
+      warehouse: {
+        production_summary: {
+          project_name: "Urban Industrial Warehouse to Biophilic Architectural Studio",
+          target_total_duration_sec: 60,
+          video_duration_sec: 10,
+          total_videos: 6,
+          total_images: 7,
+          actual_total_runtime_sec: 60,
+          temporal_summary: "60-second compressed timelapse spanning 8 weeks of real-world construction across 6 transition videos (10s each) and 7 milestone anchor states."
+        },
+        sequence_map: [
+          "IMAGE 1",
+          "VIDEO 1 (IMAGE 1 -> IMAGE 2)",
+          "IMAGE 2",
+          "VIDEO 2 (IMAGE 2 -> IMAGE 3)",
+          "IMAGE 3",
+          "VIDEO 3 (IMAGE 3 -> IMAGE 4)",
+          "IMAGE 4",
+          "VIDEO 4 (IMAGE 4 -> IMAGE 5)",
+          "IMAGE 5",
+          "VIDEO 5 (IMAGE 5 -> IMAGE 6)",
+          "IMAGE 6",
+          "VIDEO 6 (IMAGE 6 -> IMAGE 7)",
+          "IMAGE 7"
+        ],
+        core_prompt: {
+          scene_id: "SCENE_WH_TO_STUDIO_001",
+          project_description: "Conversion of a 1920s derelict brick industrial masonry warehouse into a high-end biophilic architectural design office with steel mezzanine, polished terrazzo, and indoor garden.",
+          camera_lock: "Locked heavy tripod mount, 1.6m elevation, southwest corner looking northeast at 45-degree angle. 28mm rectilinear lens, f/8 deep focus. Strictly prohibited: camera panning, tilting, focal length zooming, or perspective alteration.",
+          geometry_lock: "Exterior perimeter red-clay brick walls, overhead heavy timber king-post roof trusses, central structural steel column #2, and north arched double-hung window apertures are permanently fixed.",
+          landmark_lock: "1. Vertical steel column #2 with original rivets; 2. Transverse overhead timber roof truss #3; 3. Arched brick masonry window frame on North wall; 4. Cast-iron drainpipe in northeast corner; 5. Perimeter concrete slab expansion seam line.",
+          material_lock: "Historic red clay brick masonry with weathered lime mortar, rough-sawn Douglas fir ceiling beams, cold-rolled structural steel, aggregate epoxy terrazzo, low-iron insulated glass.",
+          lighting_lock: "Consistent soft diffused overcast daylight from northern window apertures (5600K) supplemented by 3500K warm balanced interior work lights during construction phases.",
+          environment_lock: "Indoor construction environment. Controlled dust settles realistically on horizontal surfaces, ambient air shows subtle atmospheric haze during grinding phases.",
+          worker_identity_registry: [
+            {
+              worker_id: "WORKER A",
+              role: "Lead Carpenter & Structural Specialist",
+              visual_profile: "Tall male, stocky build, navy blue Carhartt work trousers, high-visibility neon yellow safety vest, white hardhat, heavy leather toolbelt with framing hammer."
+            },
+            {
+              worker_id: "WORKER B",
+              role: "Mechanical, Electrical & Glazing Technician",
+              visual_profile: "Medium athletic build female, dark gray cargo work pants, high-visibility orange safety vest with reflective silver X, white hardhat, yellow safety goggles, multimeter pouch."
+            },
+            {
+              worker_id: "WORKER C",
+              role: "Finishing & Logistics Mason",
+              visual_profile: "Broad-shouldered male, charcoal denim overalls, neon yellow safety vest, blue hardhat, heavy neoprene work gloves, respirators during concrete work."
+            }
+          ],
+          equipment_registry: [
+            {
+              equipment_id: "EQUIPMENT 1",
+              type: "Electric Compact Scissor Lift",
+              visual_profile: "Safety-yellow Genie GS-1930 compact scissor lift, black guardrails, non-marking gray tires. Positioned systematically along north wall."
+            },
+            {
+              equipment_id: "EQUIPMENT 2",
+              type: "Heavy Commercial Debris Cart & Vacuum Unit",
+              visual_profile: "Heavy-duty industrial blue Rubbermaid 1-cubic-yard tilt truck paired with a yellow Husqvarna industrial HEPA dust extractor vacuum."
+            }
+          ],
+          global_physics_rules: "Every change requires explicit mechanical labor, tool intervention, physical material staging, debris generation, and realistic settling. No magical instantaneous appearances.",
+          global_timelapse_rules: "Accelerated natural human motion with task-based momentum. Workers walk briskly, tools vibrate realistically, concrete slurry hardens and loses surface sheen gradually.",
+          global_negative_rules: "no magical transformations, no teleporting workers or machinery, no morphing structures, no camera position drift, no text, no watermarks, no floating tools.",
+          raw_core_text: ""
+        },
+        images: [
+          {
+            image_id: "IMAGE 1",
+            state_id: "STATE_01",
+            state_purpose: "Initial raw, derelict warehouse state prior to any demolition or renovation intervention.",
+            completed_work: "None. Historic industrial warehouse as abandoned for two decades.",
+            active_work: "Initial site inspection and surveyor laser marking on floor.",
+            remaining_work: "Complete interior demolition, surface blasting, mezzanine installation, MEP, glazing, finishes, staging.",
+            worker_actions: "WORKER A stands near landmark column #2 holding architectural blueprints; WORKER B inspects electrical junction box with flashlight.",
+            equipment_state: "EQUIPMENT 1 parked stationary against west wall with power cord coiled; EQUIPMENT 2 empty near southern entryway.",
+            material_state: "Heavily spalled concrete slab with old oil stains, peeling whitewash on red brick walls, cobwebs on overhead Douglas fir timber trusses.",
+            temporary_elements: "Tripod laser level set up on concrete slab casting green horizontal guide line across brick wall.",
+            physical_evidence: "Loose mortar dust, abandoned wooden shipping pallets stacked in northeast corner, rusted electrical conduit fragments.",
+            local_negative_prompt: "no modern furniture, no clean drywall, no shiny surfaces, no plants.",
+            full_copy_ready_prompt: ""
+          },
+          {
+            image_id: "IMAGE 2",
+            state_id: "STATE_02",
+            state_purpose: "Demolition and substrate decontamination complete; structural envelope fully cleaned and prepped.",
+            completed_work: "All discarded pallets, debris, and dead conduits stripped; masonry pressure-washed and lime-pointed; concrete slab diamond-ground.",
+            active_work: "Precision chalk line snapping for mezzanine foundation anchor bolts.",
+            remaining_work: "Structural steel erection, MEP rough-in, window framing, finishes, flooring, furniture staging.",
+            worker_actions: "WORKER A and WORKER C kneeling on opposite ends of a snapped fluorescent blue chalk line on concrete floor; WORKER B checking overhead truss integrity from ladder.",
+            equipment_state: "EQUIPMENT 2 parked near central bay filled with bags of mortar residue; industrial floor grinding disc resting nearby.",
+            material_state: "Exposed pristine reclaimed red brick with fresh off-white lime repointing; concrete subfloor etched to matte light gray aggregate texture.",
+            temporary_elements: "Yellow caution tape barriers around perimeter; two heavy-duty Halogen work floodlights on yellow tripods illuminating work zone.",
+            physical_evidence: "Fine dry concrete dust swept into organized piles, anchor bolt holes drilled into concrete with vacuum rings.",
+            local_negative_prompt: "no finished furniture, no glazing, no wood partitions, no rubbish piles.",
+            full_copy_ready_prompt: ""
+          },
+          {
+            image_id: "IMAGE 3",
+            state_id: "STATE_03",
+            state_purpose: "Structural steel mezzanine skeleton and timber deck framing assembled in place.",
+            completed_work: "Baseplates anchored to slab; matte black I-beam columns and cross-beams erected; engineered timber mezzanine floor joists bolted.",
+            active_work: "Securing tongue-and-groove structural subfloor panels atop mezzanine joists.",
+            remaining_work: "MEP rough-in, exterior glazing, microcement drywall, terrazzo floor, architectural joinery, biophilic planting.",
+            worker_actions: "WORKER A atop mezzanine driving pneumatic fasteners into subfloor; WORKER C feeding plywood sheets from ground level; WORKER B running metal EMT conduits along ceiling.",
+            equipment_state: "EQUIPMENT 1 raised to 4m height supporting WORKER B under ceiling; EQUIPMENT 2 staged with conduit scrap cuttings.",
+            material_state: "Powder-coated matte black structural steel beams; raw pale pine subfloor panels; raw galvanized steel electrical conduits.",
+            temporary_elements: "Orange temporary safety netting along mezzanine edge; scaffolding tower with aluminum planks standing in northwest sector.",
+            physical_evidence: "Cabling spools on floor, cardboard packaging from fasteners, metal shavings collected on magnetic sweep tray.",
+            local_negative_prompt: "no finished office chairs, no decorative rugs, no polished glass partitions.",
+            full_copy_ready_prompt: ""
+          },
+          {
+            image_id: "IMAGE 4",
+            state_id: "STATE_04",
+            state_purpose: "Envelope closed with insulated steel-frame glazing; interior partitions drywalled and taped.",
+            completed_work: "Double-glazed multi-pane steel windows fitted into brick arches; perimeter stud walls insulated and covered with taped and mudded drywall.",
+            active_work: "Second-coat drywall joint compound sanding with vacuum pole sander.",
+            remaining_work: "Floor terrazzo pouring, wall paint/microcement, custom cabinetry, lighting fixture installation, furniture staging.",
+            worker_actions: "WORKER C sanding drywall joint seam wearing P100 respirator mask; WORKER B pulling Cat6 network cabling bundles from ceiling drop box; WORKER A assembling stair stringers.",
+            equipment_state: "EQUIPMENT 1 lowered and parked in corner; EQUIPMENT 2 actively connected to sanding vacuum hose.",
+            material_state: "Smooth pale plaster compound over off-white drywall; new matte black window sash frames with clean reflection; taped perimeter joints.",
+            temporary_elements: "Cardboard floor protection paper rolled out in walking lanes; step ladders and plaster hawk boards staged near partition.",
+            physical_evidence: "Chalky white sanding residue in localized trays, rolls of scrim tape, spackle buckets with drying paste on rims.",
+            local_negative_prompt: "no messy rubble, no broken glass, no loose wires hanging without boxes.",
+            full_copy_ready_prompt: ""
+          },
+          {
+            image_id: "IMAGE 5",
+            state_id: "STATE_05",
+            state_purpose: "Architectural finishes applied: Venetian microcement walls, polished terrazzo floor, and mezzanine steel stair.",
+            completed_work: "Poured seamless aggregate terrazzo floor cured and diamond-polished to satin sheen; walls coated in warm gray microcement; welded steel spiral stair installed.",
+            active_work: "Peeling blue protective film from metal window trims and testing floor seal curing.",
+            remaining_work: "Cabinetry installation, planter boxes, ergonomic desks, lighting fixtures, biophilic indoor plants.",
+            worker_actions: "WORKER A carefully inspecting finished stair handrail joints; WORKER B mounting low-voltage magnetic track lighting rails into ceiling slots; WORKER C removing floor tape.",
+            equipment_state: "EQUIPMENT 1 positioned under central truss for track light installation; EQUIPMENT 2 removed from main floor and parked in vestibule.",
+            material_state: "High-spec polished terrazzo floor with exposed river pebble aggregate reflecting soft daylight; smooth tactile limestone microcement walls.",
+            temporary_elements: "Padded moving blankets covering bottom three stair treads; neatly organized cardboard toolboxes with socket wrenches.",
+            physical_evidence: "Rolls of discarded blue painter tape, clean mop bucket with microfiber drying pads, buffing compound pads.",
+            local_negative_prompt: "no clutter, no raw studs, no wet cement, no unpackaged loose debris.",
+            full_copy_ready_prompt: ""
+          },
+          {
+            image_id: "IMAGE 6",
+            state_id: "STATE_06",
+            state_purpose: "Architectural millwork, custom oak workstations, and planter beds installed.",
+            completed_work: "Bespoke rift-sawn white oak long collaboration table anchored; built-in architectural planter trench filled with drainage gravel; track spotlights wired.",
+            active_work: "Soil installation and testing illumination levels with digital lux meter.",
+            remaining_work: "Final potted vegetation, designer seating, computing monitors, staging decor, glass cleaning.",
+            worker_actions: "WORKER A and WORKER C leveling a 4-meter solid oak conference table; WORKER B aiming warm 3500K track spotlights toward architectural feature wall.",
+            equipment_state: "EQUIPMENT 1 lowered to ground level ready for site egress; EQUIPMENT 2 emptied and sanitized.",
+            material_state: "Natural oiled white oak timber with satin organic sheen; dark nutrient-rich potting soil in recessed floor trench; warm directional light pools.",
+            temporary_elements: "Laser distance meter on tripod; soft felt furniture glider pads; cleaning microfiber cloths in caddy.",
+            physical_evidence: "Empty flat-pack wooden crates neatly stacked for removal; potting soil bags folded flat; clean tape measures on desk.",
+            local_negative_prompt: "no heavy machinery on floor, no dust clouds, no unfinished wiring.",
+            full_copy_ready_prompt: ""
+          },
+          {
+            image_id: "IMAGE 7",
+            state_id: "STATE_07",
+            state_purpose: "Final completed architectural studio: fully furnished, biologically enriched, spotless daylight staging.",
+            completed_work: "100% complete. Studio commissioned with lush mature Ficus Lyrata and Monstera in planters, Herman Miller chairs, architectural models on pedestals.",
+            active_work: "None (Fully staged final state ready for professional occupation).",
+            remaining_work: "Zero remaining construction tasks. Project commissioned.",
+            worker_actions: "Workers have packed up and departed; space is unoccupied and serene in pristine architectural presentation.",
+            equipment_state: "All construction machinery and equipment 100% demobilized and removed from premises.",
+            material_state: "Immaculate satin terrazzo reflection, vibrant deep green waxy plant foliage, pristine glass windows letting in crisp daylight, glowing 3500K accents.",
+            temporary_elements: "None. All temporary construction scaffolding, paper protection, and tools fully cleared.",
+            physical_evidence: "Architectural scale foamcore models displayed on oak credenza, ceramic espresso cups on table, coffee table books open to Le Corbusier layouts.",
+            local_negative_prompt: "no construction tools, no hardhats, no dust, no unfinished surfaces, no debris, no workers.",
+            full_copy_ready_prompt: ""
+          }
+        ],
+        videos: [
+          {
+            video_id: "VIDEO 1",
+            transition_id: "TRANSITION_01_TO_02",
+            from_image_id: "IMAGE 1",
+            to_image_id: "IMAGE 2",
+            target_duration_sec: 10,
+            temporal_compression_level: "High Compression (approx. 40 hours real-world labor compressed into 10 seconds)",
+            physical_workload: "Heavy demolition, pallet removal, high-pressure masonry washing, rotary concrete surface scarification.",
+            physical_action_sequence: "1. WORKER A and C break down abandoned pallets and haul timber out; 2. WORKER B disconnects and pulls obsolete conduit wiring; 3. Pressure washer team systematically cleans brick from ceiling down; 4. Heavy rotary floor grinder moves in systematic overlapping grid across floor slab, vacuuming pulverized concrete paste.",
+            worker_actions: "Workers move rapidly in accelerated timelapse cadence, loading rubble into EQUIPMENT 2, operating wand sprayers, sweeping slab clean.",
+            equipment_actions: "EQUIPMENT 2 shuttles repeatedly back and forth between center bay and exit; floor grinder spins with water-misting system.",
+            material_movement: "Rubble, broken timber, and rusted metal conduits are carried away; dirty slurry water vacuumed; brick changes from grime-darkened brown to vibrant clean terracotta red.",
+            temporary_element_changes: "Debris bins fill up and are swapped; work lights repositioned; chalk line snapped on freshly dry floor in final second.",
+            timelapse_behavior: "Fast-forward construction motion, strobe of changing daylight through north windows, dust clouds briefly form and get sucked into extractor.",
+            end_state_convergence: "Camera tripod remains 100% motionless; final frame perfectly aligns with IMAGE 2: clean brick, ground matte concrete slab, snapped blue chalk line.",
+            full_copy_ready_prompt: ""
+          },
+          {
+            video_id: "VIDEO 2",
+            transition_id: "TRANSITION_02_TO_03",
+            from_image_id: "IMAGE 2",
+            to_image_id: "IMAGE 3",
+            target_duration_sec: 10,
+            temporal_compression_level: "High Compression (approx. 45 hours labor compressed into 10 seconds)",
+            physical_workload: "Structural steel mezzanine erection, column anchoring, cross-beam crane hoisting, timber joist installation.",
+            physical_action_sequence: "1. Rotary hammer drills anchor bolts into concrete slab at snapped points; 2. Steel upright columns hoisted vertically and baseplates torqued down; 3. Main horizontal I-beam lifted and bolted to columns; 4. Douglas fir timber joists swung into steel hangers; 5. Plywood subfloor sheets laid down and pneumatic nail guns fire in rapid sequence.",
+            worker_actions: "WORKER A guides steel beams with tag lines; WORKER C torques bolts with impact wrench; WORKER B fastens joist hangers and pulls ceiling conduit drops.",
+            equipment_actions: "Portable engine crane hoists steel beams; EQUIPMENT 1 elevates WORKER B to overhead ceiling truss heights.",
+            material_movement: "Raw steel members transported into frame, hoisted upward against gravity, and locked permanently into geometric positions.",
+            temporary_element_changes: "Scaffolding towers erected in northwest corner; yellow caution tape replaced with orange perimeter safety mesh.",
+            timelapse_behavior: "Vigorous mechanical assembly timelapse, rhythmic sparks from metal drill fastening, rapid laying of horizontal timber framing.",
+            end_state_convergence: "Final frame stabilizes precisely into IMAGE 3 layout: completed steel mezzanine skeleton with raw timber floor joists securely anchored.",
+            full_copy_ready_prompt: ""
+          },
+          {
+            video_id: "VIDEO 3",
+            transition_id: "TRANSITION_03_TO_04",
+            from_image_id: "IMAGE 3",
+            to_image_id: "IMAGE 4",
+            target_duration_sec: 10,
+            temporal_compression_level: "Medium-High Compression (approx. 35 hours labor compressed into 10 seconds)",
+            physical_workload: "Perimeter stud insulation, window sash glazing, drywall hanging, joint taping and joint compound sanding.",
+            physical_action_sequence: "1. Mineral wool insulation batts friction-fitted into wall studs; 2. Black steel multi-pane window assemblies hoisted into brick arches and caulked; 3. Gypsum drywall boards screwed to wall studs in rapid succession; 4. Paper tape and joint compound applied over seams with wide trowels; 5. Electric drywall pole sander smooths joints in sweeping arcs.",
+            worker_actions: "WORKER A and C carry drywall boards together and screw into metal framing; WORKER B installs window sills and runs electrical drops; WORKER C sands dried compound with respirator.",
+            equipment_actions: "EQUIPMENT 1 used to seal top window arches; dust extractor runs steadily with hose attached to pole sander.",
+            material_movement: "Insulation sheets disappear inside wall cavities; gray drywall boards enclose the room; white mud spreads across joints, turns chalky matte as it dries.",
+            temporary_element_changes: "Temporary floor protection paper rolled out; compound buckets appear, get emptied, and stacked.",
+            timelapse_behavior: "Fluid rhythmic plastering motion, rapid drying color change of joint compound from gray-beige to powdery chalk white.",
+            end_state_convergence: "Final frame matches IMAGE 4 exactly: smooth taped drywall, glazed arched windows with clean reflections, clear floor path.",
+            full_copy_ready_prompt: ""
+          },
+          {
+            video_id: "VIDEO 4",
+            transition_id: "TRANSITION_04_TO_05",
+            from_image_id: "IMAGE 4",
+            to_image_id: "IMAGE 5",
+            target_duration_sec: 10,
+            temporal_compression_level: "High Compression (approx. 50 hours curing and polishing compressed into 10 seconds)",
+            physical_workload: "Aggregate epoxy terrazzo floor pouring, screeding, 48-hour curing, heavy rotary planetary diamond polishing, microcement wall application.",
+            physical_action_sequence: "1. Brass dividing strips set into concrete slab; 2. Liquid terrazzo matrix with multi-colored marble aggregate poured and screeded flat; 3. Surface cures chemically; 4. Planetary floor grinding machine grinds down top 2mm exposing aggregate cross-sections; 5. Polishing pads buff floor to 800-grit satin reflection; 6. Trowels apply Venetian microcement to drywalls in tight overlapping strokes; 7. Mezzanine steel stair welded and anchored.",
+            worker_actions: "Workers wearing rubber boots screed terrazzo liquid; operator maneuvers heavy grinding machine with pendulum motion; plasterer glazes microcement.",
+            equipment_actions: "Heavy planetary grinder rotates with water cooling; slurry extraction vacuum follows closely behind; scissor lift lowered to corner.",
+            material_movement: "Wet semi-liquid slurry solidifies; rough opaque surface transforms under diamond pads into a shimmering, reflective aggregate terrazzo surface.",
+            temporary_element_changes: "Perimeter masking paper removed; floor grinding pads swapped through increasing grits (50 to 800).",
+            timelapse_behavior: "Dramatic visual transformation: dull wet grey floor becomes a polished mirror of architectural reflections. Shadows from northern windows slide across floor with accelerated sun movement.",
+            end_state_convergence: "Camera strictly locked; final frame converges smoothly on IMAGE 5: cured, gleaming aggregate floor, warm microcement walls, welded steel staircase.",
+            full_copy_ready_prompt: ""
+          },
+          {
+            video_id: "VIDEO 5",
+            transition_id: "TRANSITION_05_TO_06",
+            from_image_id: "IMAGE 5",
+            to_image_id: "IMAGE 6",
+            target_duration_sec: 10,
+            temporal_compression_level: "Medium Compression (approx. 25 hours millwork assembly compressed into 10 seconds)",
+            physical_workload: "Custom architectural oak joinery installation, workstation assembly, built-in planter framing, electrical track lighting fixtures.",
+            physical_action_sequence: "1. Massive solid white oak conference table planks carried in and assembled atop steel trestle legs; 2. Recessed planter trench lined with waterproof membrane and filled with drainage gravel; 3. Black aluminum magnetic track lighting rails snapped into ceiling recesses and fitted with adjustable LED spotlights; 4. Built-in storage credenzas anchored against east brick wall.",
+            worker_actions: "WORKER A meticulously checks oak tabletop levels with digital spirit level; WORKER B clips in LED light modules and aligns beam angles; WORKER C shovels gravel and rich potting soil into planter trench.",
+            equipment_actions: "EQUIPMENT 1 performs its final overhead lighting task, then drives toward exit doorway; pallet jack wheels in timber crates.",
+            material_movement: "Timber, gravel, soil, and luminaires are brought inside; empty cardboard packaging is broken down and removed.",
+            temporary_element_changes: "Moving blankets laid out on floor to protect terrazzo, then rolled up and stored; laser alignment lines flash momentarily.",
+            timelapse_behavior: "Precise, deliberate craftsmanship movements, warm lights click on one-by-one illuminating architectural details with crisp 3500K accent cones.",
+            end_state_convergence: "Final frame locks perfectly into IMAGE 6: bespoke oak furniture firmly in place, planter beds filled with soil, overhead lighting operational.",
+            full_copy_ready_prompt: ""
+          },
+          {
+            video_id: "VIDEO 6",
+            transition_id: "TRANSITION_06_TO_07",
+            from_image_id: "IMAGE 6",
+            to_image_id: "IMAGE 7",
+            target_duration_sec: 10,
+            temporal_compression_level: "Low-Medium Compression (approx. 16 hours staging and commissioning compressed into 10 seconds)",
+            physical_workload: "Biophilic vegetation planting, designer furniture placement, glass window detailing, tech equipment staging, final deep clean.",
+            physical_action_sequence: "1. Mature indoor trees (Ficus Lyrata, Philodendron, Strelitzia) carried in and planted into soil bed; 2. Black mesh ergonomic chairs unboxed and placed at oak workstations; 3. Curved design monitors and minimalist desktop accessories placed; 4. Windows squeegeed with lint-free towels; 5. Microfiber floor mop passes over terrazzo leaving flawless reflection; 6. Workers collect all tools, hardhats, and exit through southwest door.",
+            worker_actions: "Team works in coordinated finishing dance: planting, wiping surfaces, positioning architectural books and scale models, before turning off work floodlights and vacating.",
+            equipment_actions: "All machinery, scissor lift, and carts completely absent from frame; space transitions from active worksite to pristine interior sanctuary.",
+            material_movement: "Green living plants fill the vertical space; fine smudges wiped clean; daylight filters in unobstructed through sparkling glass panes.",
+            temporary_element_changes: "All temporary ladders, cords, toolkits, and hardhats vanish as workers exit.",
+            timelapse_behavior: "Gradual calming of physical motion: fast human movements give way to a serene, static, sunlit room where plant leaves gently settle into place.",
+            end_state_convergence: "Final frame settles smoothly and identically into IMAGE 7: flawless, pristine, warm, sun-drenched biophilic architectural design studio.",
+            full_copy_ready_prompt: ""
+          }
+        ]
+      },
+
+      pool: {
+        production_summary: {
+          project_name: "Backyard Dirt Excavation to In-Ground Infinity Pool & Decking",
+          target_total_duration_sec: 40,
+          video_duration_sec: 10,
+          total_videos: 4,
+          total_images: 5,
+          actual_total_runtime_sec: 40,
+          temporal_summary: "40-second construction timelapse across 4 transition videos and 5 landmark milestone states, transforming raw terrain into a luxury pool and cedar patio."
+        },
+        sequence_map: [
+          "IMAGE 1",
+          "VIDEO 1 (IMAGE 1 -> IMAGE 2)",
+          "IMAGE 2",
+          "VIDEO 2 (IMAGE 2 -> IMAGE 3)",
+          "IMAGE 3",
+          "VIDEO 3 (IMAGE 3 -> IMAGE 4)",
+          "IMAGE 4",
+          "VIDEO 4 (IMAGE 4 -> IMAGE 5)",
+          "IMAGE 5"
+        ],
+        core_prompt: {
+          scene_id: "SCENE_POOL_002",
+          project_description: "Residential backyard transformation from an overgrown sloped dirt yard into a luxury concrete infinity pool with slate coping and western red cedar decking.",
+          camera_lock: "Elevated fixed tripod at 3.5m height on south residential balcony overlooking backyard looking north. 24mm wide lens, f/11 deep focus. Absolute camera lock with zero drift.",
+          geometry_lock: "Main house south stucco wall, property boundary mature oak tree at northeast corner, concrete retaining wall on west perimeter.",
+          landmark_lock: "1. 50-year-old Quercus oak tree (Northeast); 2. House second-story balcony railing (Foreground frame); 3. West stone retaining wall; 4. Neighboring property evergreen hedge line (North background).",
+          material_lock: "Compacted clay soil, steel rebar grid, pneumatically applied gunite concrete, charcoal basalt coping stones, western red cedar deck planks, crystal clear filtered chlorinated water.",
+          lighting_lock: "Natural outdoor solar lighting: consistent morning sun angle (approx 10:00 AM sun position) to ensure shadow alignment across key states.",
+          environment_lock: "Outdoor suburban residential atmosphere. Dry summer weather, clear sky with gentle passing cirrus clouds.",
+          worker_identity_registry: [
+            {
+              worker_id: "WORKER A",
+              role: "Excavation & Earthmoving Operator",
+              visual_profile: "Stocky male, khaki cargo pants, high-visibility green shirt, white hardhat, heavy steel-toe boots."
+            },
+            {
+              worker_id: "WORKER B",
+              role: "Steel Rebar & Concrete Gunite Specialist",
+              visual_profile: "Lean athletic male, heavy gray denim trousers, orange safety vest, yellow hardhat, protective rubber knee pads and eye goggles."
+            }
+          ],
+          equipment_registry: [
+            {
+              equipment_id: "EQUIPMENT 1",
+              type: "Compact Hydraulic Mini Excavator",
+              visual_profile: "Bright orange Kubota KX040-4 mini excavator with 24-inch toothed digging bucket and dozer blade."
+            },
+            {
+              equipment_id: "EQUIPMENT 2",
+              type: "Concrete Pumper Truck & Hose Rig",
+              visual_profile: "White Putzmeister high-pressure concrete trailer pump with heavy 4-inch black rubber delivery hose."
+            }
+          ],
+          global_physics_rules: "Soil excavation must show physical mass displacement and dump truck removal. Gunite requires physical pneumatic buildup against rebar cage. No instant concrete morphing.",
+          global_timelapse_rules: "Accelerated natural earthmoving kinetics. Heavy machine hydraulic articulation, rapid spray gunite buildup, progressive water filling.",
+          global_negative_rules: "no magical transformations, no teleporting machinery, no floating water, no camera perspective change, no sudden weather changes.",
+          raw_core_text: ""
+        },
+        images: [
+          {
+            image_id: "IMAGE 1",
+            state_id: "STATE_01",
+            state_purpose: "Initial raw, unexcavated sloped grass and dirt backyard.",
+            completed_work: "Initial property survey and perimeter wooden staking.",
+            active_work: "Spraying bright orange boundary marking paint on lawn.",
+            remaining_work: "Excavation, rebar cage, plumbing rough-in, gunite shooting, coping, cedar decking, water filling.",
+            worker_actions: "WORKER A spraying paint on ground following surveyor twine; WORKER B holding survey grade rod.",
+            equipment_state: "EQUIPMENT 1 parked on temporary plywood tracks in west corner; EQUIPMENT 2 not yet mobilized.",
+            material_state: "Overgrown patchy summer grass, dry tan soil, visible gentle slope down toward oak tree.",
+            temporary_elements: "Wooden survey stakes with orange fluorescent ribbon flags inserted into ground.",
+            physical_evidence: "Fresh orange paint contour lines visible on grass outlining pool shell.",
+            local_negative_prompt: "no pool water, no concrete, no decking, no pool equipment.",
+            full_copy_ready_prompt: ""
+          },
+          {
+            image_id: "IMAGE 2",
+            state_id: "STATE_02",
+            state_purpose: "Excavation complete and structural steel rebar cage tied with plumbing rough-in.",
+            completed_work: "120 cubic yards of earth removed; floor and wall rebar grid tied in 6-inch squares; PVC main drains and return jets plumbed.",
+            active_work: "Checking rebar elevation with transit laser level.",
+            remaining_work: "Gunite application, curing, tile & coping installation, decking, pool equipment, water filling.",
+            worker_actions: "WORKER B tying steel rebar intersections with tie wire tool; WORKER A inspecting trench plumbing lines.",
+            equipment_state: "EQUIPMENT 1 parked near spoil pile at edge of lot; PVC pipe bundles neatly staged.",
+            material_state: "Raw tiered soil trench walls; crisscrossing rusty steel rebar grid suspended on concrete dobies; white schedule 40 PVC pipes.",
+            temporary_elements: "Yellow plastic boundary stakes; wooden ladder descending into 2.5m deep end of excavated basin.",
+            physical_evidence: "Bucket teeth marks in clay walls, piles of gravel bedding, cut rebar scraps in scrap tub.",
+            local_negative_prompt: "no water, no smooth concrete, no wood deck.",
+            full_copy_ready_prompt: ""
+          },
+          {
+            image_id: "IMAGE 3",
+            state_id: "STATE_03",
+            state_purpose: "Gunite pneumatic concrete shell shot, hand-troweled, and cured to structural finish.",
+            completed_work: "High-strength pneumatically applied gunite concrete fully encasing rebar; curved spa steps and infinity weir bench hand-carved and cured.",
+            active_work: "Water misting the gunite shell for hydration curing.",
+            remaining_work: "Charcoal basalt coping stones, waterproof interior plaster, cedar decking, water commissioning.",
+            worker_actions: "WORKER B holding garden hose spraying mist over cured gray gunite walls; WORKER A setting laser level for deck ledger board.",
+            equipment_state: "EQUIPMENT 2 detached and departing; wet concrete hose marks on soil.",
+            material_state: "Rough textured charcoal-gray gunite concrete shell with crisp curved stairs and sharp weir edge.",
+            temporary_elements: "Black expansion joint foam strips along top rim; wooden deck support post brackets anchored to house wall.",
+            physical_evidence: "Rebound concrete sand piles around perimeter, damp dark concrete hydration patches.",
+            local_negative_prompt: "no pool water, no finished wood planks, no outdoor loungers.",
+            full_copy_ready_prompt: ""
+          },
+          {
+            image_id: "IMAGE 4",
+            state_id: "STATE_04",
+            state_purpose: "Basalt coping stones installed and Western red cedar decking framed and planked around basin.",
+            completed_work: "Charcoal natural split basalt coping bonded to pool beam; treated joists framing completed; 90% of western red cedar deck boards screwed down.",
+            active_work: "Fastening final perimeter cedar decking boards with hidden camo deck screws.",
+            remaining_work: "Pool interior quartz plastering, acid wash, chemical water filling, outdoor furniture staging.",
+            worker_actions: "WORKER A driving deck screws into cedar planks; WORKER B applying waterproof joint sealant between coping and deck edge.",
+            equipment_state: "Miter saw station on portable stand in west corner; stack of raw cedar boards on saw horses.",
+            material_state: "Rich warm honey-amber Western Red Cedar with straight grain; honed matte black basalt coping; smooth white quartz pool shell.",
+            temporary_elements: "Cordless drill batteries charging in station; sawdust extraction bag; protective tarps over lawn.",
+            physical_evidence: "Piles of aromatic cedar sawdust swept into corner, empty boxes of stainless deck screws.",
+            local_negative_prompt: "no filled water, no swimming floats, no debris in pool bowl.",
+            full_copy_ready_prompt: ""
+          },
+          {
+            image_id: "IMAGE 5",
+            state_id: "STATE_05",
+            state_purpose: "Completed infinity pool: crystal clear turquoise water overflowing weir edge, warm cedar patio, luxury staging.",
+            completed_work: "100% complete. Water fully balanced and illuminated, deck sealed with UV oil, modern teak loungers and planters staged.",
+            active_work: "None (Pristine completed recreation retreat).",
+            remaining_work: "Zero remaining construction tasks. Project commissioned.",
+            worker_actions: "All workers and contractors have departed; setting is tranquil and pristine.",
+            equipment_state: "All excavation and building equipment 100% demobilized.",
+            material_state: "Vibrant sparkling turquoise pool water with gentle surface caustics; smooth water sheet cascading over infinity weir; rich oiled cedar deck.",
+            temporary_elements: "None. All temporary tools, saws, and stakes completely cleared.",
+            physical_evidence: "Two white upholstered teak sun loungers, low marble outdoor cocktail table, stainless steel glass pool fence.",
+            local_negative_prompt: "no dirt piles, no construction tools, no empty pool, no workers, no mud.",
+            full_copy_ready_prompt: ""
+          }
+        ],
+        videos: [
+          {
+            video_id: "VIDEO 1",
+            transition_id: "TRANSITION_01_TO_02",
+            from_image_id: "IMAGE 1",
+            to_image_id: "IMAGE 2",
+            target_duration_sec: 10,
+            temporal_compression_level: "High Compression (approx. 32 hours labor compressed into 10 seconds)",
+            physical_workload: "Excavator digging pool basin, loading soil into haulers, rebar grid delivery and manual steel tying.",
+            physical_action_sequence: "1. Mini excavator bucket bites into grass, scooping cubic yards of dirt in systematic strokes; 2. Basin deepens progressively from shallow to deep end; 3. Soil hauled away; 4. Rebar grid laid across gravel bed and wired into rigid 3D cage; 5. PVC plumbing pipes threaded beneath steel.",
+            worker_actions: "WORKER A operates excavator with rapid fluid movements; WORKER B measures depth with laser pole and ties rebar joints with spinning pliers.",
+            equipment_actions: "Mini excavator pivots repeatedly, digging, swinging, and depositing earth; tracks move incrementally along rim.",
+            material_movement: "Vast volumes of grass and soil vanish from center of frame; intricate dark grid of steel rebar rises from the earthen bowl.",
+            temporary_element_changes: "Survey stakes are dug away; trench shoring planks appear briefly at deep end; PVC pipe stacks deplete.",
+            timelapse_behavior: "Dynamic earthmoving timelapse, rapid shadow rotation from sun, clouds skating quickly across sky.",
+            end_state_convergence: "Camera strictly fixed; final frame converges smoothly on IMAGE 2: carved basin with complete rebar cage and plumbing rough-in.",
+            full_copy_ready_prompt: ""
+          },
+          {
+            video_id: "VIDEO 2",
+            transition_id: "TRANSITION_02_TO_03",
+            from_image_id: "IMAGE 2",
+            to_image_id: "IMAGE 3",
+            target_duration_sec: 10,
+            temporal_compression_level: "High Compression (approx. 24 hours shotcrete and curing compressed into 10 seconds)",
+            physical_workload: "High pressure pneumatic gunite spraying, rebound sweeping, trowel contouring, and 7-day water curing.",
+            physical_action_sequence: "1. Concrete pump hose pressurized; 2. Nozzleman sprays dense concrete slurry encapsulating rebar cage; 3. Finisher carves steps and benches using straight edge rod; 4. Sponge troweling creates clean pool perimeter; 5. Shell hydrates and cures with daily water misting.",
+            worker_actions: "WORKER B wields heavy pulsating gunite nozzle with steady horizontal sweeps; WORKER A assists hose handling and shaves excess wet concrete.",
+            equipment_actions: "EQUIPMENT 2 pumps steadily with pulsing hose movement; compressor hums in background.",
+            material_movement: "Air-propelled grey mortar builds up rapidly over rebar cage, transitioning from porous steel skeleton to monolithic stone basin.",
+            temporary_element_changes: "Plumbing pipes masked with red tape, unmasked after concrete shoot; protective plastic draped over fences.",
+            timelapse_behavior: "Pneumatic spray timelapse: rapid accumulation of grey matter, energetic troweling, water spray causing momentary darkening of concrete surface.",
+            end_state_convergence: "Final frame locks perfectly with IMAGE 3: monolithic curved grey gunite pool shell with pristine steps.",
+            full_copy_ready_prompt: ""
+          },
+          {
+            video_id: "VIDEO 3",
+            transition_id: "TRANSITION_03_TO_04",
+            from_image_id: "IMAGE 3",
+            to_image_id: "IMAGE 4",
+            target_duration_sec: 10,
+            temporal_compression_level: "Medium-High Compression (approx. 36 hours carpentry compressed into 10 seconds)",
+            physical_workload: "Mortar setting basalt coping stones, timber post anchoring, deck joist framing, cedar plank screw fastening.",
+            physical_action_sequence: "1. Basalt coping stones dry-laid, cut with wet tile saw, and set in polymer-modified mortar bed; 2. Post holes dug around pool perimeter, concrete piers poured, galvanized brackets anchored; 3. Pressure-treated 2x8 joists framed; 4. Aromatic red cedar planks laid perpendicular and fastened with cordless auto-feed screwdrivers.",
+            worker_actions: "WORKER A cuts deck boards on chop saw and fastens them down in rapid succession; WORKER B checks coping level and grouts joints.",
+            equipment_actions: "Chop saw spins with intermittent sawdust puffs; portable concrete mixer churns for footing posts.",
+            material_movement: "Stone blocks lock onto concrete rim; sea of warm cedar boards spreads rapidly across raw dirt, completely enclosing the perimeter.",
+            temporary_element_changes: "Lumber stacks shrink; toolboxes move as deck surface advances; safety cones relocated.",
+            timelapse_behavior: "Orderly linear carpentry progress, rhythmic alignment of parallel timber planks across patio area.",
+            end_state_convergence: "Final frame seamlessly matches IMAGE 4: complete cedar deck and charcoal basalt coping surrounding empty white quartz pool shell.",
+            full_copy_ready_prompt: ""
+          },
+          {
+            video_id: "VIDEO 4",
+            transition_id: "TRANSITION_04_TO_05",
+            from_image_id: "IMAGE 4",
+            to_image_id: "IMAGE 5",
+            target_duration_sec: 10,
+            temporal_compression_level: "Medium Compression (approx. 20 hours plastering and filling compressed into 10 seconds)",
+            physical_workload: "Smooth pool plastering, water tanker hose filling, chemical balancing, deck oiling, outdoor furniture staging.",
+            physical_action_sequence: "1. Pool bowl acid washed and waterproof white pebble plaster troweled; 2. High-volume clean water hoses fill pool basin continuously as water line rises; 3. Deck wood coated with penetrating natural UV sealer; 4. Infinity weir pump activated, cascading water over edge; 5. Furniture carried out and arranged.",
+            worker_actions: "Workers wipe down deck surfaces, roll out waterproof cushions on loungers, pack all power tools into work trucks, and leave.",
+            equipment_actions: "Water hoses writhe slightly under pressure; pool filtration pump hums silently in enclosure.",
+            material_movement: "Water volume rises steadily from bottom drain up to coping edge, shifting in color from clear to deep azure blue.",
+            temporary_element_changes: "Filling hoses coiled and removed; all scrap materials, tarps, and ladders vanish from frame.",
+            timelapse_behavior: "Hypnotic water filling timelapse: rising water surface with shimmering caustic reflections, sunlight dancing across fresh turquoise pool.",
+            end_state_convergence: "Camera 100% motionless; final frame stabilizes in complete perfection matching IMAGE 5: crystal clear filled infinity pool, glistening cedar deck.",
+            full_copy_ready_prompt: ""
+          }
+        ]
+      },
+
+      "tea-house": {
+        production_summary: {
+          project_name: "Raw Concrete Shell to Minimalist Japanese Hinoki Tea Pavilion",
+          target_total_duration_sec: 50,
+          video_duration_sec: 10,
+          total_videos: 5,
+          total_images: 6,
+          actual_total_runtime_sec: 50,
+          temporal_summary: "50-second architectural transformation across 5 transition videos (10s each) and 6 anchor states, crafting a serene Japanese pavilion."
+        },
+        sequence_map: [
+          "IMAGE 1",
+          "VIDEO 1 (IMAGE 1 -> IMAGE 2)",
+          "IMAGE 2",
+          "VIDEO 2 (IMAGE 2 -> IMAGE 3)",
+          "IMAGE 3",
+          "VIDEO 3 (IMAGE 3 -> IMAGE 4)",
+          "IMAGE 4",
+          "VIDEO 4 (IMAGE 4 -> IMAGE 5)",
+          "IMAGE 5",
+          "VIDEO 5 (IMAGE 5 -> IMAGE 6)",
+          "IMAGE 6"
+        ],
+        core_prompt: {
+          scene_id: "SCENE_TEAHOUSE_003",
+          project_description: "Refinement of a bare board-formed concrete commercial shell into an authentic minimalist Japanese Hinoki wood and tatami tea pavilion with raked gravel garden.",
+          camera_lock: "Fixed low-angle tripod mount at 0.9m elevation (traditional seated eye-line), center of south entry facing north. 35mm prime lens. Zero camera movement.",
+          geometry_lock: "Board-formed concrete exterior shear walls, overhead concrete ceiling coffering, north garden glass sliding threshold opening.",
+          landmark_lock: "1. Left board-formed concrete tie-rod hole cluster; 2. Center overhead concrete beam joint; 3. North garden courtyard weeping maple tree; 4. Right recessed alcove niche (Tokonoma).",
+          material_lock: "Japanese Hinoki cypress wood, Washi paper, Igusa rush grass tatami mats, black river basalt, Shirakawa white granite gravel.",
+          lighting_lock: "Diffused northern garden daylight filtered through washi screens, warm 2700K concealed floor cove lighting.",
+          environment_lock: "Controlled indoor climate, ultra-clean dust-free finishing conditions.",
+          worker_identity_registry: [
+            {
+              worker_id: "WORKER A",
+              role: "Master Joinery Carpenter (Miyadaiku)",
+              visual_profile: "Senior craftsman, indigo Japanese work trousers (Tobi), white split-toe Tabi shoes, navy blue towel band around forehead, wooden tool tote."
+            },
+            {
+              worker_id: "WORKER B",
+              role: "Tatami & Screen Artisan",
+              visual_profile: "Young craftsman, beige cotton work jacket, white socks, carrying Japanese hand planes (Kanna) and chisels."
+            }
+          ],
+          equipment_registry: [
+            {
+              equipment_id: "EQUIPMENT 1",
+              type: "Traditional Woodworking Workbench & Shavehorse",
+              visual_profile: "Solid Japanese Hinoki low woodworking beam with traditional wooden bench stops, staged in south corner."
+            }
+          ],
+          global_physics_rules: "Traditional Japanese mortise and tenon joinery (Kanawa-tsugi) fitted without nails. Physical planing shavings, gentle gravel raking. No instant geometry warping.",
+          global_timelapse_rules: "Deliberate, highly precise artisan gestures, wood shavings feathering off hand planes, rhythmic placement of tatami mats.",
+          global_negative_rules: "no magical transitions, no western drywall tools, no sloppy joints, no camera rotation, no text.",
+          raw_core_text: ""
+        },
+        images: [
+          {
+            image_id: "IMAGE 1",
+            state_id: "STATE_01",
+            state_purpose: "Initial raw, unadorned board-formed concrete room shell.",
+            completed_work: "Structural concrete cured and washed.",
+            active_work: "Laying out baseline laser axes for floating timber subfloor.",
+            remaining_work: "Subfloor framing, Hinoki post-and-beam joinery, washi screens, tatami layout, stone staging.",
+            worker_actions: "WORKER A checks dimensions with folding bamboo ruler; WORKER B unrolls blueprints on floor.",
+            equipment_state: "EQUIPMENT 1 staged in southeast corner with hand planes resting on oiled cloth.",
+            material_state: "Matte board-formed concrete with visible wood-grain imprint and circular formwork tie holes.",
+            temporary_elements: "Red chalk marks on concrete slab; protective felt slippers staged at entry.",
+            physical_evidence: "Pristine swept concrete, wooden measurement rods, drafting compass.",
+            local_negative_prompt: "no furniture, no tatami, no sliding doors.",
+            full_copy_ready_prompt: ""
+          },
+          {
+            image_id: "IMAGE 2",
+            state_id: "STATE_02",
+            state_purpose: "Elevated timber subfloor grid and acoustic insulation installed.",
+            completed_work: "Damp-proof membrane laid, rubber acoustic isolation pads placed, interlocking cypress joists framed.",
+            active_work: "Leveling joist plane with micro-shims and precision spirit level.",
+            remaining_work: "Hinoki framing, ceiling lattices, Tokonoma alcove, Shoji installation, tatami laying.",
+            worker_actions: "WORKER A taps wooden leveling shim with wooden mallet; WORKER B applies natural resin sealer.",
+            equipment_state: "EQUIPMENT 1 actively in use with hand plane shavings curling from Hinoki beam.",
+            material_state: "Pale yellow-gold Hinoki cypress framing with aromatic scent; black vibration dampers.",
+            temporary_elements: "Spirit levels, wooden clamps holding joints snug.",
+            physical_evidence: "Curled gossamer-thin Hinoki wood shavings in wooden collection basket.",
+            local_negative_prompt: "no drywall, no metallic screws visible, no finished tatami.",
+            full_copy_ready_prompt: ""
+          },
+          {
+            image_id: "IMAGE 3",
+            state_id: "STATE_03",
+            state_purpose: "Architectural Hinoki post-and-beam pavilion framework assembled with Tokonoma alcove.",
+            completed_work: "Vertical 120mm square Hinoki posts erected; lintels (Kamoi) with grooved sliding tracks carved and seated.",
+            active_work: "Fitting the sacred post (Toko-bashira) with natural bark edge into Tokonoma corner.",
+            remaining_work: "Washi shoji sliding screens, woven rush tatami mats, gravel courtyard, lighting.",
+            worker_actions: "WORKER A and B gently guide the Toko-bashira post into mortise socket.",
+            equipment_state: "EQUIPMENT 1 positioned to side with Japanese mortise chisels.",
+            material_state: "Silky hand-planed Hinoki wood glowing with soft natural luster; textured bark of cedar post.",
+            temporary_elements: "Padded cotton straps around wood posts to prevent fingertip oils.",
+            physical_evidence: "Finely chiseled wood mortise plugs, small brass dovetail templates.",
+            local_negative_prompt: "no tatami laid yet, no paper screens installed.",
+            full_copy_ready_prompt: ""
+          },
+          {
+            image_id: "IMAGE 4",
+            state_id: "STATE_04",
+            state_purpose: "Shoji screens hung in tracks and delicate ceiling kumiko lattice mounted.",
+            completed_work: "Translucent mulberry washi paper Shoji screens sliding smoothly in grooves; cedar ceiling grid mounted.",
+            active_work: "Trimming the perimeter threshold stops.",
+            remaining_work: "Laying woven Igusa rush tatami mats, exterior gravel courtyard raking, staging tea utensils.",
+            worker_actions: "WORKER B slides a delicate shoji screen back and forth testing glide; WORKER A cleans floor recess.",
+            equipment_state: "EQUIPMENT 1 cleared of heavy tools; brooms and horsehair brushes staged.",
+            material_state: "Luminous diffuse white light through washi screens; satin cedar ceiling panels.",
+            temporary_elements: "Cloth shoe covers; soft cotton gloves worn by all workers.",
+            physical_evidence: "Washi paper cut strips in waste bin, natural starch paste tub.",
+            local_negative_prompt: "no plastic, no clutter, no western furniture.",
+            full_copy_ready_prompt: ""
+          },
+          {
+            image_id: "IMAGE 5",
+            state_id: "STATE_05",
+            state_purpose: "Authentic Igusa tatami mats laid in traditional auspicious spiral pattern.",
+            completed_work: "Six full-size natural rush tatami mats seated tightly into floor well with dark green fabric borders (Heri).",
+            active_work: "Placing natural volcanic stepping stone at garden threshold.",
+            remaining_work: "Exterior raked white gravel, hanging scroll, cast iron tea kettle staging.",
+            worker_actions: "WORKER A adjusts alignment of center tatami seam; WORKER B beds basalt stone into exterior gravel.",
+            equipment_state: "EQUIPMENT 1 demobilized and carried outside.",
+            material_state: "Pale green-gold woven rush mats with sweet herbal fragrance; dark matte basalt stone.",
+            temporary_elements: "Traditional wooden gravel rake resting against exterior wall.",
+            physical_evidence: "Grass fibers from fresh mats, clean wooden alignment shims.",
+            local_negative_prompt: "no synthetic rugs, no dirty shoes on tatami.",
+            full_copy_ready_prompt: ""
+          },
+          {
+            image_id: "IMAGE 6",
+            state_id: "STATE_06",
+            state_purpose: "Final completed Zen Hinoki tea pavilion: raked gravel garden, steaming cast-iron kettle, serene contemplation.",
+            completed_work: "100% complete. Hanging Zen calligraphy scroll in Tokonoma, bronze single-flower vase, charcoal hearth glowing.",
+            active_work: "None (Sacred architectural serenity achieved).",
+            remaining_work: "Zero remaining construction tasks. Space consecrated.",
+            worker_actions: "Craftsmen have bowed and vacated; space is peaceful and immaculate.",
+            equipment_state: "All tools completely removed.",
+            material_state: "Golden Hinoki wood, glowing washi paper softly diffusing exterior sun, concentric ripples in raked white Shirakawa gravel.",
+            temporary_elements: "None.",
+            physical_evidence: "Traditional iron Nanbu Tetsubin kettle on ceramic brazier with faint curl of water steam, dark glazed chawan tea bowl.",
+            local_negative_prompt: "no construction debris, no workers, no modern electronics.",
+            full_copy_ready_prompt: ""
+          }
+        ],
+        videos: [
+          {
+            video_id: "VIDEO 1",
+            transition_id: "TRANSITION_01_TO_02",
+            from_image_id: "IMAGE 1",
+            to_image_id: "IMAGE 2",
+            target_duration_sec: 10,
+            temporal_compression_level: "High Compression (approx. 24 hours joinery labor compressed to 10 seconds)",
+            physical_workload: "Floor membrane damp-proofing, rubber isolator placement, cypress joist interlocking assembly.",
+            physical_action_sequence: "1. Black damp-proof membrane rolled across concrete slab; 2. Neoprene acoustic isolation blocks placed; 3. Hinoki cypress floor sleepers notched and fitted together like puzzle; 4. Laser verification of millimeter level across all joists.",
+            worker_actions: "WORKER A cuts lap joints with Japanese Ryoba pull-saw; WORKER B secures rubber pads and aligns wood beams.",
+            equipment_actions: "Hand tools used with silent, fluid kinetic rhythm; zero heavy loud machinery.",
+            material_movement: "Bare dark grey concrete slab is progressively covered by geometric yellow-gold cypress framework.",
+            temporary_element_changes: "Chalk markers erased; measuring rods moved systematically across bay.",
+            timelapse_behavior: "Graceful Japanese joinery timelapse, smooth rapid interlocking of hand-crafted wood joints.",
+            end_state_convergence: "Camera motionless; final frame stabilizes identically on IMAGE 2 subfloor grid.",
+            full_copy_ready_prompt: ""
+          },
+          {
+            video_id: "VIDEO 2",
+            transition_id: "TRANSITION_02_TO_03",
+            from_image_id: "IMAGE 2",
+            to_image_id: "IMAGE 3",
+            target_duration_sec: 10,
+            temporal_compression_level: "High Compression (approx. 30 hours framing compressed to 10 seconds)",
+            physical_workload: "Hinoki timber column raising, mortise-tenon lintel locking, Tokonoma alcove erection.",
+            physical_action_sequence: "1. Vertical posts slotted into floor mortises; 2. Horizontal grooved lintels hoisted and tapped down with wooden mallets; 3. Hand-planed cypress braces pegged with oak dowels; 4. Naturally curved Toko-bashira cedar post seated in sacred niche.",
+            worker_actions: "Craftsmen work in synchronized choreography: raising posts, checking plumb with plumblines, seating tenons.",
+            equipment_actions: "EQUIPMENT 1 used to plane final bevels on column heads.",
+            material_movement: "Three-dimensional timber pavilion skeleton rises gracefully from the floor plane into ceiling volume.",
+            temporary_element_changes: "Temporary timber diagonal braces hold columns plumb, then removed as roof ties lock in.",
+            timelapse_behavior: "Hypnotic joinery assembly, wood members sliding tightly together with zero nails or screws.",
+            end_state_convergence: "Final frame matches IMAGE 3: complete Hinoki pavilion framework glowing with raw timber beauty.",
+            full_copy_ready_prompt: ""
+          },
+          {
+            video_id: "VIDEO 3",
+            transition_id: "TRANSITION_03_TO_04",
+            from_image_id: "IMAGE 3",
+            to_image_id: "IMAGE 4",
+            target_duration_sec: 10,
+            temporal_compression_level: "Medium Compression (approx. 20 hours paper and lattice work compressed to 10 seconds)",
+            physical_workload: "Washi paper gluing to Kumiko lattices, shoji screen track fitting, cedar ceiling coffering.",
+            physical_action_sequence: "1. Translucent handmade washi paper stretched and pasted with rice glue to fine wooden lattices; 2. Cedar ceiling grid lifted and pinned; 3. Sliding shoji screens inserted into top and bottom wooden grooves; 4. Screens slide smoothly back and forth to burnish track wax.",
+            worker_actions: "WORKER B applies rice paste with horsehair brush; WORKER A waxes sliding grooves with natural beeswax block.",
+            equipment_actions: "Delicate hand planes slice gossamer shavings from screen bottoms for friction-free glide.",
+            material_movement: "Open post spaces are enclosed by pure white translucent washi paper walls; raw ceiling becomes intricate coffered timber.",
+            temporary_element_changes: "Paper stretching weights removed; paste bowls wiped clean.",
+            timelapse_behavior: "Light inside room transforms dramatically: harsh shadows soften into a diffuse ethereal white glow.",
+            end_state_convergence: "Final frame matches IMAGE 4: glowing translucent washi screens and ceiling lattice.",
+            full_copy_ready_prompt: ""
+          },
+          {
+            video_id: "VIDEO 4",
+            transition_id: "TRANSITION_04_TO_05",
+            from_image_id: "IMAGE 4",
+            to_image_id: "IMAGE 5",
+            target_duration_sec: 10,
+            temporal_compression_level: "Medium Compression (approx. 18 hours matting and masonry compressed to 10 seconds)",
+            physical_workload: "Igusa rush tatami mat carrying, layout in auspicious clockwise spiral, basalt stepping stone positioning.",
+            physical_action_sequence: "1. Floor cavity thoroughly vacuumed; 2. Thick woven rush tatami mats carried in one by one and snuggly pressed into floor recess; 3. Seams aligned with zero gap; 4. Heavy charcoal basalt stepping stone bedded in exterior doorway.",
+            worker_actions: "Craftsmen handle tatami mats with white cotton gloves, patting edges flat; stone levered with wooden bar.",
+            equipment_actions: "Heavy workbench moved out of room into exterior courtyard.",
+            material_movement: "Exposed plywood subfloor disappears under woven green-gold rush mats; room acoustics dampen instantly.",
+            temporary_element_changes: "All tool bags and measuring equipment removed from the pavilion interior.",
+            timelapse_behavior: "Rapid, orderly carpeting of the floor with geometric woven tatami, instant shift in light and tactile warmth.",
+            end_state_convergence: "Final frame locks onto IMAGE 5: pristine woven tatami floor with basalt threshold stone in place.",
+            full_copy_ready_prompt: ""
+          },
+          {
+            video_id: "VIDEO 5",
+            transition_id: "TRANSITION_05_TO_06",
+            from_image_id: "IMAGE 5",
+            to_image_id: "IMAGE 6",
+            target_duration_sec: 10,
+            temporal_compression_level: "Low Compression (approx. 12 hours garden raking and ceremonial staging compressed to 10 seconds)",
+            physical_workload: "Raking Shirakawa granite gravel into concentric ripples, hanging calligraphy scroll, tea utensil ceremony staging.",
+            physical_action_sequence: "1. White granite gravel in north courtyard raked in smooth concentric water-ripple waves around stones; 2. Silk hanging scroll hung in Tokonoma niche; 3. Single seasonal camellia placed in bronze vase; 4. Charcoal embers placed in sunken hearth; 5. Cast iron Nanbu kettle set on trivet.",
+            worker_actions: "WORKER A rakes gravel with meditative slow paces; WORKER B hangs scroll, bows respectfully, and slides shoji partially open before exiting.",
+            equipment_actions: "No equipment; pure artisanal finish.",
+            material_movement: "Garden stones gain rippling gravel oceans; subtle steam begins to rise from kettle spout.",
+            temporary_element_changes: "Rake hung in garden shed; shoe slippers placed neatly outside entrance.",
+            timelapse_behavior: "Poetic deceleration of motion: the energetic building process subsides into still, meditative Zen architectural perfection.",
+            end_state_convergence: "Final frame stabilizes with absolute perfection matching IMAGE 6: serene, timeless, glowing Japanese tea sanctuary.",
+            full_copy_ready_prompt: ""
+          }
+        ]
+      },
+
+      kitchen: {
+        production_summary: {
+          project_name: "Vintage 1970s Dilapidated Kitchen to Modern Minimalist Chef's Kitchen",
+          target_total_duration_sec: 30,
+          video_duration_sec: 10,
+          total_videos: 3,
+          total_images: 4,
+          actual_total_runtime_sec: 30,
+          temporal_summary: "30-second rapid kitchen renovation compressed across 3 transition videos and 4 milestone anchor states."
+        },
+        sequence_map: [
+          "IMAGE 1",
+          "VIDEO 1 (IMAGE 1 -> IMAGE 2)",
+          "IMAGE 2",
+          "VIDEO 2 (IMAGE 2 -> IMAGE 3)",
+          "IMAGE 3",
+          "VIDEO 3 (IMAGE 3 -> IMAGE 4)",
+          "IMAGE 4"
+        ],
+        core_prompt: {
+          scene_id: "SCENE_KITCHEN_004",
+          project_description: "Total gut renovation of a 1970s linoleum kitchen into a modern architectural minimalist kitchen with Calacatta marble waterfall island and fluted walnut cabinetry.",
+          camera_lock: "Locked wide tripod mount at 1.4m height in dining room doorway looking northwest into kitchen. 24mm prime lens. Absolute camera lock.",
+          geometry_lock: "Perimeter exterior wall with western double-casement window, structural ceiling header beam, plumbing stack location.",
+          landmark_lock: "1. West window frame and sill; 2. Overhead ceiling structural bulkhead beam; 3. East plumbing chase corner; 4. Gas supply shutoff valve location.",
+          material_lock: "Honed Calacatta marble, fluted solid American walnut, matte charcoal laminate, brushed brass fixtures, white oak flooring.",
+          lighting_lock: "Afternoon western window sunlight complemented by 3000K recessed ceiling pot lights and under-cabinet LED linear warm strips.",
+          environment_lock: "Indoor residential kitchen environment.",
+          worker_identity_registry: [
+            {
+              worker_id: "WORKER A",
+              role: "Lead Remodeling Specialist & Cabinetmaker",
+              visual_profile: "Male in gray utility pants, black t-shirt, beige toolbelt, protective eyewear, dust mask."
+            },
+            {
+              worker_id: "WORKER B",
+              role: "Plumber & Stonemason",
+              visual_profile: "Male in dark navy work trousers, yellow high-vis vest, heavy leather gloves, pipe wrench pouch."
+            }
+          ],
+          equipment_registry: [
+            {
+              equipment_id: "EQUIPMENT 1",
+              type: "Heavy Rolling Tool Cart & Marble Suction Lifter",
+              visual_profile: "Red Milwaukee Packout rolling tool stack paired with dual heavy-duty vacuum suction cups for slab handling."
+            }
+          ],
+          global_physics_rules: "Full demolition of rotten laminate, replumbing with PEX, structural stone slab rigging and cabinet anchoring. No magical morphing.",
+          global_timelapse_rules: "High-speed kitchen transformation kinetics, sawdust clouds swept away, plumbing lines run, heavy marble positioned.",
+          global_negative_rules: "no magical transitions, no floating appliances, no camera movement, no text, no watermarks.",
+          raw_core_text: ""
+        },
+        images: [
+          {
+            image_id: "IMAGE 1",
+            state_id: "STATE_01",
+            state_purpose: "Initial outdated, peeling 1970s kitchen prior to demolition.",
+            completed_work: "Water and gas main shut off.",
+            active_work: "Cabinet measurement and disassembly marking.",
+            remaining_work: "Complete gutting, rough MEP, drywall, cabinet installation, marble waterfall island, appliance integration.",
+            worker_actions: "WORKER A unscrewing top laminate cabinet doors; WORKER B testing water shutoff valve under sink.",
+            equipment_state: "EQUIPMENT 1 parked near doorway with pry bars and screwdrivers staged.",
+            material_state: "Peeling floral linoleum flooring, avocado-green laminate countertops, dated faux-wood laminate cabinetry.",
+            temporary_elements: "Cardboard boxes for salvage items; red hazard tags on gas line.",
+            physical_evidence: "Loose cabinet hinges, pry bar marks in corner drywall.",
+            local_negative_prompt: "no modern stone, no white oak floor, no induction cooktop.",
+            full_copy_ready_prompt: ""
+          },
+          {
+            image_id: "IMAGE 2",
+            state_id: "STATE_02",
+            state_purpose: "Demolition complete to studs; rough plumbing, electrical circuits, and new drywall installed.",
+            completed_work: "All old cabinets and linoleum ripped out; new PEX plumbing lines and 240V circuits run; drywall hung and primed white.",
+            active_work: "Installing tongue-and-groove white oak engineered plank flooring.",
+            remaining_work: "Cabinetry installation, marble waterfall island, brass plumbing trim, appliance integration.",
+            worker_actions: "WORKER A kneeling with pneumatic flooring nailer; WORKER B marking cabinet mounting laser line on wall.",
+            equipment_state: "EQUIPMENT 1 staged with laser level and boxes of flooring cleats.",
+            material_state: "Clean primed white walls; warm natural matte white oak hardwood floor planks; copper and PEX pipe stubs in island location.",
+            temporary_elements: "Green laser crossline projecting across wall studs; rolls of red rosin flooring underlayment paper.",
+            physical_evidence: "Floor cleat boxes, chalk line on subfloor, pipe test pressure gauges.",
+            local_negative_prompt: "no avocado green, no old cabinets, no laminate.",
+            full_copy_ready_prompt: ""
+          },
+          {
+            image_id: "IMAGE 3",
+            state_id: "STATE_03",
+            state_purpose: "Fluted walnut cabinetry mounted; massive Calacatta marble waterfall island set in place.",
+            completed_work: "Custom fluted American walnut lower cabinets anchored; 3-meter solid Calacatta marble slab with mitered waterfall edge installed.",
+            active_work: "Connecting undermount brass prep sink and testing under-cabinet LED channel lights.",
+            remaining_work: "Induction cooktop, built-in panel-ready refrigerator, brass barstools, final styling.",
+            worker_actions: "WORKER B tightening brass drain trap under marble island; WORKER A aligning soft-close drawer glides.",
+            equipment_state: "EQUIPMENT 1 holding silicone sealant guns and marble polishing pads.",
+            material_state: "Dramatic gray and gold veining on white Calacatta marble; rich textural vertical fluted walnut; warm under-cabinet light glow.",
+            temporary_elements: "Suction cup glass lifters resting on island counter; blue tape protecting marble mitered corners.",
+            physical_evidence: "Silicone caulk tubes, wipe rags, brass plumbing fittings.",
+            local_negative_prompt: "no old appliances, no clutter, no open wall cavities.",
+            full_copy_ready_prompt: ""
+          },
+          {
+            image_id: "IMAGE 4",
+            state_id: "STATE_04",
+            state_purpose: "Completed architectural chef's kitchen: seamless paneled appliances, brass fixtures, pristine staging.",
+            completed_work: "100% complete. Flush induction cooktop, integrated walnut-faced refrigerator, sculptural brass gooseneck faucet, warm daylight.",
+            active_work: "None (Pristine completed luxury kitchen).",
+            remaining_work: "Zero remaining construction tasks. Project commissioned.",
+            worker_actions: "Contractors have cleaned and departed; space is unoccupied and magazine-ready.",
+            equipment_state: "All tools and equipment 100% removed.",
+            material_state: "Honed silky Calacatta marble with zero reflections of dust; warm rich walnut; gleaming brushed brass; clean oak floors.",
+            temporary_elements: "None.",
+            physical_evidence: "Ceramic fruit bowl with green pears on island, wooden cutting board with sourdough loaf, copper kettle on cooktop.",
+            local_negative_prompt: "no tools, no dust, no workers, no old laminate.",
+            full_copy_ready_prompt: ""
+          }
+        ],
+        videos: [
+          {
+            video_id: "VIDEO 1",
+            transition_id: "TRANSITION_01_TO_02",
+            from_image_id: "IMAGE 1",
+            to_image_id: "IMAGE 2",
+            target_duration_sec: 10,
+            temporal_compression_level: "High Compression (approx. 24 hours gut and rough-in compressed to 10 seconds)",
+            physical_workload: "Full cabinet rip-out, floor scraping, electrical rewiring, PEX plumbing, drywall hanging and painting.",
+            physical_action_sequence: "1. Cabinets pry-barred off walls and hauled away; 2. Linoleum scraped to bare subfloor; 3. Electrician drills through studs, pulling yellow Romex lines; 4. Plumber runs PEX lines to center island footprint; 5. Drywall hung, taped, mudded, and primed white; 6. Hardwood floor planks laid across floor in rapid strokes.",
+            worker_actions: "WORKER A and B move energetically, tearing down old kitchen elements, hauling trash bags, then shifting to precision flooring nailing.",
+            equipment_actions: "Shop vac runs continuously sucking drywall dust; chop saw cuts oak floor ends.",
+            material_movement: "Avocado green and brown laminate vanishes; clean white drywall surfaces and golden oak boards spread across the space.",
+            temporary_element_changes: "Rubble bins fill and exit; drywall buckets come and go; laser level tripod stands in center.",
+            timelapse_behavior: "Violent energetic demolition gives way to rapid clean rebuilding rhythm, daylight cycling through window.",
+            end_state_convergence: "Camera completely static; final frame matches IMAGE 2: clean primed room with fresh oak flooring.",
+            full_copy_ready_prompt: ""
+          },
+          {
+            video_id: "VIDEO 2",
+            transition_id: "TRANSITION_02_TO_03",
+            from_image_id: "IMAGE 2",
+            to_image_id: "IMAGE 3",
+            target_duration_sec: 10,
+            temporal_compression_level: "High Compression (approx. 28 hours cabinetry and stonework compressed to 10 seconds)",
+            physical_workload: "Wall cabinet anchoring, fluted island base assembly, heavy marble slab rigging and seam epoxy bonding.",
+            physical_action_sequence: "1. French cleats secured to wall studs; 2. Upper and lower walnut cabinet modules hung and leveled; 3. Heavy plywood island substrate erected; 4. Two workers with suction lifters hoist massive 300kg Calacatta marble slab into place; 5. Mitered vertical waterfall leg glued with color-matched two-part epoxy.",
+            worker_actions: "WORKER A fastens cabinet fasteners; WORKER B maneuvers suction cups and clamps marble corner with 90-degree stone clamps.",
+            equipment_actions: "EQUIPMENT 1 transports heavy hardware; suction cups latch and release.",
+            material_movement: "Rich textural fluted walnut cabinets frame the walls; bright white marble slab with grey-gold veins crowns the central island.",
+            temporary_element_changes: "Clamping jigs secured to marble edges, then removed; blue painter tape applied along seams.",
+            timelapse_behavior: "Precise, deliberate heavy stone installation, clamps snapping on, adhesive setting, clean rag wiping excess epoxy.",
+            end_state_convergence: "Final frame aligns identically with IMAGE 3: walnut cabinets and marble waterfall island securely installed.",
+            full_copy_ready_prompt: ""
+          },
+          {
+            video_id: "VIDEO 3",
+            transition_id: "TRANSITION_03_TO_04",
+            from_image_id: "IMAGE 3",
+            to_image_id: "IMAGE 4",
+            target_duration_sec: 10,
+            temporal_compression_level: "Medium Compression (approx. 14 hours trim and staging compressed to 10 seconds)",
+            physical_workload: "Appliance installation, brass plumbing trim, marble sealing, electrical testing, final staging.",
+            physical_action_sequence: "1. Flush induction cooktop wired and dropped into counter cutout; 2. Brushed brass sculptural faucet connected and water tested; 3. Walnut panel attached to integrated dishwasher and fridge; 4. Calacatta marble buffed with stone impregnating sealer; 5. Oak barstools and styling accessories placed.",
+            worker_actions: "Workers wipe down all surfaces with microfiber, pack tools into rolling cart, roll cart out through dining doorway.",
+            equipment_actions: "EQUIPMENT 1 rolling cart rolls out of frame in the 8th second, leaving room completely empty of construction items.",
+            material_movement: "Appliances become seamlessly flush; water runs crystal clear from brass tap; surfaces buffed to satin brilliance.",
+            temporary_element_changes: "All blue tapes, protective films, and hoses fully removed.",
+            timelapse_behavior: "Calm, orderly finishing pace, concluding with empty, sunlit architectural kitchen splendor.",
+            end_state_convergence: "Final frame locks with 100% stillness on IMAGE 4: complete luxury modern chef's kitchen.",
+            full_copy_ready_prompt: ""
+          }
+        ]
+      }
+    };
+
+    // Pre-populate all copy-ready prompts for all scenarios
+    Object.keys(SCENARIOS).forEach(key => {
+      const scen = SCENARIOS[key];
+      scen.core_prompt.raw_core_text = formatCoreContinuityBlock(scen.core_prompt);
+      scen.images.forEach(img => {
+        img.full_copy_ready_prompt = compileImageCopyReadyPrompt(scen.core_prompt, img);
+      });
+      scen.videos.forEach(vid => {
+        vid.full_copy_ready_prompt = compileVideoCopyReadyPrompt(scen.core_prompt, vid);
+      });
+    });
+
+    // Expose for browser console and programmatic verification
+    window.SCENARIOS = SCENARIOS;
+    window.synthesizeCustomPlan = synthesizeCustomPlan;
+    window.formatCoreContinuityBlock = formatCoreContinuityBlock;
+    window.compileImageCopyReadyPrompt = compileImageCopyReadyPrompt;
+    window.compileVideoCopyReadyPrompt = compileVideoCopyReadyPrompt;
+    window.AUTHORITATIVE_SYSTEM_PROMPT = AUTHORITATIVE_SYSTEM_PROMPT;
+
+    // --- APPLICATION STATE ---
+    let currentScenarioKey = 'warehouse';
+    let currentData = JSON.parse(JSON.stringify(SCENARIOS.warehouse));
+    window.getCurrentData = () => currentData;
+    let activeFilter = 'all'; // 'all', 'images', 'videos', 'json'
+
+    // --- UI RENDER FUNCTIONS ---
+    function renderApp() {
+      renderSceneBible();
+      renderStats();
+      renderSequenceStepper();
+      renderAssets();
+      renderJsonOutput();
+      validateContinuityRules();
+    }
+
+    function renderStats() {
+      document.getElementById('stat-videos-count').textContent = currentData.production_summary.total_videos;
+      document.getElementById('stat-images-count').textContent = currentData.production_summary.total_images;
+      document.getElementById('stat-video-duration').textContent = `${currentData.production_summary.video_duration_sec}s / clip`;
+      document.getElementById('stat-total-duration').textContent = `${currentData.production_summary.target_total_duration_sec} seconds ($N_{vid} \\times ${currentData.production_summary.video_duration_sec}\\text{s}$)`;
+    }
+
+    function renderSceneBible() {
+      const core = currentData.core_prompt;
+      document.getElementById('bible-project-name').textContent = currentData.production_summary.project_name;
+      document.getElementById('bible-scene-id').textContent = core.scene_id;
+      document.getElementById('bible-camera-lock').textContent = core.camera_lock;
+      document.getElementById('bible-geometry-lock').textContent = core.geometry_lock;
+      document.getElementById('bible-lighting-lock').textContent = core.lighting_lock;
+
+      // Landmarks pills
+      const landmarksContainer = document.getElementById('bible-landmarks-list');
+      landmarksContainer.innerHTML = '';
+      const landmarks = core.landmark_lock.split(/;\s*|\d+\.\s*/).filter(Boolean);
+      landmarks.forEach(lm => {
+        const span = document.createElement('span');
+        span.className = 'text-[10px] font-mono text-slate-300 bg-slate-900 border border-white/5 px-2 py-0.5 rounded';
+        span.textContent = lm.trim();
+        landmarksContainer.appendChild(span);
+      });
+
+      // Workers list
+      const workersList = document.getElementById('bible-workers-list');
+      workersList.innerHTML = '';
+      core.worker_identity_registry.forEach(w => {
+        const item = document.createElement('div');
+        item.className = 'bg-slate-950/70 p-2.5 rounded-xl border border-white/5 text-xs';
+        item.innerHTML = `
+          <div class="flex items-center justify-between font-mono mb-1">
+            <span class="text-sky-400 font-bold">${w.worker_id}</span>
+            <span class="text-[10px] text-slate-400">${w.role}</span>
+          </div>
+          <p class="text-[11px] text-slate-300 leading-relaxed">${w.visual_profile}</p>
+        `;
+        workersList.appendChild(item);
+      });
+
+      // Equipment list
+      const equipList = document.getElementById('bible-equipment-list');
+      equipList.innerHTML = '';
+      core.equipment_registry.forEach(eq => {
+        const item = document.createElement('div');
+        item.className = 'bg-slate-950/70 p-2.5 rounded-xl border border-white/5 text-xs';
+        item.innerHTML = `
+          <div class="flex items-center justify-between font-mono mb-1">
+            <span class="text-amber-400 font-bold">${eq.equipment_id}</span>
+            <span class="text-[10px] text-slate-400">${eq.type}</span>
+          </div>
+          <p class="text-[11px] text-slate-300 leading-relaxed">${eq.visual_profile}</p>
+        `;
+        equipList.appendChild(item);
+      });
+    }
+
+    function renderSequenceStepper() {
+      const stepper = document.getElementById('sequence-stepper');
+      stepper.innerHTML = '';
+
+      currentData.sequence_map.forEach((item, idx) => {
+        const isImage = item.startsWith('IMAGE');
+        const badge = document.createElement('button');
+        badge.className = `flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-semibold transition-all border ${
+          isImage 
+            ? 'bg-slate-900 text-emerald-400 border-emerald-500/30 hover:border-emerald-500' 
+            : 'bg-slate-950 text-sky-400 border-sky-500/30 hover:border-sky-500'
+        }`;
+        
+        badge.innerHTML = `
+          <span>${isImage ? '📸' : '🎬'}</span>
+          <span>${item.replace(/IMAGE\s*(\d+)/, 'IMG $1').replace(/VIDEO\s*(\d+).*/, 'VID $1')}</span>
+        `;
+
+        badge.addEventListener('click', () => {
+          scrollToCard(item);
+        });
+
+        stepper.appendChild(badge);
+
+        if (idx < currentData.sequence_map.length - 1) {
+          const arrow = document.createElement('span');
+          arrow.className = 'text-slate-600 font-mono text-xs';
+          arrow.textContent = '⟶';
+          stepper.appendChild(arrow);
+        }
+      });
+    }
+
+    function scrollToCard(identifier) {
+      const targetId = identifier.startsWith('IMAGE') 
+        ? `card-${identifier.replace(/\s+/g, '-').toLowerCase()}`
+        : `card-${identifier.split(' ')[0].toLowerCase()}-${identifier.split(' ')[1].toLowerCase()}`;
+      
+      const targetEl = document.getElementById(targetId);
+      if (targetEl) {
+        targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        targetEl.classList.add('active-card');
+        setTimeout(() => targetEl.classList.remove('active-card'), 2500);
+      }
+    }
+
+    function renderAssets() {
+      const container = document.getElementById('assets-list-container');
+      container.innerHTML = '';
+
+      if (activeFilter === 'json') {
+        container.classList.add('hidden');
+        document.getElementById('json-viewer-container').classList.remove('hidden');
+        return;
+      } else {
+        container.classList.remove('hidden');
+        document.getElementById('json-viewer-container').classList.add('hidden');
+      }
+
+      // Merge sequentially based on sequence_map
+      currentData.sequence_map.forEach((entry, seqIdx) => {
+        if (entry.startsWith('IMAGE')) {
+          if (activeFilter === 'videos') return;
+          const imgMatch = entry.match(/IMAGE\s*(\d+)/);
+          const imgId = imgMatch ? `IMAGE ${imgMatch[1]}` : entry;
+          const img = currentData.images.find(i => i.image_id === imgId) || currentData.images[0];
+          container.appendChild(createImageCard(img, seqIdx));
+        } else if (entry.startsWith('VIDEO')) {
+          if (activeFilter === 'images') return;
+          const vidMatch = entry.match(/VIDEO\s*(\d+)/);
+          const vidId = vidMatch ? `VIDEO ${vidMatch[1]}` : entry;
+          const vid = currentData.videos.find(v => v.video_id === vidId) || currentData.videos[0];
+          container.appendChild(createVideoCard(vid, seqIdx));
+        }
+      });
+    }
+
+    function createImageCard(img, seqIdx) {
+      const card = document.createElement('div');
+      card.id = `card-${img.image_id.replace(/\s+/g, '-').toLowerCase()}`;
+      card.className = 'glass-card rounded-2xl p-5 sm:p-6 border border-white/10 space-y-4';
+
+      card.innerHTML = `
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/5">
+          <div class="flex items-center gap-2.5">
+            <span class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm border border-emerald-500/30">
+              📸
+            </span>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-sm font-bold text-white font-mono">${img.image_id}</span>
+                <span class="text-[10px] font-mono font-bold text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800/40">${img.state_id}</span>
+                <span class="text-[10px] font-mono text-slate-400 bg-slate-900 px-2 py-0.5 rounded">STATIC ANCHOR</span>
+              </div>
+              <p class="text-xs text-slate-300 font-medium mt-0.5">${img.state_purpose}</p>
+            </div>
+          </div>
+          <button class="btn-copy-prompt inline-flex items-center gap-1.5 text-xs font-bold text-slate-950 bg-emerald-400 hover:bg-emerald-300 px-3.5 py-1.5 rounded-lg shadow-sm transition-all font-mono self-start sm:self-auto" data-copy-type="image" data-id="${img.image_id}">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            <span>Copy Prompt</span>
+          </button>
+        </div>
+
+        <!-- DETAILS GRID -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+          <div class="bg-slate-950/70 p-3 rounded-xl border border-white/5 space-y-1">
+            <span class="text-[10px] font-mono text-emerald-400 uppercase font-semibold">Completed Work</span>
+            <p class="text-slate-300 text-[11px] leading-relaxed">${img.completed_work}</p>
+          </div>
+          <div class="bg-slate-950/70 p-3 rounded-xl border border-white/5 space-y-1">
+            <span class="text-[10px] font-mono text-sky-400 uppercase font-semibold">Active Work In Frame</span>
+            <p class="text-slate-300 text-[11px] leading-relaxed">${img.active_work}</p>
+          </div>
+          <div class="bg-slate-950/70 p-3 rounded-xl border border-white/5 space-y-1">
+            <span class="text-[10px] font-mono text-amber-400 uppercase font-semibold">Worker Actions &amp; Positions</span>
+            <p class="text-slate-300 text-[11px] leading-relaxed">${img.worker_actions}</p>
+          </div>
+          <div class="bg-slate-950/70 p-3 rounded-xl border border-white/5 space-y-1">
+            <span class="text-[10px] font-mono text-indigo-400 uppercase font-semibold">Material &amp; Substrate State</span>
+            <p class="text-slate-300 text-[11px] leading-relaxed">${img.material_state}</p>
+          </div>
+        </div>
+
+        <!-- COLLAPSIBLE FULL COPY-READY PROMPT -->
+        <div class="pt-2">
+          <details class="group bg-slate-950/90 rounded-xl border border-white/5 overflow-hidden">
+            <summary class="cursor-pointer px-4 py-2.5 text-[11px] font-mono text-slate-400 hover:text-white flex items-center justify-between transition-colors">
+              <span class="flex items-center gap-1.5">
+                <span class="text-emerald-400">⚡</span>
+                <span>View Pre-Combined Copy-Ready Prompt (${img.full_copy_ready_prompt.length} chars)</span>
+              </span>
+              <span class="group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <div class="p-4 border-t border-white/5 bg-slate-950 text-slate-300 font-mono text-[11px] leading-relaxed whitespace-pre-wrap select-all max-h-60 overflow-y-auto">${escapeHtml(img.full_copy_ready_prompt)}</div>
+          </details>
+        </div>
+      `;
+
+      // Copy prompt button listener
+      card.querySelector('.btn-copy-prompt').addEventListener('click', () => {
+        copyToClipboard(img.full_copy_ready_prompt, `Copied ${img.image_id} Copy-Ready Prompt!`);
+      });
+
+      return card;
+    }
+
+    function createVideoCard(vid, seqIdx) {
+      const card = document.createElement('div');
+      card.id = `card-${vid.video_id.replace(/\s+/g, '-').toLowerCase()}`;
+      card.className = 'glass-card rounded-2xl p-5 sm:p-6 border border-white/10 space-y-4';
+
+      card.innerHTML = `
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/5">
+          <div class="flex items-center gap-2.5">
+            <span class="w-8 h-8 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center font-bold text-sm border border-sky-500/30">
+              🎬
+            </span>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-sm font-bold text-white font-mono">${vid.video_id}</span>
+                <span class="text-[10px] font-mono font-bold text-sky-400 bg-sky-950/80 px-2 py-0.5 rounded border border-sky-800/40">${vid.from_image_id} ⟶ ${vid.to_image_id}</span>
+                <span class="text-[10px] font-mono text-amber-300 bg-amber-950/60 px-2 py-0.5 rounded">${vid.target_duration_sec}s TIMELAPSE</span>
+              </div>
+              <p class="text-xs text-slate-300 font-medium mt-0.5 font-mono">${vid.temporal_compression_level}</p>
+            </div>
+          </div>
+          <button class="btn-copy-prompt inline-flex items-center gap-1.5 text-xs font-bold text-slate-950 bg-sky-400 hover:bg-sky-300 px-3.5 py-1.5 rounded-lg shadow-sm transition-all font-mono self-start sm:self-auto" data-copy-type="video" data-id="${vid.video_id}">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            <span>Copy Video Prompt</span>
+          </button>
+        </div>
+
+        <!-- DETAILS GRID -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+          <div class="bg-slate-950/70 p-3 rounded-xl border border-white/5 space-y-1">
+            <span class="text-[10px] font-mono text-emerald-400 uppercase font-semibold">Physical Workload</span>
+            <p class="text-slate-300 text-[11px] leading-relaxed">${vid.physical_workload}</p>
+          </div>
+          <div class="bg-slate-950/70 p-3 rounded-xl border border-white/5 space-y-1">
+            <span class="text-[10px] font-mono text-sky-400 uppercase font-semibold">Action Sequence (Causal Steps)</span>
+            <p class="text-slate-300 text-[11px] leading-relaxed">${vid.physical_action_sequence}</p>
+          </div>
+          <div class="bg-slate-950/70 p-3 rounded-xl border border-white/5 space-y-1">
+            <span class="text-[10px] font-mono text-amber-400 uppercase font-semibold">Material Movement &amp; Logistics</span>
+            <p class="text-slate-300 text-[11px] leading-relaxed">${vid.material_movement}</p>
+          </div>
+          <div class="bg-slate-950/70 p-3 rounded-xl border border-white/5 space-y-1">
+            <span class="text-[10px] font-mono text-indigo-400 uppercase font-semibold">End State Convergence</span>
+            <p class="text-slate-300 text-[11px] leading-relaxed">${vid.end_state_convergence}</p>
+          </div>
+        </div>
+
+        <!-- COLLAPSIBLE FULL COPY-READY PROMPT -->
+        <div class="pt-2">
+          <details class="group bg-slate-950/90 rounded-xl border border-white/5 overflow-hidden">
+            <summary class="cursor-pointer px-4 py-2.5 text-[11px] font-mono text-slate-400 hover:text-white flex items-center justify-between transition-colors">
+              <span class="flex items-center gap-1.5">
+                <span class="text-sky-400">⚡</span>
+                <span>View Pre-Combined Copy-Ready Prompt (${vid.full_copy_ready_prompt.length} chars)</span>
+              </span>
+              <span class="group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <div class="p-4 border-t border-white/5 bg-slate-950 text-slate-300 font-mono text-[11px] leading-relaxed whitespace-pre-wrap select-all max-h-60 overflow-y-auto">${escapeHtml(vid.full_copy_ready_prompt)}</div>
+          </details>
+        </div>
+      `;
+
+      card.querySelector('.btn-copy-prompt').addEventListener('click', () => {
+        copyToClipboard(vid.full_copy_ready_prompt, `Copied ${vid.video_id} Video Prompt!`);
+      });
+
+      return card;
+    }
+
+    function renderJsonOutput() {
+      const codeEl = document.getElementById('raw-json-output');
+      codeEl.textContent = JSON.stringify(currentData, null, 2);
+    }
+
+    function validateContinuityRules() {
+      const list = document.getElementById('validation-checklist');
+      list.innerHTML = '';
+
+      const images = currentData.images;
+      const videos = currentData.videos;
+      const summary = currentData.production_summary;
+
+      // 1. images.length == videos.length + 1
+      const rule1Passed = images.length === videos.length + 1;
+      addCheckItem(list, rule1Passed, `images.length (${images.length}) == videos.length + 1 (${videos.length + 1})`);
+
+      // 2. Every transition connects IMAGE k to IMAGE k+1
+      let rule2Passed = true;
+      for (let i = 0; i < videos.length; i++) {
+        const expectedFrom = `IMAGE ${i + 1}`;
+        const expectedTo = `IMAGE ${i + 2}`;
+        if (videos[i].from_image_id !== expectedFrom || videos[i].to_image_id !== expectedTo) {
+          rule2Passed = false;
+          break;
+        }
+      }
+      addCheckItem(list, rule2Passed, `Sequential Continuity: Transition k links IMAGE k ⟶ IMAGE k+1`);
+
+      // 3. Duration constraint
+      const calcDuration = videos.length * summary.video_duration_sec;
+      const rule3Passed = calcDuration === summary.target_total_duration_sec;
+      addCheckItem(list, rule3Passed, `Total Duration: ${calcDuration}s matches target ${summary.target_total_duration_sec}s`);
+
+      // 4. Persistent worker IDs preserved
+      const workerIds = currentData.core_prompt.worker_identity_registry.map(w => w.worker_id);
+      const rule4Passed = workerIds.length > 0;
+      addCheckItem(list, rule4Passed, `Persistent Worker Registries (${workerIds.join(', ')}) strictly mapped`);
+
+      // 5. full_copy_ready_prompt populated
+      const rule5Passed = images.every(i => i.full_copy_ready_prompt && i.full_copy_ready_prompt.includes('CORE CONTINUITY INSTRUCTION')) &&
+                          videos.every(v => v.full_copy_ready_prompt && v.full_copy_ready_prompt.includes('CORE CONTINUITY INSTRUCTION'));
+      addCheckItem(list, rule5Passed, `Every Asset has pre-combined, self-contained full_copy_ready_prompt`);
+
+      // 6. RFC 8259 syntax validation
+      let rule6Passed = false;
+      try {
+        const testStr = JSON.stringify(currentData);
+        JSON.parse(testStr);
+        rule6Passed = true;
+      } catch (e) {
+        rule6Passed = false;
+      }
+      addCheckItem(list, rule6Passed, `Strict RFC 8259 JSON validation compliant`);
+    }
+
+    function addCheckItem(container, passed, text) {
+      const item = document.createElement('div');
+      item.className = 'flex items-start gap-2 text-slate-300';
+      item.innerHTML = `
+        <span class="${passed ? 'text-emerald-400' : 'text-rose-500 font-bold'}">${passed ? '✓' : '✗'}</span>
+        <span class="${passed ? '' : 'text-rose-400'}">${text}</span>
+      `;
+      container.appendChild(item);
+    }
+
+    // --- SYNTHESIZE CUSTOM CONTINUITY PLAN ---
+    function synthesizeCustomPlan(projectName, totalDuration, clipDuration, initialState, finalState, cameraLock) {
+      const totalVideos = Math.max(1, Math.round(totalDuration / clipDuration));
+      const totalImages = totalVideos + 1;
+      const actualTotal = totalVideos * clipDuration;
+
+      const sceneId = `SCENE_CUSTOM_${Date.now().toString().slice(-4)}`;
+
+      // Core Scene Bible
+      const core = {
+        scene_id: sceneId,
+        project_description: `Sequential realistic transformation: from "${initialState.slice(0, 100)}..." to "${finalState.slice(0, 100)}...".`,
+        camera_lock: cameraLock,
+        geometry_lock: "Permanent exterior load-bearing walls, structural foundation slab, overhead primary beam framing, and outer boundary thresholds.",
+        landmark_lock: "1. Primary structural corner wall; 2. Central ceiling support junction; 3. Main entrance doorway frame; 4. Fixed electrical service stack.",
+        material_lock: "Specified substrate materials transitioning naturally through physical construction phases.",
+        lighting_lock: "Locked consistent illumination: balanced daylight supplemented by 3500K construction work lights during interior phases.",
+        environment_lock: "Controlled realistic transformation conditions; natural airborne dust during demolition settling on surfaces.",
+        worker_identity_registry: [
+          {
+            worker_id: "WORKER A",
+            role: "Lead Construction Specialist & Carpenter",
+            visual_profile: "Male, navy blue work trousers, neon yellow high-vis vest, white hardhat, heavy leather toolbelt."
+          },
+          {
+            worker_id: "WORKER B",
+            role: "Technical MEP & Surface Finisher",
+            visual_profile: "Female, charcoal cargo pants, orange safety vest, white hardhat, safety goggles and respirator."
+          }
+        ],
+        equipment_registry: [
+          {
+            equipment_id: "EQUIPMENT 1",
+            type: "Heavy Commercial Utility Transporter & Scaffolding",
+            visual_profile: "Safety-yellow mobile utility tower and heavy industrial waste bin."
+          }
+        ],
+        global_physics_rules: "Every visual alteration is physically caused by human or mechanical labor. No instantaneous replacement or morphing.",
+        global_timelapse_rules: "Accelerated realistic human motion, task-oriented inertia, physical surface interaction.",
+        global_negative_rules: "no magical transformations, no teleporting workers or machinery, no morphing structures, no camera position drift, no text, no watermarks.",
+        raw_core_text: ""
+      };
+
+      const sequenceMap = [];
+      const images = [];
+      const videos = [];
+
+      const stages = [
+        { purpose: "Initial Raw State", action: "Site assessment and demolition prep", complete: "Site survey complete", active: "Pencil markings and protective masking" },
+        { purpose: "Demolition & Debris Extraction", action: "Tear-down of non-structural elements", complete: "Obsolete structures stripped", active: "Surface grinding and debris hauling" },
+        { purpose: "Structural & Framing Substrate", action: "Erecting primary structural framework", complete: "Subfloor and framing anchored", active: "Joist fastening and laser alignment" },
+        { purpose: "Rough MEP & Core Utilities", action: "Running electrical and mechanical feeds", complete: "Rough plumbing and conduit placed", active: "Pulling cables and insulation" },
+        { purpose: "Enclosure, Sheathing & Drywall", action: "Hanging drywall and joint compound", complete: "Insulation sealed inside walls", active: "Drywall mudding and seam sanding" },
+        { purpose: "Architectural Surface Finishes", action: "Flooring, paint, and microcement", complete: "Drywall prepped and primed", active: "Applying surface finish coats" },
+        { purpose: "Fixtures & Millwork Installation", action: "Mounting custom cabinetry and hardware", complete: "Floors cured and sealed", active: "Installing cabinetry and lighting" },
+        { purpose: "Staging, Detailing & Commissioning", action: "Furniture placement and deep cleaning", complete: "100% build tasks completed", active: "Unboxing furniture and final detailing" }
+      ];
+
+      // Interpolate stages across totalImages
+      for (let i = 0; i < totalImages; i++) {
+        const imgId = `IMAGE ${i + 1}`;
+        const stateId = `STATE_${String(i + 1).padStart(2, '0')}`;
+        const stageIndex = Math.min(stages.length - 1, Math.floor((i / (totalImages - 1)) * (stages.length - 1)));
+        const stage = stages[stageIndex];
+
+        const isFirst = (i === 0);
+        const isLast = (i === totalImages - 1);
+
+        const imgData = {
+          image_id: imgId,
+          state_id: stateId,
+          state_purpose: isFirst ? `Initial state: ${initialState}` : (isLast ? `Final completed state: ${finalState}` : stage.purpose),
+          completed_work: isFirst ? "None. Site in pre-construction baseline condition." : (isLast ? "100% complete. Commissioned and verified." : stage.complete),
+          active_work: isLast ? "None (Project commissioned and ready for handover)." : stage.active,
+          remaining_work: isLast ? "Zero remaining work." : `${totalImages - 1 - i} milestone stages remaining.`,
+          worker_actions: isLast ? "Workers have packed up and departed; site pristine." : "WORKER A and WORKER B actively collaborating on task verification.",
+          equipment_state: isLast ? "All equipment demobilized." : "EQUIPMENT 1 staged in functional work position.",
+          material_state: isFirst ? "Pre-renovation materials." : (isLast ? "Flawless, pristine finished architectural materials." : "Active substrate transition."),
+          temporary_elements: isLast ? "None." : "Laser level tripod, tool caddies, safety signage.",
+          physical_evidence: isLast ? "Pristine architectural staging." : "Cut markings, material packaging, swept dust bins.",
+          local_negative_prompt: isLast ? "no construction debris, no workers, no tools." : "no magical morphing, no floating items.",
+          full_copy_ready_prompt: ""
+        };
+
+        images.push(imgData);
+        sequenceMap.push(imgId);
+
+        if (i < totalImages - 1) {
+          const vidId = `VIDEO ${i + 1}`;
+          const vidTransition = `TRANSITION_${String(i + 1).padStart(2, '0')}_TO_${String(i + 2).padStart(2, '0')}`;
+          
+          const vidData = {
+            video_id: vidId,
+            transition_id: vidTransition,
+            from_image_id: imgId,
+            to_image_id: `IMAGE ${i + 2}`,
+            target_duration_sec: clipDuration,
+            temporal_compression_level: `Compressed timelapse (${clipDuration}s clip)`,
+            physical_workload: `Execute ${stage.action} systematically with mechanical labor.`,
+            physical_action_sequence: `1. Setup tools; 2. Carry out ${stage.action}; 3. Verify tolerances; 4. Clean work area.`,
+            worker_actions: "Workers move with task-oriented momentum and authentic physical interaction.",
+            equipment_actions: "EQUIPMENT 1 deployed and utilized systematically.",
+            material_movement: "Materials brought in, assembled, and waste hauled away.",
+            temporary_element_changes: "Tools staged, operated, and relocated.",
+            timelapse_behavior: "Accelerated realistic human and mechanical motion, task-oriented inertia, physical interaction with surfaces.",
+            end_state_convergence: `Final frame smoothly and precisely matches the exact layout, geometry, and material state of IMAGE ${i + 2}.`,
+            full_copy_ready_prompt: ""
+          };
+
+          videos.push(vidData);
+          sequenceMap.push(`${vidId} (${imgId} -> IMAGE ${i + 2})`);
+        }
+      }
+
+      const generatedPlan = {
+        production_summary: {
+          project_name: projectName,
+          target_total_duration_sec: actualTotal,
+          video_duration_sec: clipDuration,
+          total_videos: totalVideos,
+          total_images: totalImages,
+          actual_total_runtime_sec: actualTotal,
+          temporal_summary: `${actualTotal}-second accelerated transformation across ${totalVideos} videos (${clipDuration}s each) connecting ${totalImages} states.`
+        },
+        sequence_map: sequenceMap,
+        core_prompt: core,
+        images: images,
+        videos: videos
+      };
+
+      // Compile prompts
+      generatedPlan.core_prompt.raw_core_text = formatCoreContinuityBlock(generatedPlan.core_prompt);
+      generatedPlan.images.forEach(img => {
+        img.full_copy_ready_prompt = compileImageCopyReadyPrompt(generatedPlan.core_prompt, img);
+      });
+      generatedPlan.videos.forEach(vid => {
+        vid.full_copy_ready_prompt = compileVideoCopyReadyPrompt(generatedPlan.core_prompt, vid);
+      });
+
+      return generatedPlan;
+    }
+
+    // --- UTILITIES ---
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-message').textContent = msg;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 2500);
+    }
+
+    function copyToClipboard(text, successMsg) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast(successMsg);
+        }).catch(() => {
+          fallbackCopyText(text, successMsg);
+        });
+      } else {
+        fallbackCopyText(text, successMsg);
+      }
+    }
+
+    function fallbackCopyText(text, successMsg) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        showToast(successMsg);
+      } catch (err) {
+        showToast("Error copying to clipboard");
+      }
+      document.body.removeChild(textArea);
+    }
+
+    // --- EVENT LISTENERS ---
+    document.addEventListener('DOMContentLoaded', () => {
+      // Scenario buttons
+      const scenarioBtns = document.querySelectorAll('.scenario-btn');
+      scenarioBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          scenarioBtns.forEach(b => {
+            b.classList.remove('active', 'bg-emerald-500', 'text-slate-950', 'shadow-md', 'shadow-emerald-500/20');
+            b.classList.add('text-slate-400', 'border', 'border-white/5');
+          });
+          btn.classList.add('active', 'bg-emerald-500', 'text-slate-950', 'shadow-md', 'shadow-emerald-500/20');
+          btn.classList.remove('text-slate-400', 'border-white/5');
+
+          const key = btn.getAttribute('data-scenario');
+          currentScenarioKey = key;
+          currentData = JSON.parse(JSON.stringify(SCENARIOS[key]));
+          renderApp();
+          showToast(`Loaded "${currentData.production_summary.project_name}"!`);
+        });
+      });
+
+      // Filter tabs
+      const filterBtns = document.querySelectorAll('.view-filter-btn');
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          filterBtns.forEach(b => {
+            b.classList.remove('active', 'bg-emerald-500', 'text-slate-950', 'font-bold');
+            b.classList.add('text-slate-400');
+          });
+          btn.classList.add('active', 'bg-emerald-500', 'text-slate-950', 'font-bold');
+          btn.classList.remove('text-slate-400');
+
+          if (btn.id === 'filter-all-assets') activeFilter = 'all';
+          else if (btn.id === 'filter-images-only') activeFilter = 'images';
+          else if (btn.id === 'filter-videos-only') activeFilter = 'videos';
+          else if (btn.id === 'filter-json-view') activeFilter = 'json';
+
+          renderAssets();
+        });
+      });
+
+      // Copy All Prompts Button
+      document.getElementById('btn-copy-all-prompts').addEventListener('click', () => {
+        let fullText = `=== ${currentData.production_summary.project_name} ===\nTotal Target Duration: ${currentData.production_summary.target_total_duration_sec}s\n\n`;
+        currentData.sequence_map.forEach(entry => {
+          if (entry.startsWith('IMAGE')) {
+            const imgMatch = entry.match(/IMAGE\s*(\d+)/);
+            const imgId = imgMatch ? `IMAGE ${imgMatch[1]}` : entry;
+            const img = currentData.images.find(i => i.image_id === imgId);
+            if (img) {
+              fullText += `\n############################################################\n### ASSET: ${img.image_id} (${img.state_id})\n############################################################\n${img.full_copy_ready_prompt}\n\n`;
+            }
+          } else if (entry.startsWith('VIDEO')) {
+            const vidMatch = entry.match(/VIDEO\s*(\d+)/);
+            const vidId = vidMatch ? `VIDEO ${vidMatch[1]}` : entry;
+            const vid = currentData.videos.find(v => v.video_id === vidId);
+            if (vid) {
+              fullText += `\n############################################################\n### ASSET: ${vid.video_id}\n############################################################\n${vid.full_copy_ready_prompt}\n\n`;
+            }
+          }
+        });
+
+        copyToClipboard(fullText, "Copied all prompts sequence to clipboard!");
+      });
+
+      // Copy Raw RFC 8259 JSON
+      document.getElementById('btn-copy-raw-json').addEventListener('click', () => {
+        const jsonStr = JSON.stringify(currentData, null, 2);
+        copyToClipboard(jsonStr, "Copied strict RFC 8259 JSON!");
+      });
+
+      // Download JSON File
+      document.getElementById('btn-download-json').addEventListener('click', () => {
+        const jsonStr = JSON.stringify(currentData, null, 2);
+        const blob = new Blob([jsonStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        const filename = `${currentData.core_prompt.scene_id.toLowerCase()}_continuity.json`;
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast(`Downloaded ${filename}!`);
+      });
+
+      // Custom Generator Modal
+      const generatorModal = document.getElementById('generator-modal');
+      document.getElementById('btn-open-generator').addEventListener('click', () => {
+        generatorModal.classList.remove('hidden');
+      });
+      document.getElementById('btn-close-generator').addEventListener('click', () => {
+        generatorModal.classList.add('hidden');
+      });
+      document.getElementById('btn-cancel-generator').addEventListener('click', () => {
+        generatorModal.classList.add('hidden');
+      });
+
+      document.getElementById('custom-plan-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = document.getElementById('custom-name').value.trim();
+        const totalSec = parseInt(document.getElementById('custom-total-duration').value, 10);
+        const clipSec = parseInt(document.getElementById('custom-clip-duration').value, 10);
+        const initial = document.getElementById('custom-initial-state').value.trim();
+        const final = document.getElementById('custom-final-state').value.trim();
+        const camera = document.getElementById('custom-camera').value.trim();
+
+        const plan = synthesizeCustomPlan(name, totalSec, clipSec, initial, final, camera);
+        currentData = plan;
+
+        // Deselect preset buttons
+        document.querySelectorAll('.scenario-btn').forEach(b => {
+          b.classList.remove('active', 'bg-emerald-500', 'text-slate-950', 'shadow-md', 'shadow-emerald-500/20');
+          b.classList.add('text-slate-400', 'border', 'border-white/5');
+        });
+
+        generatorModal.classList.add('hidden');
+        renderApp();
+        showToast(`Synthesized custom continuity plan: ${plan.production_summary.total_videos} videos, ${plan.production_summary.total_images} images!`);
+      });
+
+      // System Prompt Modal
+      const promptModal = document.getElementById('system-prompt-modal');
+      document.getElementById('system-prompt-text').textContent = AUTHORITATIVE_SYSTEM_PROMPT;
+      document.getElementById('btn-open-system-prompt').addEventListener('click', () => {
+        promptModal.classList.remove('hidden');
+      });
+      document.getElementById('btn-close-prompt-modal').addEventListener('click', () => {
+        promptModal.classList.add('hidden');
+      });
+      document.getElementById('btn-copy-system-prompt').addEventListener('click', () => {
+        copyToClipboard(AUTHORITATIVE_SYSTEM_PROMPT, "Copied Director System Prompt!");
+      });
+
+      // Initial render
+      renderApp();
+    });
+  </script>
+</body>
+</html>

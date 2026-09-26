@@ -13,6 +13,7 @@ Kumpulan eksperimen web interaktif, visualisasi 3D WebGL, prototipe antarmuka, d
 | **IAM TO YOGYA (3D Showcase)** | [`tshirt.html`](tshirt.html) | Three.js, WebGL, GLTF, Scrollytelling | Showcase produk kaos 3D interaktif bertema Yogyakarta dengan scrollytelling sinematik, orbit kamera 360°, dan color switcher. |
 | **Kalender Interaktif (Tailwind)** | [`calendar-tailwind.html`](calendar-tailwind.html) | FullCalendar 6, Tailwind CSS, Vanilla JS | Aplikasi kalender responsif bertema sky-blue dengan modal event scheduler dan side panel detail agenda harian. |
 | **Kalender Interaktif (Bootstrap)** | [`bootstrap.html`](bootstrap.html) | FullCalendar 6, Bootstrap 5, Offcanvas | Implementasi kalender jadwal interaktif berbasis komponen native Bootstrap 5 dan Bootstrap Icons. |
+| **Continuity Engine (AI Timelapse)** | [`timelapse-continuity.html`](timelapse-continuity.html) | Vanilla JS, RFC 8259 JSON, Tailwind CSS | Engine perencana kontinuitas transformasi fisik dan konstruksi bertahap untuk generator AI video & gambar (Sora, Kling, Runway) dengan validasi ketat RFC 8259 JSON. |
 
 ---
 
