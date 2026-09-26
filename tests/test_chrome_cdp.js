@@ -365,6 +365,113 @@ async function runChromeTest() {
   });
   console.log("Edit project modal test verified:", editModalTestResult.result.value);
 
+  // Test 1d: Desktop Dropdown Stacking Context Overlap Verification
+  console.log("Testing Desktop Dropdown Stacking Context & Overlap in Chrome...");
+  const dropdownStackingTestResult = await sendCommand('Runtime.evaluate', {
+    expression: `
+      (() => {
+        window.scrollTo(0, 0);
+        // Open dropdown
+        const btn = document.getElementById('project-dropdown-btn');
+        btn.click();
+        const menu = document.getElementById('project-dropdown-menu');
+        const isMenuOpen = !menu.classList.contains('hidden');
+
+        // Get geometry
+        const menuRect = menu.getBoundingClientRect();
+        const card1 = document.getElementById('card-image-1');
+        const card1Rect = card1 ? card1.getBoundingClientRect() : null;
+        const doesOverlapY = card1Rect ? (menuRect.bottom > card1Rect.top && menuRect.top < card1Rect.bottom) : false;
+
+        // Test hit point in the overlapping region
+        const testX = menuRect.left + menuRect.width / 2;
+        const testY = (card1Rect && doesOverlapY) ? (card1Rect.top + 15) : (menuRect.top + 25);
+
+        const hitEl = document.elementFromPoint(testX, testY);
+        const hitInsideDropdown = menu.contains(hitEl);
+
+        return {
+          isMenuOpen,
+          menuZIndex: window.getComputedStyle(menu).zIndex,
+          menuRect: { top: menuRect.top, bottom: menuRect.bottom },
+          card1Rect: card1Rect ? { top: card1Rect.top, bottom: card1Rect.bottom } : null,
+          doesOverlapY,
+          hitInsideDropdown,
+          hitTag: hitEl?.tagName
+        };
+      })()
+    `,
+    returnByValue: true
+  });
+  console.log("Dropdown stacking context overlap verification:", dropdownStackingTestResult.result.value);
+
+  // Test 1e: Delete Project & Restore Presets Flow
+  console.log("Testing Delete Project & Restore Presets Flow in Chrome...");
+  const deleteProjectTestResult = await sendCommand('Runtime.evaluate', {
+    expression: `
+      (() => {
+        // 1. Open delete modal via active button
+        const btnDeleteActive = document.getElementById('btn-delete-active-project');
+        btnDeleteActive.click();
+        const modal = document.getElementById('delete-confirm-modal');
+        const modalOpen = !modal.classList.contains('hidden');
+        const deleteName = document.getElementById('delete-modal-project-name')?.textContent;
+
+        // 2. Test Cancel button
+        document.getElementById('btn-cancel-delete-modal').click();
+        const modalClosedOnCancel = modal.classList.contains('hidden');
+
+        // 3. Open again and confirm deletion
+        btnDeleteActive.click();
+        const activeBefore = document.getElementById('active-project-title')?.textContent.trim();
+        document.getElementById('btn-confirm-delete-modal').click();
+        const modalClosedOnConfirm = modal.classList.contains('hidden');
+        const activeAfter = document.getElementById('active-project-title')?.textContent.trim();
+
+        // Check dropdown shows restore presets button
+        const restoreContainer = document.getElementById('restore-presets-container');
+        const restoreVisible = !restoreContainer.classList.contains('hidden');
+
+        // Test restoring presets
+        document.getElementById('btn-restore-presets').click();
+        const restoreHiddenAfter = restoreContainer.classList.contains('hidden');
+
+        // 4. Test deleting via dropdown item delete icon button
+        const dropdownBtn = document.getElementById('project-dropdown-btn');
+        dropdownBtn.click();
+        const deleteKitchenBtn = document.querySelector('.btn-delete-preset[data-delete-key="kitchen"]');
+        deleteKitchenBtn.click();
+        const modalOpenFromDropdown = !modal.classList.contains('hidden');
+        const modalDeleteKitchenName = document.getElementById('delete-modal-project-name')?.textContent;
+        document.getElementById('btn-confirm-delete-modal').click();
+        const kitchenRow = document.querySelector('.scenario-item-row[data-scenario-row="kitchen"]');
+        const kitchenHidden = kitchenRow ? kitchenRow.classList.contains('hidden') : false;
+
+        // Restore once more
+        document.getElementById('btn-restore-presets').click();
+        const kitchenVisibleAfterRestore = kitchenRow ? !kitchenRow.classList.contains('hidden') : false;
+
+        return {
+          modalOpen,
+          deleteName,
+          modalClosedOnCancel,
+          modalClosedOnConfirm,
+          activeBefore,
+          activeAfter,
+          differentProjectActive: activeBefore !== activeAfter,
+          restoreVisible,
+          restoreHiddenAfter,
+          modalOpenFromDropdown,
+          modalDeleteKitchenName,
+          kitchenHidden,
+          kitchenVisibleAfterRestore
+        };
+      })()
+    `,
+    returnByValue: true
+  });
+  console.log("Delete project and restore flow verification:", deleteProjectTestResult.result.value);
+
   // Test 2: Navigate to index.html and verify new card & filters
   const indexUrl = `file:///d:/07_PROJECTS/Personal/experiments/index.html`;
   console.log(`\nNavigating to ${indexUrl}...`);

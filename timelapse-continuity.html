@@ -239,8 +239,8 @@
       </div>
 
       <!-- ACTIVE PROJECT CARD & INTUITIVE SWITCHER -->
-      <div class="mt-4 space-y-3">
-        <div class="glass-panel rounded-2xl p-3.5 sm:p-4 border border-slate-200 dark:border-white/10 shadow-sm relative">
+      <div class="mt-4 space-y-3 relative z-30">
+        <div class="glass-panel rounded-2xl p-3.5 sm:p-4 border border-slate-200 dark:border-white/10 shadow-sm relative z-30">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div class="flex items-start sm:items-center gap-3 min-w-0">
               <div class="w-10 h-10 rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/25">
@@ -258,7 +258,7 @@
             </div>
 
             <!-- Project Switcher Dropdown Trigger -->
-            <div class="relative shrink-0 flex items-center gap-2 self-end sm:self-auto">
+            <div class="relative shrink-0 flex items-center gap-2 self-end sm:self-auto z-40">
               <button id="project-dropdown-btn" class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-white/10 transition-all shadow-sm">
                 <span class="material-symbols-outlined text-base text-emerald-600 dark:text-emerald-400">swap_horiz</span>
                 <span>Pilih Project</span>
@@ -266,80 +266,124 @@
               </button>
 
               <!-- Dropdown Menu -->
-              <div id="project-dropdown-menu" class="hidden absolute right-0 top-full mt-2 w-72 sm:w-80 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-2xl p-2 z-40 space-y-1">
+              <div id="project-dropdown-menu" class="hidden absolute right-0 top-full mt-2 w-72 sm:w-80 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-2xl p-2 z-50 max-h-[75vh] overflow-y-auto space-y-1">
                 <div class="px-2.5 py-1.5 text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-slate-500">Pilih Preset / Custom Plan</div>
                 
-                <button data-scenario="warehouse" class="scenario-btn active w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-left transition-all bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/50">
-                  <span class="material-symbols-outlined text-base text-emerald-600 dark:text-emerald-400">factory</span>
-                  <div class="min-w-0 flex-1">
-                    <div class="flex items-center justify-between gap-1">
-                      <div class="font-semibold truncate">Warehouse to Studio</div>
-                      <span class="scenario-status-pill text-[9px] font-mono px-1.5 py-0.5 rounded border hidden"></span>
+                <!-- Warehouse -->
+                <div class="scenario-item-row flex items-center gap-1 w-full rounded-xl transition-all hover:bg-slate-100/80 dark:hover:bg-slate-800/80" data-scenario-row="warehouse">
+                  <button data-scenario="warehouse" class="scenario-btn active flex-1 flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-left transition-all bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/50">
+                    <span class="material-symbols-outlined text-base text-emerald-600 dark:text-emerald-400 shrink-0">factory</span>
+                    <div class="min-w-0 flex-1">
+                      <div class="flex items-center justify-between gap-1">
+                        <div class="font-semibold truncate">Warehouse to Studio</div>
+                        <span class="scenario-status-pill text-[9px] font-mono px-1.5 py-0.5 rounded border hidden"></span>
+                      </div>
+                      <div class="text-[10px] text-slate-500 dark:text-slate-400 font-mono">60s · 6 clips · 7 images</div>
                     </div>
-                    <div class="text-[10px] text-slate-500 dark:text-slate-400 font-mono">60s · 6 clips · 7 images</div>
-                  </div>
-                  <span class="material-symbols-outlined text-sm text-emerald-600 dark:text-emerald-400 check-indicator">check</span>
-                </button>
+                    <span class="material-symbols-outlined text-sm text-emerald-600 dark:text-emerald-400 check-indicator shrink-0">check</span>
+                  </button>
+                  <button type="button" class="btn-delete-preset p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/60 rounded-lg transition-colors shrink-0" data-delete-key="warehouse" title="Hapus proyek Warehouse">
+                    <span class="material-symbols-outlined text-sm pointer-events-none">delete</span>
+                  </button>
+                </div>
 
-                <button data-scenario="dapur" class="scenario-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-left transition-all text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
-                  <span class="material-symbols-outlined text-base text-amber-600 dark:text-amber-400">soup_kitchen</span>
-                  <div class="min-w-0 flex-1">
-                    <div class="flex items-center justify-between gap-1">
-                      <div class="font-semibold truncate">Dapur Tradisional Nenek</div>
-                      <span class="scenario-status-pill text-[9px] font-mono px-1.5 py-0.5 rounded border hidden"></span>
+                <!-- Dapur -->
+                <div class="scenario-item-row flex items-center gap-1 w-full rounded-xl transition-all hover:bg-slate-100/80 dark:hover:bg-slate-800/80" data-scenario-row="dapur">
+                  <button data-scenario="dapur" class="scenario-btn flex-1 flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-left transition-all text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+                    <span class="material-symbols-outlined text-base text-amber-600 dark:text-amber-400 shrink-0">soup_kitchen</span>
+                    <div class="min-w-0 flex-1">
+                      <div class="flex items-center justify-between gap-1">
+                        <div class="font-semibold truncate">Dapur Tradisional Nenek</div>
+                        <span class="scenario-status-pill text-[9px] font-mono px-1.5 py-0.5 rounded border hidden"></span>
+                      </div>
+                      <div class="text-[10px] text-slate-500 dark:text-slate-400 font-mono">120s · 6 clips · 7 images</div>
                     </div>
-                    <div class="text-[10px] text-slate-500 dark:text-slate-400 font-mono">120s · 6 clips · 7 images</div>
-                  </div>
-                  <span class="material-symbols-outlined text-sm text-emerald-600 dark:text-emerald-400 check-indicator hidden">check</span>
-                </button>
+                    <span class="material-symbols-outlined text-sm text-emerald-600 dark:text-emerald-400 check-indicator hidden shrink-0">check</span>
+                  </button>
+                  <button type="button" class="btn-delete-preset p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/60 rounded-lg transition-colors shrink-0" data-delete-key="dapur" title="Hapus proyek Dapur">
+                    <span class="material-symbols-outlined text-sm pointer-events-none">delete</span>
+                  </button>
+                </div>
 
-                <button data-scenario="pool" class="scenario-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-left transition-all text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
-                  <span class="material-symbols-outlined text-base text-sky-600 dark:text-sky-400">pool</span>
-                  <div class="min-w-0 flex-1">
-                    <div class="flex items-center justify-between gap-1">
-                      <div class="font-semibold truncate">Infinity Pool &amp; Decking</div>
-                      <span class="scenario-status-pill text-[9px] font-mono px-1.5 py-0.5 rounded border hidden"></span>
+                <!-- Pool -->
+                <div class="scenario-item-row flex items-center gap-1 w-full rounded-xl transition-all hover:bg-slate-100/80 dark:hover:bg-slate-800/80" data-scenario-row="pool">
+                  <button data-scenario="pool" class="scenario-btn flex-1 flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-left transition-all text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+                    <span class="material-symbols-outlined text-base text-sky-600 dark:text-sky-400 shrink-0">pool</span>
+                    <div class="min-w-0 flex-1">
+                      <div class="flex items-center justify-between gap-1">
+                        <div class="font-semibold truncate">Infinity Pool &amp; Decking</div>
+                        <span class="scenario-status-pill text-[9px] font-mono px-1.5 py-0.5 rounded border hidden"></span>
+                      </div>
+                      <div class="text-[10px] text-slate-500 dark:text-slate-400 font-mono">40s · 4 clips · 5 images</div>
                     </div>
-                    <div class="text-[10px] text-slate-500 dark:text-slate-400 font-mono">40s · 4 clips · 5 images</div>
-                  </div>
-                  <span class="material-symbols-outlined text-sm text-emerald-600 dark:text-emerald-400 check-indicator hidden">check</span>
-                </button>
+                    <span class="material-symbols-outlined text-sm text-emerald-600 dark:text-emerald-400 check-indicator hidden shrink-0">check</span>
+                  </button>
+                  <button type="button" class="btn-delete-preset p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/60 rounded-lg transition-colors shrink-0" data-delete-key="pool" title="Hapus proyek Infinity Pool">
+                    <span class="material-symbols-outlined text-sm pointer-events-none">delete</span>
+                  </button>
+                </div>
 
-                <button data-scenario="tea-house" class="scenario-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-left transition-all text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
-                  <span class="material-symbols-outlined text-base text-emerald-600 dark:text-emerald-400">local_cafe</span>
-                  <div class="min-w-0 flex-1">
-                    <div class="flex items-center justify-between gap-1">
-                      <div class="font-semibold truncate">Minimalist Tea Pavilion</div>
-                      <span class="scenario-status-pill text-[9px] font-mono px-1.5 py-0.5 rounded border hidden"></span>
+                <!-- Tea House -->
+                <div class="scenario-item-row flex items-center gap-1 w-full rounded-xl transition-all hover:bg-slate-100/80 dark:hover:bg-slate-800/80" data-scenario-row="tea-house">
+                  <button data-scenario="tea-house" class="scenario-btn flex-1 flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-left transition-all text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+                    <span class="material-symbols-outlined text-base text-emerald-600 dark:text-emerald-400 shrink-0">local_cafe</span>
+                    <div class="min-w-0 flex-1">
+                      <div class="flex items-center justify-between gap-1">
+                        <div class="font-semibold truncate">Minimalist Tea Pavilion</div>
+                        <span class="scenario-status-pill text-[9px] font-mono px-1.5 py-0.5 rounded border hidden"></span>
+                      </div>
+                      <div class="text-[10px] text-slate-500 dark:text-slate-400 font-mono">50s · 5 clips · 6 images</div>
                     </div>
-                    <div class="text-[10px] text-slate-500 dark:text-slate-400 font-mono">50s · 5 clips · 6 images</div>
-                  </div>
-                  <span class="material-symbols-outlined text-sm text-emerald-600 dark:text-emerald-400 check-indicator hidden">check</span>
-                </button>
+                    <span class="material-symbols-outlined text-sm text-emerald-600 dark:text-emerald-400 check-indicator hidden shrink-0">check</span>
+                  </button>
+                  <button type="button" class="btn-delete-preset p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/60 rounded-lg transition-colors shrink-0" data-delete-key="tea-house" title="Hapus proyek Tea Pavilion">
+                    <span class="material-symbols-outlined text-sm pointer-events-none">delete</span>
+                  </button>
+                </div>
 
-                <button data-scenario="kitchen" class="scenario-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-left transition-all text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
-                  <span class="material-symbols-outlined text-base text-rose-600 dark:text-rose-400">skillet</span>
-                  <div class="min-w-0 flex-1">
-                    <div class="flex items-center justify-between gap-1">
-                      <div class="font-semibold truncate">Chef's Kitchen</div>
-                      <span class="scenario-status-pill text-[9px] font-mono px-1.5 py-0.5 rounded border hidden"></span>
+                <!-- Kitchen -->
+                <div class="scenario-item-row flex items-center gap-1 w-full rounded-xl transition-all hover:bg-slate-100/80 dark:hover:bg-slate-800/80" data-scenario-row="kitchen">
+                  <button data-scenario="kitchen" class="scenario-btn flex-1 flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-left transition-all text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+                    <span class="material-symbols-outlined text-base text-rose-600 dark:text-rose-400 shrink-0">skillet</span>
+                    <div class="min-w-0 flex-1">
+                      <div class="flex items-center justify-between gap-1">
+                        <div class="font-semibold truncate">Chef's Kitchen</div>
+                        <span class="scenario-status-pill text-[9px] font-mono px-1.5 py-0.5 rounded border hidden"></span>
+                      </div>
+                      <div class="text-[10px] text-slate-500 dark:text-slate-400 font-mono">30s · 3 clips · 4 images</div>
                     </div>
-                    <div class="text-[10px] text-slate-500 dark:text-slate-400 font-mono">30s · 3 clips · 4 images</div>
-                  </div>
-                  <span class="material-symbols-outlined text-sm text-emerald-600 dark:text-emerald-400 check-indicator hidden">check</span>
-                </button>
+                    <span class="material-symbols-outlined text-sm text-emerald-600 dark:text-emerald-400 check-indicator hidden shrink-0">check</span>
+                  </button>
+                  <button type="button" class="btn-delete-preset p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/60 rounded-lg transition-colors shrink-0" data-delete-key="kitchen" title="Hapus proyek Chef's Kitchen">
+                    <span class="material-symbols-outlined text-sm pointer-events-none">delete</span>
+                  </button>
+                </div>
 
-                <button id="scenario-btn-imported" class="scenario-btn hidden w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-left transition-all text-sky-700 dark:text-sky-300 bg-sky-50 dark:bg-sky-950/60 border border-sky-200 dark:border-sky-800/40">
-                  <span class="material-symbols-outlined text-base text-sky-500">assignment</span>
-                  <div class="min-w-0 flex-1">
-                    <div class="flex items-center justify-between gap-1">
-                      <div class="font-semibold truncate" id="imported-scenario-label">Custom Plan</div>
-                      <span class="scenario-status-pill text-[9px] font-mono px-1.5 py-0.5 rounded border hidden"></span>
+                <!-- Imported / Custom Plan Row -->
+                <div id="scenario-imported-row" class="hidden scenario-item-row flex items-center gap-1 w-full rounded-xl transition-all hover:bg-slate-100/80 dark:hover:bg-slate-800/80" data-scenario-row="imported">
+                  <button id="scenario-btn-imported" class="scenario-btn flex-1 flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-left transition-all text-sky-700 dark:text-sky-300 bg-sky-50 dark:bg-sky-950/60 border border-sky-200 dark:border-sky-800/40">
+                    <span class="material-symbols-outlined text-base text-sky-500 shrink-0">assignment</span>
+                    <div class="min-w-0 flex-1">
+                      <div class="flex items-center justify-between gap-1">
+                        <div class="font-semibold truncate" id="imported-scenario-label">Custom Plan</div>
+                        <span class="scenario-status-pill text-[9px] font-mono px-1.5 py-0.5 rounded border hidden"></span>
+                      </div>
+                      <div class="text-[10px] text-slate-500 dark:text-slate-400 font-mono" id="imported-scenario-meta">Custom JSON Payload</div>
                     </div>
-                    <div class="text-[10px] text-slate-500 dark:text-slate-400 font-mono" id="imported-scenario-meta">Custom JSON Payload</div>
-                  </div>
-                  <span class="material-symbols-outlined text-sm text-sky-600 dark:text-sky-400 check-indicator hidden">check</span>
-                </button>
+                    <span class="material-symbols-outlined text-sm text-sky-600 dark:text-sky-400 check-indicator hidden shrink-0">check</span>
+                  </button>
+                  <button type="button" class="btn-delete-preset p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/60 rounded-lg transition-colors shrink-0" data-delete-key="imported" title="Hapus Custom Plan">
+                    <span class="material-symbols-outlined text-sm pointer-events-none">delete</span>
+                  </button>
+                </div>
+
+                <!-- Restore Presets Container -->
+                <div id="restore-presets-container" class="hidden pt-2 border-t border-slate-200 dark:border-white/10 mt-1">
+                  <button type="button" id="btn-restore-presets" class="w-full flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-white/5 transition-all">
+                    <span class="material-symbols-outlined text-sm">restart_alt</span>
+                    <span>Pulihkan Preset Default</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -360,7 +404,7 @@
             </div>
 
             <!-- Action buttons for active project -->
-            <div class="flex items-center gap-1.5 shrink-0 self-end sm:self-auto">
+            <div class="flex items-center gap-1.5 shrink-0 self-end sm:self-auto flex-wrap">
               <button id="btn-quick-status" class="inline-flex items-center gap-1 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-white/10 px-2.5 py-1.5 rounded-lg transition-all shadow-sm" title="Ubah status dan tautan hasil">
                 <span class="material-symbols-outlined text-sm text-sky-500">link</span>
                 <span>Status &amp; Link</span>
@@ -368,6 +412,10 @@
               <button id="btn-edit-active-project" class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 dark:text-emerald-300 hover:text-emerald-900 dark:hover:text-white bg-emerald-50 dark:bg-emerald-950/60 hover:bg-emerald-100 dark:hover:bg-emerald-900/80 border border-emerald-200 dark:border-emerald-700/50 px-2.5 py-1.5 rounded-lg transition-all shadow-sm" title="Edit proyek atau struktur JSON">
                 <span class="material-symbols-outlined text-sm text-emerald-600 dark:text-emerald-400">edit_document</span>
                 <span>Edit Project / JSON</span>
+              </button>
+              <button id="btn-delete-active-project" class="inline-flex items-center gap-1 text-xs font-semibold text-rose-700 dark:text-rose-300 hover:text-rose-900 dark:hover:text-white bg-rose-50 dark:bg-rose-950/60 hover:bg-rose-100 dark:hover:bg-rose-900/80 border border-rose-200 dark:border-rose-700/50 px-2.5 py-1.5 rounded-lg transition-all shadow-sm" title="Hapus proyek aktif ini">
+                <span class="material-symbols-outlined text-sm text-rose-600 dark:text-rose-400">delete</span>
+                <span>Hapus Project</span>
               </button>
             </div>
           </div>
@@ -831,13 +879,49 @@
         <span id="edit-error-msg"></span>
       </div>
 
+      <div class="pt-3 border-t border-slate-200 dark:border-white/5 flex items-center justify-between gap-2.5 flex-wrap">
+        <button type="button" id="btn-delete-from-modal" class="inline-flex items-center gap-1 text-xs font-semibold text-rose-700 dark:text-rose-300 hover:text-rose-900 dark:hover:text-white bg-rose-50 dark:bg-rose-950/60 hover:bg-rose-100 dark:hover:bg-rose-900/80 border border-rose-200 dark:border-rose-700/50 px-3 py-1.5 rounded-xl transition-all shadow-sm" title="Hapus proyek ini">
+          <span class="material-symbols-outlined text-sm text-rose-600 dark:text-rose-400">delete</span>
+          <span>Hapus Proyek Ini</span>
+        </button>
+        <div class="flex items-center gap-2.5 ml-auto">
+          <button type="button" id="btn-cancel-edit-modal" class="px-3.5 py-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white font-medium text-xs transition-colors">
+            Batal
+          </button>
+          <button type="button" id="btn-save-edit-modal" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-bold px-4 py-2 rounded-xl shadow-md transition-all font-mono text-xs flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-base">save</span>
+            <span>Simpan Perubahan</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DELETE PROJECT CONFIRMATION MODAL -->
+  <div id="delete-confirm-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-2xl max-w-md w-full p-5 sm:p-6 shadow-2xl space-y-4">
+      <div class="flex items-start gap-3.5">
+        <div class="w-10 h-10 rounded-xl bg-rose-500/15 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0 border border-rose-500/25">
+          <span class="material-symbols-outlined text-xl">delete_forever</span>
+        </div>
+        <div class="min-w-0 flex-1">
+          <h3 class="text-base font-bold text-slate-900 dark:text-white">Hapus Proyek Ini?</h3>
+          <p class="text-xs text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
+            Apakah Anda yakin ingin menghapus proyek <span id="delete-modal-project-name" class="font-semibold text-slate-900 dark:text-white"></span>?
+          </p>
+          <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-2 font-mono">
+            Proyek akan dihapus dari daftar. Anda dapat memulihkan preset default kapan saja melalui menu project.
+          </p>
+        </div>
+      </div>
+
       <div class="pt-3 border-t border-slate-200 dark:border-white/5 flex items-center justify-end gap-2.5">
-        <button type="button" id="btn-cancel-edit-modal" class="px-3.5 py-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white font-medium text-xs transition-colors">
+        <button type="button" id="btn-cancel-delete-modal" class="px-4 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white font-medium text-xs transition-colors">
           Batal
         </button>
-        <button type="button" id="btn-save-edit-modal" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-bold px-4 py-2 rounded-xl shadow-md transition-all font-mono text-xs flex items-center gap-1.5">
-          <span class="material-symbols-outlined text-base">save</span>
-          <span>Simpan Perubahan</span>
+        <button type="button" id="btn-confirm-delete-modal" class="bg-rose-600 hover:bg-rose-500 text-white font-bold px-4 py-2 rounded-xl shadow-md shadow-rose-600/20 transition-all font-mono text-xs flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-base">delete</span>
+          <span>Ya, Hapus Proyek</span>
         </button>
       </div>
     </div>
@@ -3684,6 +3768,9 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
             b.classList.add('text-slate-700', 'dark:text-slate-300');
           });
 
+          const importedRow = document.getElementById('scenario-imported-row');
+          if (importedRow) importedRow.classList.remove('hidden');
+
           const importedBtn = document.getElementById('scenario-btn-imported');
           if (importedBtn) {
             importedBtn.classList.remove('hidden');
@@ -3692,6 +3779,12 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
             labelEl.textContent = pName.length > 25 ? `${pName.slice(0, 25)}...` : pName;
             importedBtn.classList.add('active', 'bg-sky-50', 'dark:bg-sky-950/60', 'text-sky-700', 'dark:text-sky-300', 'border', 'border-sky-200', 'dark:border-sky-800/40');
             importedBtn.classList.remove('text-slate-700', 'dark:text-slate-300');
+          }
+
+          if (typeof localStorage !== 'undefined') {
+            try {
+              localStorage.setItem('continuity_imported_plan', JSON.stringify(plan));
+            } catch (e) {}
           }
 
           closeImportModal();
@@ -4089,13 +4182,232 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
         });
       }
 
+      // --- DELETE PROJECT CONTROLLERS & LOGIC ---
+      let pendingDeleteKey = null;
+      let pendingDeleteName = '';
+
+      const deleteConfirmModal = document.getElementById('delete-confirm-modal');
+      const deleteModalProjectName = document.getElementById('delete-modal-project-name');
+      const btnCancelDeleteModal = document.getElementById('btn-cancel-delete-modal');
+      const btnConfirmDeleteModal = document.getElementById('btn-confirm-delete-modal');
+      const btnDeleteActiveProject = document.getElementById('btn-delete-active-project');
+      const btnDeleteFromModal = document.getElementById('btn-delete-from-modal');
+      const btnRestorePresets = document.getElementById('btn-restore-presets');
+
+      function getDeletedProjects() {
+        if (typeof localStorage === 'undefined') return [];
+        try {
+          const raw = localStorage.getItem('continuity_deleted_projects');
+          return raw ? JSON.parse(raw) : [];
+        } catch (e) {
+          return [];
+        }
+      }
+
+      function setDeletedProjects(arr) {
+        if (typeof localStorage === 'undefined') return;
+        try {
+          localStorage.setItem('continuity_deleted_projects', JSON.stringify(arr));
+        } catch (e) {
+          console.warn("Could not save deleted projects", e);
+        }
+      }
+
+      function openDeleteModal(key, name) {
+        pendingDeleteKey = key || currentScenarioKey || 'warehouse';
+        pendingDeleteName = name || currentData?.production_summary?.project_name || 'Proyek';
+        if (deleteModalProjectName) deleteModalProjectName.textContent = `"${pendingDeleteName}"`;
+        if (deleteConfirmModal) deleteConfirmModal.classList.remove('hidden');
+      }
+
+      function closeDeleteModal() {
+        pendingDeleteKey = null;
+        pendingDeleteName = '';
+        if (deleteConfirmModal) deleteConfirmModal.classList.add('hidden');
+      }
+
+      function applyDeletedProjectsFilter() {
+        const deleted = getDeletedProjects();
+        const presetKeys = ['warehouse', 'dapur', 'pool', 'tea-house', 'kitchen'];
+
+        presetKeys.forEach(k => {
+          const row = document.querySelector(`.scenario-item-row[data-scenario-row="${k}"]`);
+          if (row) {
+            if (deleted.includes(k)) {
+              row.classList.add('hidden');
+            } else {
+              row.classList.remove('hidden');
+            }
+          }
+        });
+
+        const restoreContainer = document.getElementById('restore-presets-container');
+        if (restoreContainer) {
+          if (deleted.length > 0) {
+            restoreContainer.classList.remove('hidden');
+          } else {
+            restoreContainer.classList.add('hidden');
+          }
+        }
+      }
+
+      function restoreDeletedPresets() {
+        setDeletedProjects([]);
+        applyDeletedProjectsFilter();
+        showToast("Semua preset default berhasil dipulihkan!");
+        const restoreContainer = document.getElementById('restore-presets-container');
+        if (restoreContainer) restoreContainer.classList.add('hidden');
+
+        // If current project is not visible, switch to first preset
+        const firstPreset = 'warehouse';
+        if (SCENARIOS[firstPreset]) {
+          currentScenarioKey = firstPreset;
+          const overrides = getSavedProjectOverrides();
+          currentData = overrides[firstPreset] ? JSON.parse(JSON.stringify(overrides[firstPreset])) : JSON.parse(JSON.stringify(SCENARIOS[firstPreset]));
+          updateActiveProjectDisplay(firstPreset, currentData);
+          renderApp();
+        }
+      }
+
+      function confirmDeleteProject() {
+        if (!pendingDeleteKey) return;
+        const keyToDelete = pendingDeleteKey;
+        const nameDeleted = pendingDeleteName || 'Proyek';
+
+        if (keyToDelete === 'imported') {
+          importedPlan = null;
+          if (typeof localStorage !== 'undefined') {
+            try { localStorage.removeItem('continuity_imported_plan'); } catch (e) {}
+          }
+          const importedRow = document.getElementById('scenario-imported-row');
+          if (importedRow) importedRow.classList.add('hidden');
+          const importedBtn = document.getElementById('scenario-btn-imported');
+          if (importedBtn) importedBtn.classList.add('hidden');
+        } else {
+          // Preset scenario
+          const deleted = getDeletedProjects();
+          if (!deleted.includes(keyToDelete)) {
+            deleted.push(keyToDelete);
+            setDeletedProjects(deleted);
+          }
+          // Remove any overrides
+          const overrides = getSavedProjectOverrides();
+          delete overrides[keyToDelete];
+          if (typeof localStorage !== 'undefined') {
+            try { localStorage.setItem('continuity_project_overrides', JSON.stringify(overrides)); } catch (e) {}
+          }
+        }
+
+        applyDeletedProjectsFilter();
+
+        // If the currently active project was deleted, switch to another project
+        if (currentScenarioKey === keyToDelete || (keyToDelete === 'imported' && currentScenarioKey === 'imported')) {
+          const deleted = getDeletedProjects();
+          const presetKeys = ['warehouse', 'dapur', 'pool', 'tea-house', 'kitchen'];
+          const nextKey = presetKeys.find(k => !deleted.includes(k));
+
+          if (nextKey && SCENARIOS[nextKey]) {
+            currentScenarioKey = nextKey;
+            const overrides = getSavedProjectOverrides();
+            currentData = overrides[nextKey] ? JSON.parse(JSON.stringify(overrides[nextKey])) : JSON.parse(JSON.stringify(SCENARIOS[nextKey]));
+            updateActiveProjectDisplay(nextKey, currentData);
+            renderApp();
+          } else if (importedPlan) {
+            currentScenarioKey = 'imported';
+            currentData = JSON.parse(JSON.stringify(importedPlan));
+            updateActiveProjectDisplay('imported', currentData);
+            renderApp();
+          } else {
+            // All presets deleted, restore them
+            restoreDeletedPresets();
+          }
+        }
+
+        closeDeleteModal();
+        closeEditProjectModal();
+        closeProjectDropdown();
+        showToast(`Proyek "${nameDeleted}" berhasil dihapus.`);
+      }
+
+      if (btnDeleteActiveProject) {
+        btnDeleteActiveProject.addEventListener('click', () => {
+          openDeleteModal(currentScenarioKey, currentData?.production_summary?.project_name);
+        });
+      }
+
+      if (btnDeleteFromModal) {
+        btnDeleteFromModal.addEventListener('click', () => {
+          openDeleteModal(currentScenarioKey, currentData?.production_summary?.project_name);
+        });
+      }
+
+      document.querySelectorAll('.btn-delete-preset').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const key = btn.getAttribute('data-delete-key');
+          let pName = 'Proyek';
+          if (key === 'imported' && importedPlan) {
+            pName = importedPlan.production_summary?.project_name || 'Custom Plan';
+          } else if (key && SCENARIOS[key]) {
+            const overrides = getSavedProjectOverrides();
+            const p = overrides[key] || SCENARIOS[key];
+            pName = p.production_summary?.project_name || key;
+          }
+          openDeleteModal(key, pName);
+        });
+      });
+
+      if (btnCancelDeleteModal) btnCancelDeleteModal.addEventListener('click', closeDeleteModal);
+      if (btnConfirmDeleteModal) btnConfirmDeleteModal.addEventListener('click', confirmDeleteProject);
+      if (btnRestorePresets) btnRestorePresets.addEventListener('click', restoreDeletedPresets);
+
       window.openStatusModal = openStatusModal;
       window.closeStatusModal = closeStatusModal;
       window.openEditProjectModal = openEditProjectModal;
       window.closeEditProjectModal = closeEditProjectModal;
+      window.openDeleteModal = openDeleteModal;
+      window.closeDeleteModal = closeDeleteModal;
+      window.confirmDeleteProject = confirmDeleteProject;
+      window.restoreDeletedPresets = restoreDeletedPresets;
+      window.getDeletedProjects = getDeletedProjects;
+
+      // Restore persisted imported plan if present
+      if (typeof localStorage !== 'undefined') {
+        try {
+          const savedImported = localStorage.getItem('continuity_imported_plan');
+          if (savedImported) {
+            importedPlan = JSON.parse(savedImported);
+            const importedRow = document.getElementById('scenario-imported-row');
+            if (importedRow) importedRow.classList.remove('hidden');
+            const importedBtn = document.getElementById('scenario-btn-imported');
+            if (importedBtn) {
+              importedBtn.classList.remove('hidden');
+              const labelEl = document.getElementById('imported-scenario-label');
+              if (labelEl) {
+                const pName = importedPlan.production_summary?.project_name || 'Custom Plan';
+                labelEl.textContent = pName.length > 25 ? `${pName.slice(0, 25)}...` : pName;
+              }
+            }
+          }
+        } catch (e) {}
+      }
+
+      applyDeletedProjectsFilter();
+      const deletedOnLoad = getDeletedProjects();
+      let initialKey = 'warehouse';
+      if (deletedOnLoad.includes(initialKey)) {
+        const presetKeys = ['warehouse', 'dapur', 'pool', 'tea-house', 'kitchen'];
+        initialKey = presetKeys.find(k => !deletedOnLoad.includes(k)) || 'warehouse';
+      }
+
+      if (SCENARIOS[initialKey]) {
+        currentScenarioKey = initialKey;
+        const overrides = getSavedProjectOverrides();
+        currentData = overrides[initialKey] ? JSON.parse(JSON.stringify(overrides[initialKey])) : JSON.parse(JSON.stringify(SCENARIOS[initialKey]));
+      }
 
       // Initial active project display & render
-      updateActiveProjectDisplay('warehouse', currentData);
+      updateActiveProjectDisplay(currentScenarioKey, currentData);
       renderApp();
     });
   </script>
