@@ -181,15 +181,13 @@
       </div>
 
       <div class="flex items-center gap-1.5 sm:gap-2">
-        <button id="btn-open-importer" class="inline-flex items-center gap-1.5 text-xs font-semibold text-sky-700 dark:text-sky-300 hover:text-sky-900 dark:hover:text-white bg-sky-50 dark:bg-sky-950/70 hover:bg-sky-100 dark:hover:bg-sky-900/80 border border-sky-200 dark:border-sky-600/50 px-2.5 sm:px-3 py-1.5 rounded-lg transition-all shadow-sm">
-          <span class="material-symbols-outlined text-base">file_upload</span>
-          <span class="hidden sm:inline">Paste / Import JSON</span>
-          <span class="sm:hidden">Import</span>
+        <button id="btn-open-add-project" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-950 bg-emerald-500 hover:bg-emerald-400 px-3 sm:px-3.5 py-1.5 rounded-xl transition-all shadow-sm shadow-emerald-500/20 cursor-pointer">
+          <span class="material-symbols-outlined text-base">add_circle</span>
+          <span>Tambah Project</span>
         </button>
-        <button id="btn-open-generator" class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 dark:text-emerald-300 hover:text-emerald-900 dark:hover:text-white bg-emerald-50 dark:bg-emerald-950/60 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 border border-emerald-200 dark:border-emerald-700/50 px-2.5 sm:px-3 py-1.5 rounded-lg transition-all shadow-sm">
-          <span class="material-symbols-outlined text-base">add</span>
-          <span class="hidden sm:inline">Custom</span>
-        </button>
+        <!-- Aliased buttons for compatibility -->
+        <button id="btn-open-importer" class="hidden" aria-hidden="true"></button>
+        <button id="btn-open-generator" class="hidden" aria-hidden="true"></button>
         <button id="btn-open-system-prompt" class="inline-flex items-center gap-1 text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-white/10 px-2 sm:px-2.5 py-1.5 rounded-lg transition-all" title="Director System Rules">
           <span class="material-symbols-outlined text-base text-amber-500">menu_book</span>
           <span class="hidden md:inline">Rules</span>
@@ -206,7 +204,7 @@
   <main class="flex-grow max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-6 w-full">
 
     <!-- HERO & SUMMARY -->
-    <div class="mb-5 sm:mb-6">
+    <div class="mb-5 sm:mb-6 relative z-40">
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-slate-200 dark:border-white/5">
         <div>
           <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
@@ -239,8 +237,8 @@
       </div>
 
       <!-- ACTIVE PROJECT CARD & INTUITIVE SWITCHER -->
-      <div class="mt-4 space-y-3 relative z-30">
-        <div class="glass-panel rounded-2xl p-3.5 sm:p-4 border border-slate-200 dark:border-white/10 shadow-sm relative z-30">
+      <div class="mt-4 space-y-3 relative z-40">
+        <div class="glass-panel rounded-2xl p-3.5 sm:p-4 border border-slate-200 dark:border-white/10 shadow-sm relative z-40">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div class="flex items-start sm:items-center gap-3 min-w-0">
               <div class="w-10 h-10 rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/25">
@@ -258,7 +256,7 @@
             </div>
 
             <!-- Project Switcher Dropdown Trigger -->
-            <div class="relative shrink-0 flex items-center gap-2 self-end sm:self-auto z-40">
+            <div class="relative shrink-0 flex items-center gap-2 self-end sm:self-auto z-50">
               <button id="project-dropdown-btn" class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-white/10 transition-all shadow-sm">
                 <span class="material-symbols-outlined text-base text-emerald-600 dark:text-emerald-400">swap_horiz</span>
                 <span>Pilih Project</span>
@@ -266,8 +264,27 @@
               </button>
 
               <!-- Dropdown Menu -->
-              <div id="project-dropdown-menu" class="hidden absolute right-0 top-full mt-2 w-72 sm:w-80 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-2xl p-2 z-50 max-h-[75vh] overflow-y-auto space-y-1">
-                <div class="px-2.5 py-1.5 text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-slate-500">Pilih Preset / Custom Plan</div>
+              <div id="project-dropdown-menu" class="hidden absolute right-0 top-full mt-2 w-72 sm:w-84 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-2xl p-2.5 z-50 max-h-[75vh] overflow-y-auto space-y-2">
+                <!-- Action: Tambah Project Baru -->
+                <button type="button" id="btn-dropdown-add-project" class="w-full flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-slate-950 bg-emerald-500 hover:bg-emerald-400 transition-all shadow-sm cursor-pointer">
+                  <span class="material-symbols-outlined text-base">add_circle</span>
+                  <span>+ Tambah Project Baru</span>
+                </button>
+
+                <!-- Proyek Saya Section -->
+                <div id="custom-projects-section" class="space-y-1 pb-1">
+                  <div class="px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-slate-500 flex items-center justify-between">
+                    <span>Proyek Saya</span>
+                    <span id="custom-projects-count" class="text-[9px] bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded font-bold text-slate-600 dark:text-slate-400">0</span>
+                  </div>
+                  <div id="custom-projects-list" class="space-y-1">
+                    <!-- Dynamically populated custom projects -->
+                  </div>
+                </div>
+
+                <div class="pt-1 border-t border-slate-200 dark:border-white/10">
+                  <div class="px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-slate-500">Preset Bawaan</div>
+                </div>
                 
                 <!-- Warehouse -->
                 <div class="scenario-item-row flex items-center gap-1 w-full rounded-xl transition-all hover:bg-slate-100/80 dark:hover:bg-slate-800/80" data-scenario-row="warehouse">
@@ -557,50 +574,111 @@
     </div>
   </main>
 
-  <!-- CUSTOM PROJECT GENERATOR MODAL -->
-  <div id="generator-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-4">
-    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-2xl max-w-xl w-full p-4 sm:p-6 max-h-[92vh] overflow-y-auto shadow-2xl">
-      <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-white/5 mb-4">
-        <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-lg bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold text-xs border border-emerald-500/25 shrink-0">
-            <span class="material-symbols-outlined text-base">auto_fix_high</span>
+  <!-- UNIFIED ADD PROJECT MODAL (PASTE JSON OR MANUAL FORM) -->
+  <div id="add-project-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-2xl max-w-2xl w-full p-4 sm:p-6 max-h-[92vh] overflow-y-auto shadow-2xl space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-white/5">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/25">
+            <span class="material-symbols-outlined text-base">add_circle</span>
           </div>
           <div>
-            <h3 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white">Generate Custom Continuity Plan</h3>
-            <p class="text-[11px] text-slate-500 dark:text-slate-400">Adaptive sequence synthesis based on physical complexity</p>
+            <h3 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white">Tambah Project Baru</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Pilih metode: Tempel JSON kontinuitas atau buat spesifikasi baru.</p>
           </div>
         </div>
-        <button id="btn-close-generator" class="text-slate-400 hover:text-slate-700 dark:hover:text-white p-1 rounded-lg transition-colors">
+        <button id="btn-close-add-modal" class="text-slate-400 hover:text-slate-700 dark:hover:text-white p-1 rounded-lg transition-colors">
           <span class="material-symbols-outlined">close</span>
         </button>
       </div>
 
-      <form id="custom-plan-form" class="space-y-3.5 text-xs">
+      <!-- Mode Tabs: Tempel JSON vs Formulir Manual -->
+      <div class="flex items-center gap-1.5 p-1 bg-slate-100 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-white/5 text-xs font-mono">
+        <button type="button" id="tab-add-json" class="flex-1 py-1.5 px-3 rounded-lg font-bold bg-emerald-500 text-slate-950 transition-all flex items-center justify-center gap-1.5 shadow-sm">
+          <span class="material-symbols-outlined text-sm">content_paste</span>
+          <span>Tempel JSON (Rekomendasi)</span>
+        </button>
+        <button type="button" id="tab-add-form" class="flex-1 py-1.5 px-3 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all flex items-center justify-center gap-1.5">
+          <span class="material-symbols-outlined text-sm">tune</span>
+          <span>Buat Manual (Form)</span>
+        </button>
+      </div>
+
+      <!-- TAB 1: TEMPEL JSON -->
+      <div id="content-add-json" class="space-y-3">
+        <!-- Quick action helpers -->
+        <div class="flex flex-wrap items-center justify-between gap-2 text-xs">
+          <div class="flex flex-wrap items-center gap-1.5">
+            <button type="button" id="btn-import-paste-clipboard" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-white/10 font-mono text-[11px] transition-all">
+              <span class="material-symbols-outlined text-sm text-sky-500">content_paste</span>
+              <span>Clipboard</span>
+            </button>
+            <label class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-white/10 font-mono text-[11px] cursor-pointer transition-all">
+              <span class="material-symbols-outlined text-sm text-emerald-500">upload_file</span>
+              <span>Upload .json</span>
+              <input type="file" id="import-json-file" accept=".json,application/json" class="hidden">
+            </label>
+            <button type="button" id="btn-import-load-dapur-sample" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/60 dark:hover:bg-amber-900/70 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800/40 font-mono text-[11px] transition-all">
+              <span class="material-symbols-outlined text-sm text-amber-500">soup_kitchen</span>
+              <span>Contoh Dapur Nenek</span>
+            </button>
+          </div>
+          <button type="button" id="btn-import-clear" class="inline-flex items-center gap-1 text-[11px] font-mono text-slate-500 hover:text-rose-500 transition-colors">
+            <span class="material-symbols-outlined text-xs">delete</span>
+            <span>Bersihkan</span>
+          </button>
+        </div>
+
+        <div class="space-y-1">
+          <div class="flex items-center justify-between text-[11px] font-mono">
+            <label for="import-json-textarea" class="text-slate-500 dark:text-slate-400">JSON Payload (RFC 8259):</label>
+            <span id="import-json-status" class="text-slate-500">Menunggu input...</span>
+          </div>
+          <textarea id="import-json-textarea" rows="8" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-white/10 rounded-xl p-3 text-xs font-mono text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:border-emerald-500 leading-relaxed transition-colors" placeholder='Tempelkan JSON RFC 8259 proyek di sini...'></textarea>
+        </div>
+
+        <!-- Error banner -->
+        <div id="import-error-banner" class="hidden p-3 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800/50 text-xs text-rose-700 dark:text-rose-300 font-mono flex items-start gap-2">
+          <span class="material-symbols-outlined text-base text-rose-500 shrink-0">error</span>
+          <span id="import-error-msg"></span>
+        </div>
+
+        <div class="pt-2 border-t border-slate-200 dark:border-white/5 flex items-center justify-end gap-2.5">
+          <button type="button" id="btn-cancel-import" class="px-3.5 py-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white font-medium text-xs transition-colors">
+            Batal
+          </button>
+          <button type="button" id="btn-submit-import" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-bold px-4 py-2 rounded-xl shadow-md transition-all font-mono text-xs flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-base">check</span>
+            <span>Simpan &amp; Buka Project</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- TAB 2: BUAT DARI FORMULIR -->
+      <form id="custom-plan-form" class="hidden space-y-3 text-xs">
         <div>
-          <label class="block text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase mb-1">Project Name</label>
+          <label class="block text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase mb-1">Nama Project</label>
           <input type="text" id="custom-name" required value="Suburban Garage to High-Tech Music Production Studio" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-white/10 rounded-xl px-3 py-2 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-sans transition-colors">
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase mb-1">Target Total Duration (s)</label>
-            <input type="number" id="custom-total-duration" required min="10" max="300" step="5" value="40" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-white/10 rounded-xl px-3 py-2 text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 font-mono transition-colors">
-            <span class="text-[10px] text-slate-500 font-mono">Total duration constraint</span>
+            <label class="block text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase mb-1">Target Total Durasi (detik)</label>
+            <input type="number" id="custom-total-duration" required min="10" max="600" step="5" value="40" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-white/10 rounded-xl px-3 py-2 text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 font-mono transition-colors">
           </div>
           <div>
-            <label class="block text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase mb-1">Clip Duration (s)</label>
+            <label class="block text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase mb-1">Durasi per Klip (detik)</label>
             <input type="number" id="custom-clip-duration" required min="5" max="30" step="1" value="10" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-white/10 rounded-xl px-3 py-2 text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 font-mono transition-colors">
-            <span class="text-[10px] text-slate-500 font-mono">Per-video clip length</span>
           </div>
         </div>
 
         <div>
-          <label class="block text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase mb-1">Initial State (IMAGE 1)</label>
+          <label class="block text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase mb-1">State Awal (IMAGE 1)</label>
           <textarea id="custom-initial-state" required rows="2" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-white/10 rounded-xl p-2.5 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-sans transition-colors">Cluttered suburban concrete garage with exposed 2x4 stud walls, bare cement floor with oil stains, overhead steel garage door tracks, and unorganized tool boxes.</textarea>
         </div>
 
         <div>
-          <label class="block text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase mb-1">Final Desired State (IMAGE N)</label>
+          <label class="block text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase mb-1">State Akhir (IMAGE N)</label>
           <textarea id="custom-final-state" required rows="2" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-white/10 rounded-xl p-2.5 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-sans transition-colors">Acoustically isolated professional music recording studio with custom walnut acoustic slat diffusers, floating hardwood flooring, recessed halo lighting, and dual synth workstations.</textarea>
         </div>
 
@@ -609,92 +687,22 @@
           <input type="text" id="custom-camera" value="Tripod locked at 1.5m eye-level in southwest doorway corner, 24mm wide angle, looking northeast at 45-degree angle. Zero pan, tilt, or dolly." class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-white/10 rounded-xl px-3 py-2 text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 font-sans transition-colors">
         </div>
 
-        <div class="pt-3 border-t border-slate-200 dark:border-white/5 flex items-center justify-end gap-2.5">
+        <div class="pt-2 border-t border-slate-200 dark:border-white/5 flex items-center justify-end gap-2.5">
           <button type="button" id="btn-cancel-generator" class="px-3.5 py-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white font-medium text-xs transition-colors">
-            Cancel
+            Batal
           </button>
-          <button type="submit" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-bold px-4 py-2 rounded-xl shadow-md transition-all font-mono text-xs">
-            Synthesize Plan
+          <button type="submit" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-bold px-4 py-2 rounded-xl shadow-md transition-all font-mono text-xs flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-base">add_circle</span>
+            <span>Buat &amp; Buka Project</span>
           </button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- IMPORT JSON MODAL -->
-  <div id="import-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-2xl max-w-3xl w-full p-5 sm:p-6 max-h-[92vh] overflow-y-auto shadow-2xl space-y-4">
-      <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-white/5">
-        <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-lg bg-sky-500/15 text-sky-600 dark:text-sky-400 flex items-center justify-center font-bold text-sm border border-sky-500/25 shrink-0">
-            <span class="material-symbols-outlined text-base">file_upload</span>
-          </div>
-          <div>
-            <h3 class="text-base font-bold text-slate-900 dark:text-white">Paste or Import RFC 8259 Continuity JSON</h3>
-            <p class="text-xs text-slate-500 dark:text-slate-400">Instantly render, validate, and extract copy-ready prompts from your custom project JSON</p>
-          </div>
-        </div>
-        <button id="btn-close-import-modal" class="text-slate-400 hover:text-slate-700 dark:hover:text-white p-1 rounded-lg transition-colors">
-          <span class="material-symbols-outlined">close</span>
-        </button>
-      </div>
-
-      <!-- Quick action helpers -->
-      <div class="flex flex-wrap items-center justify-between gap-2 text-xs">
-        <div class="flex flex-wrap items-center gap-2">
-          <button type="button" id="btn-import-paste-clipboard" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-white/10 font-mono transition-all">
-            <span class="material-symbols-outlined text-sm text-sky-500">content_paste</span>
-            <span>Tempel dari Clipboard</span>
-          </button>
-          <label class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-white/10 font-mono cursor-pointer transition-all">
-            <span class="material-symbols-outlined text-sm text-emerald-500">upload_file</span>
-            <span>Upload File .json</span>
-            <input type="file" id="import-json-file" accept=".json,application/json" class="hidden">
-          </label>
-          <button type="button" id="btn-import-load-dapur-sample" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/60 dark:hover:bg-amber-900/70 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800/40 font-mono transition-all">
-            <span class="material-symbols-outlined text-sm text-amber-500">soup_kitchen</span>
-            <span>Contoh: Dapur Nenek (120s)</span>
-          </button>
-        </div>
-        <button type="button" id="btn-import-clear" class="inline-flex items-center gap-1 text-xs font-mono text-slate-500 hover:text-rose-500 transition-colors">
-          <span class="material-symbols-outlined text-sm">delete</span>
-          <span>Bersihkan</span>
-        </button>
-      </div>
-
-      <!-- JSON Input Textarea -->
-      <div class="space-y-1.5">
-        <div class="flex items-center justify-between text-[11px] font-mono">
-          <label for="import-json-textarea" class="text-slate-500 dark:text-slate-400">JSON Payload (RFC 8259):</label>
-          <span id="import-json-status" class="text-slate-500">Menunggu input...</span>
-        </div>
-        <textarea id="import-json-textarea" rows="12" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-white/10 rounded-xl p-3.5 text-xs font-mono text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:border-sky-500 leading-relaxed transition-colors" placeholder='Tempelkan JSON RFC 8259 di sini...
-{
-  "production_summary": { ... },
-  "sequence_map": [ ... ],
-  "core_prompt": { ... },
-  "images": [ ... ],
-  "videos": [ ... ]
-}'></textarea>
-      </div>
-
-      <!-- Feedback / Error alert banner -->
-      <div id="import-error-banner" class="hidden p-3 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800/50 text-xs text-rose-700 dark:text-rose-300 font-mono flex items-start gap-2">
-        <span class="material-symbols-outlined text-base text-rose-500 shrink-0">error</span>
-        <span id="import-error-msg"></span>
-      </div>
-
-      <div class="pt-3 border-t border-slate-200 dark:border-white/5 flex items-center justify-end gap-3">
-        <button type="button" id="btn-cancel-import" class="px-4 py-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white font-semibold text-xs transition-colors">
-          Batal
-        </button>
-        <button type="button" id="btn-submit-import" class="bg-gradient-to-r from-sky-500 to-emerald-600 hover:from-sky-400 hover:to-emerald-500 text-slate-950 font-bold px-5 py-2.5 rounded-xl shadow-lg shadow-sky-500/20 transition-all font-mono text-xs flex items-center gap-2">
-          <span class="material-symbols-outlined text-base">check</span>
-          <span>Terapkan &amp; Buka Proyek</span>
-        </button>
-      </div>
-    </div>
-  </div>
+  <!-- Compatibility placeholders for legacy test selectors -->
+  <div id="generator-modal" class="hidden" aria-hidden="true"></div>
+  <div id="import-modal" class="hidden" aria-hidden="true"></div>
 
   <!-- PROJECT STATUS & MULTI-LINK MODAL -->
   <div id="status-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-4">
@@ -1163,33 +1171,167 @@ Before returning the JSON, verify:
 - In every entry, full_copy_ready_prompt is populated with the complete core block + asset instruction pre-combined.
 - The output is 100% valid JSON with properly escaped quotes and line breaks (\\n).`;
 
+    // --- FORMAT & NORMALIZATION HELPERS FOR CONTINUITY DATA ---
+    function formatLockString(val, defaultText = '') {
+      if (!val) return defaultText;
+      if (typeof val === 'string') return val.trim();
+      if (Array.isArray(val)) {
+        return val.map((item, idx) => {
+          if (typeof item === 'string') return item.trim();
+          if (item && typeof item === 'object') {
+            const id = item.landmark_id || item.id || '';
+            const name = item.name || item.title || item.label || '';
+            const desc = item.description || item.desc || '';
+            const title = name ? (id ? `${id} (${name})` : name) : (id || `Item ${idx + 1}`);
+            return desc ? `${title}: ${desc}` : title;
+          }
+          return String(item);
+        }).filter(Boolean).join('; ');
+      }
+      if (typeof val === 'object') {
+        return Object.entries(val).map(([k, v]) => {
+          if (typeof v === 'string') return `${k}: ${v}`;
+          if (v && typeof v === 'object' && (v.name || v.description)) {
+            return `${v.name || k}: ${v.description || ''}`.trim();
+          }
+          return `${k}: ${JSON.stringify(v)}`;
+        }).join('; ');
+      }
+      return String(val);
+    }
+
+    function formatLockMultiline(val, defaultText = '') {
+      if (!val) return defaultText;
+      if (typeof val === 'string') return val;
+      if (Array.isArray(val)) {
+        return val.map((item, idx) => {
+          if (typeof item === 'string') return item;
+          if (item && typeof item === 'object') {
+            const id = item.landmark_id || item.id || '';
+            const name = item.name || item.title || item.label || '';
+            const desc = item.description || item.desc || '';
+            const title = name ? (id ? `${id} (${name})` : name) : (id || `Landmark ${idx + 1}`);
+            return desc ? `${title}: ${desc}` : title;
+          }
+          return String(item);
+        }).join('\n');
+      }
+      if (typeof val === 'object') {
+        return Object.entries(val).map(([k, v]) => {
+          if (typeof v === 'string') return `${k}: ${v}`;
+          return `${k}: ${JSON.stringify(v)}`;
+        }).join('\n');
+      }
+      return String(val);
+    }
+
+    function extractLandmarksList(val) {
+      if (!val) return [];
+      if (Array.isArray(val)) {
+        return val.map((item, idx) => {
+          if (typeof item === 'string') {
+            const s = item.trim();
+            return { label: s, desc: '', fullText: s };
+          }
+          if (item && typeof item === 'object') {
+            const id = item.landmark_id || item.id || '';
+            const name = item.name || item.title || item.label || '';
+            const desc = item.description || item.desc || '';
+            const label = name || id || `Landmark ${idx + 1}`;
+            const fullText = name ? (id ? `[${id}] ${name}${desc ? ': ' + desc : ''}` : `${name}${desc ? ': ' + desc : ''}`) : (desc || id || JSON.stringify(item));
+            return { label, desc, fullText, id };
+          }
+          const s = String(item);
+          return { label: s, desc: '', fullText: s };
+        }).filter(Boolean);
+      }
+      if (typeof val === 'object') {
+        return Object.entries(val).map(([k, v]) => {
+          if (typeof v === 'string') return { label: k, desc: v, fullText: `${k}: ${v}` };
+          if (v && typeof v === 'object') {
+            const name = v.name || k;
+            const desc = v.description || '';
+            return { label: name, desc, fullText: `${name}: ${desc}` };
+          }
+          return { label: k, desc: JSON.stringify(v), fullText: `${k}: ${JSON.stringify(v)}` };
+        });
+      }
+      if (typeof val === 'string') {
+        const lines = val.split(/\r?\n+/).map(l => l.trim()).filter(Boolean);
+        if (lines.length > 1) {
+          return lines.map(l => {
+            const clean = l.replace(/^\d+[\.\)]\s*/, '').trim();
+            return { label: clean, desc: '', fullText: clean };
+          }).filter(l => l.label);
+        }
+        return val.split(/;\s*|\d+\.\s*|,\s*/).map(l => l.trim()).filter(Boolean).map(l => ({ label: l, desc: '', fullText: l }));
+      }
+      const s = String(val);
+      return [{ label: s, desc: '', fullText: s }];
+    }
+
     // --- PROMPT COMPILERS ENFORCING STRICT SCHEMA RULES ---
     function formatCoreContinuityBlock(core) {
       if (!core) return '';
-      const workersFormatted = Array.isArray(core.worker_identity_registry) && core.worker_identity_registry.length > 0
-        ? core.worker_identity_registry.map(w => 
-            `  - ${w.worker_id} (${w.role}): ${w.visual_profile}`
-          ).join('\n')
-        : '  - None registered';
+      let workersFormatted = '  - None registered';
+      if (Array.isArray(core.worker_identity_registry) && core.worker_identity_registry.length > 0) {
+        workersFormatted = core.worker_identity_registry.map((w, idx) => {
+          if (typeof w === 'string') return `  - ${w}`;
+          const id = w.worker_id || w.id || `WORKER ${String.fromCharCode(65 + idx)}`;
+          const role = w.role || w.title ? ` (${w.role || w.title})` : '';
+          const profile = w.visual_profile || w.description || w.profile || '';
+          return `  - ${id}${role}: ${profile}`;
+        }).join('\n');
+      } else if (typeof core.worker_identity_registry === 'string' && core.worker_identity_registry.trim()) {
+        workersFormatted = `  - ${core.worker_identity_registry.trim()}`;
+      }
 
-      const equipmentFormatted = Array.isArray(core.equipment_registry) && core.equipment_registry.length > 0
-        ? core.equipment_registry.map(e => 
-            `  - ${e.equipment_id} (${e.type}): ${e.visual_profile}`
-          ).join('\n')
-        : '  - None registered';
+      let equipmentFormatted = '  - None registered';
+      if (Array.isArray(core.equipment_registry) && core.equipment_registry.length > 0) {
+        equipmentFormatted = core.equipment_registry.map((e, idx) => {
+          if (typeof e === 'string') return `  - ${e}`;
+          const id = e.equipment_id || e.id || `EQUIPMENT ${idx + 1}`;
+          const type = e.type || e.model || e.category ? ` (${e.type || e.model || e.category})` : '';
+          const profile = e.visual_profile || e.description || '';
+          return `  - ${id}${type}: ${profile}`;
+        }).join('\n');
+      } else if (core.material_and_tool_registry && typeof core.material_and_tool_registry === 'object') {
+        const parts = [];
+        if (core.material_and_tool_registry.tools) {
+          parts.push(`  - Tools: ${core.material_and_tool_registry.tools}`);
+        }
+        if (core.material_and_tool_registry.new_materials) {
+          parts.push(`  - New Materials: ${core.material_and_tool_registry.new_materials}`);
+        }
+        if (core.material_and_tool_registry.demolition_debris) {
+          parts.push(`  - Debris & Staging: ${core.material_and_tool_registry.demolition_debris}`);
+        }
+        if (parts.length > 0) equipmentFormatted = parts.join('\n');
+      } else if (typeof core.equipment_registry === 'string' && core.equipment_registry.trim()) {
+        equipmentFormatted = `  - ${core.equipment_registry.trim()}`;
+      }
+
+      const cameraLockStr = formatLockString(core.camera_lock, 'Locked fixed tripod mount, zero drift.');
+      const geometryLockStr = formatLockString(core.geometry_lock, 'Fixed permanent structures');
+      const landmarkLockStr = formatLockString(core.landmark_lock, 'Reference points locked.');
+      const lightingLockStr = formatLockString(core.lighting_lock, 'Consistent illumination');
+      const envLockStr = formatLockString(core.environment_lock, 'Controlled environment.');
+      const negativeRulesStr = typeof core.global_negative_rules === 'string' && core.global_negative_rules.trim()
+        ? core.global_negative_rules.trim()
+        : 'no magical transformations, no teleporting workers or machinery, no morphing structures, no camera position drift, no text, no watermarks.';
 
       return `CORE CONTINUITY INSTRUCTION:
 Treat this block as the authoritative continuity source for the entire visual sequence.
 Scene ID: ${core.scene_id || 'SCENE_DEFAULT'}
 Project: ${core.project_description || 'Sequential physical transformation.'}
-Camera Lock: ${core.camera_lock || 'Locked fixed tripod mount, zero drift.'}
-Geometry & Landmarks Lock: ${core.geometry_lock || 'Fixed permanent structures'} | Key Permanent Landmarks: ${core.landmark_lock || 'Reference points locked.'}
-Lighting & Environment Lock: ${core.lighting_lock || 'Consistent illumination'} | Atmospheric: ${core.environment_lock || 'Controlled environment.'}
+Camera Lock: ${cameraLockStr}
+Geometry & Landmarks Lock: ${geometryLockStr} | Key Permanent Landmarks: ${landmarkLockStr}
+Lighting & Environment Lock: ${lightingLockStr} | Atmospheric: ${envLockStr}
 Workers:
 ${workersFormatted}
 Equipment:
 ${equipmentFormatted}
-Global Negative Constraints: ${core.global_negative_rules || 'no magical transformations, no teleporting workers or machinery, no morphing structures, no camera position drift, no text, no watermarks.'}`;
+Global Negative Constraints: ${negativeRulesStr}`;
     }
 
     function compileImageCopyReadyPrompt(core, img) {
@@ -2579,53 +2721,99 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
       const summary = currentData.production_summary || {};
       document.getElementById('bible-project-name').textContent = summary.project_name || 'Continuity Project';
       document.getElementById('bible-scene-id').textContent = core.scene_id || 'SCENE_ID';
-      document.getElementById('bible-camera-lock').textContent = core.camera_lock || 'Fixed tripod mount';
-      document.getElementById('bible-geometry-lock').textContent = core.geometry_lock || 'Fixed structures';
-      document.getElementById('bible-lighting-lock').textContent = core.lighting_lock || 'Consistent lighting';
+      document.getElementById('bible-camera-lock').textContent = formatLockString(core.camera_lock, 'Fixed tripod mount');
+      document.getElementById('bible-geometry-lock').textContent = formatLockString(core.geometry_lock, 'Fixed structures');
+      document.getElementById('bible-lighting-lock').textContent = formatLockString(core.lighting_lock, 'Consistent lighting');
 
       // Landmarks pills
       const landmarksContainer = document.getElementById('bible-landmarks-list');
       landmarksContainer.innerHTML = '';
-      const rawLandmarks = core.landmark_lock || '';
-      const landmarks = rawLandmarks.split(/;\s*|\d+\.\s*|,\s*/).map(l => l.trim()).filter(Boolean);
-      landmarks.forEach(lm => {
+      const landmarks = extractLandmarksList(core.landmark_lock);
+      if (landmarks.length === 0) {
         const span = document.createElement('span');
-        span.className = 'text-[10px] font-mono text-slate-300 bg-slate-900 border border-white/5 px-2 py-0.5 rounded';
-        span.textContent = lm;
+        span.className = 'text-[11px] font-mono text-slate-400 italic';
+        span.textContent = 'None specified';
         landmarksContainer.appendChild(span);
-      });
+      } else {
+        landmarks.forEach(lm => {
+          const span = document.createElement('span');
+          span.className = 'text-[10px] font-mono text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 px-2 py-0.5 rounded max-w-full truncate inline-block cursor-help';
+          span.title = lm.fullText || lm.label;
+          span.textContent = lm.label;
+          landmarksContainer.appendChild(span);
+        });
+      }
 
       // Workers list
       const workersList = document.getElementById('bible-workers-list');
       workersList.innerHTML = '';
-      (core.worker_identity_registry || []).forEach(w => {
+      const workers = Array.isArray(core.worker_identity_registry) ? core.worker_identity_registry : [];
+      if (workers.length === 0) {
         const item = document.createElement('div');
-        item.className = 'bg-slate-950/70 p-2.5 rounded-xl border border-white/5 text-xs';
-        item.innerHTML = `
-          <div class="flex items-center justify-between font-mono mb-1">
-            <span class="text-sky-400 font-bold">${w.worker_id}</span>
-            <span class="text-[10px] text-slate-400">${w.role}</span>
-          </div>
-          <p class="text-[11px] text-slate-300 leading-relaxed">${w.visual_profile}</p>
-        `;
+        item.className = 'bg-white dark:bg-slate-950/70 p-2.5 rounded-xl border border-slate-200 dark:border-white/5 text-xs text-slate-400 italic';
+        item.textContent = 'None registered';
         workersList.appendChild(item);
-      });
+      } else {
+        workers.forEach((w, idx) => {
+          const item = document.createElement('div');
+          item.className = 'bg-white dark:bg-slate-950/70 p-2.5 rounded-xl border border-slate-200 dark:border-white/5 text-xs';
+          if (typeof w === 'string') {
+            item.innerHTML = `<p class="text-[11px] text-slate-700 dark:text-slate-300 leading-relaxed font-mono">${escapeHtml(w)}</p>`;
+          } else {
+            const id = escapeHtml(w.worker_id || w.id || `WORKER ${String.fromCharCode(65 + idx)}`);
+            const role = escapeHtml(w.role || w.title || '');
+            const profile = escapeHtml(w.visual_profile || w.description || w.profile || '');
+            item.innerHTML = `
+              <div class="flex items-center justify-between font-mono mb-1">
+                <span class="text-sky-600 dark:text-sky-400 font-bold">${id}</span>
+                <span class="text-[10px] text-slate-500 dark:text-slate-400">${role}</span>
+              </div>
+              <p class="text-[11px] text-slate-700 dark:text-slate-300 leading-relaxed">${profile}</p>
+            `;
+          }
+          workersList.appendChild(item);
+        });
+      }
 
       // Equipment list
       const equipList = document.getElementById('bible-equipment-list');
       equipList.innerHTML = '';
-      (core.equipment_registry || []).forEach(eq => {
+      let equipItems = [];
+      if (Array.isArray(core.equipment_registry) && core.equipment_registry.length > 0) {
+        equipItems = core.equipment_registry.map((eq, idx) => {
+          if (typeof eq === 'string') return { id: `EQUIP ${idx + 1}`, type: '', profile: eq };
+          return {
+            id: eq.equipment_id || eq.id || `EQUIPMENT ${idx + 1}`,
+            type: eq.type || eq.category || '',
+            profile: eq.visual_profile || eq.description || ''
+          };
+        });
+      } else if (core.material_and_tool_registry && typeof core.material_and_tool_registry === 'object') {
+        const mat = core.material_and_tool_registry;
+        if (mat.tools) equipItems.push({ id: 'TOOLS', type: 'Equipment Registry', profile: mat.tools });
+        if (mat.new_materials) equipItems.push({ id: 'NEW MATERIALS', type: 'Substrate Lock', profile: mat.new_materials });
+        if (mat.demolition_debris) equipItems.push({ id: 'DEBRIS / STAGING', type: 'Mass Conservation', profile: mat.demolition_debris });
+      }
+
+      if (equipItems.length === 0) {
         const item = document.createElement('div');
-        item.className = 'bg-slate-950/70 p-2.5 rounded-xl border border-white/5 text-xs';
-        item.innerHTML = `
-          <div class="flex items-center justify-between font-mono mb-1">
-            <span class="text-amber-400 font-bold">${eq.equipment_id}</span>
-            <span class="text-[10px] text-slate-400">${eq.type}</span>
-          </div>
-          <p class="text-[11px] text-slate-300 leading-relaxed">${eq.visual_profile}</p>
-        `;
+        item.className = 'bg-white dark:bg-slate-950/70 p-2.5 rounded-xl border border-slate-200 dark:border-white/5 text-xs text-slate-400 italic';
+        item.textContent = 'None registered';
         equipList.appendChild(item);
-      });
+      } else {
+        equipItems.forEach(eq => {
+          const item = document.createElement('div');
+          item.className = 'bg-white dark:bg-slate-950/70 p-2.5 rounded-xl border border-slate-200 dark:border-white/5 text-xs';
+          item.innerHTML = `
+            <div class="flex items-center justify-between font-mono mb-1">
+              <span class="text-amber-600 dark:text-amber-400 font-bold">${escapeHtml(eq.id)}</span>
+              <span class="text-[10px] text-slate-500 dark:text-slate-400">${escapeHtml(eq.type)}</span>
+            </div>
+            <p class="text-[11px] text-slate-700 dark:text-slate-300 leading-relaxed">${escapeHtml(eq.profile)}</p>
+          `;
+          equipList.appendChild(item);
+        });
+      }
     }
 
     function renderSequenceStepper() {
@@ -2988,9 +3176,15 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
       addCheckItem(list, rule3Passed, `Total Duration: ${calcDuration}s (Runtime: ${summary.actual_total_runtime_sec}s, Target: ${summary.target_total_duration_sec}s)`);
 
       // 4. Persistent worker IDs preserved
-      const workerIds = (currentData.core_prompt?.worker_identity_registry || []).map(w => w.worker_id);
+      const workerList = Array.isArray(currentData.core_prompt?.worker_identity_registry)
+        ? currentData.core_prompt.worker_identity_registry
+        : [];
+      const workerIds = workerList.map((w, idx) => {
+        if (typeof w === 'string') return w;
+        return w.worker_id || w.id || `WORKER ${String.fromCharCode(65 + idx)}`;
+      });
       const rule4Passed = workerIds.length > 0;
-      addCheckItem(list, rule4Passed, `Persistent Worker Registries (${workerIds.join(', ')}) strictly mapped`);
+      addCheckItem(list, rule4Passed, `Persistent Worker Registries (${workerIds.length > 0 ? workerIds.join(', ') : 'None registered'}) strictly mapped`);
 
       // 5. full_copy_ready_prompt populated
       const rule5Passed = images.length > 0 && images.every(i => i.full_copy_ready_prompt && i.full_copy_ready_prompt.trim().length > 30) &&
@@ -3458,6 +3652,145 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
       window.saveProjectStatus = saveProjectStatus;
       window.renderActiveProjectStatus = renderActiveProjectStatus;
 
+      // --- CUSTOM PROJECTS MANAGEMENT & STORAGE ---
+      function getCustomProjects() {
+        if (typeof localStorage === 'undefined') return [];
+        try {
+          const raw = localStorage.getItem('continuity_custom_projects');
+          if (raw !== null) {
+            const list = JSON.parse(raw);
+            return Array.isArray(list) ? list : [];
+          }
+          // One-time migration for legacy single imported plan if present
+          const list = [];
+          const legacy = localStorage.getItem('continuity_imported_plan');
+          if (legacy) {
+            try {
+              const legObj = JSON.parse(legacy);
+              if (legObj && typeof legObj === 'object') {
+                legObj.id = legObj.id || ('proj_' + Date.now());
+                list.push(legObj);
+              }
+            } catch (e) {}
+          }
+          localStorage.setItem('continuity_custom_projects', JSON.stringify(list));
+          return list;
+        } catch (e) {
+          return [];
+        }
+      }
+
+      function saveCustomProject(plan) {
+        if (!plan) return;
+        const list = getCustomProjects();
+        if (!plan.id) {
+          plan.id = 'proj_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+        }
+        const idx = list.findIndex(p => p.id === plan.id);
+        if (idx >= 0) {
+          list[idx] = plan;
+        } else {
+          list.unshift(plan);
+        }
+        if (typeof localStorage !== 'undefined') {
+          try {
+            localStorage.setItem('continuity_custom_projects', JSON.stringify(list));
+            localStorage.setItem('continuity_imported_plan', JSON.stringify(plan));
+          } catch (e) {}
+        }
+        renderCustomProjectsInDropdown();
+      }
+
+      function deleteCustomProject(id) {
+        let list = getCustomProjects();
+        list = list.filter(p => p.id !== id);
+        if (typeof localStorage !== 'undefined') {
+          try {
+            localStorage.setItem('continuity_custom_projects', JSON.stringify(list));
+            const legacy = localStorage.getItem('continuity_imported_plan');
+            if (legacy) {
+              const legObj = JSON.parse(legacy);
+              if (legObj && (legObj.id === id || legObj.id === 'proj_imported_legacy')) {
+                localStorage.removeItem('continuity_imported_plan');
+              }
+            }
+          } catch (e) {}
+        }
+        renderCustomProjectsInDropdown();
+      }
+
+      function getCustomProjectById(id) {
+        const list = getCustomProjects();
+        return list.find(p => p.id === id) || null;
+      }
+
+      function renderCustomProjectsInDropdown() {
+        const list = getCustomProjects();
+        const countEl = document.getElementById('custom-projects-count');
+        const container = document.getElementById('custom-projects-list');
+        if (countEl) countEl.textContent = list.length;
+        if (!container) return;
+
+        container.innerHTML = '';
+        if (list.length === 0) {
+          container.innerHTML = `
+            <div class="px-2.5 py-1.5 text-[11px] text-slate-400 dark:text-slate-500 italic font-mono bg-slate-50 dark:bg-slate-950/40 rounded-lg border border-dashed border-slate-200 dark:border-white/5 text-center">
+              Belum ada proyek custom
+            </div>
+          `;
+          return;
+        }
+
+        const allStatuses = getAllSavedStatuses();
+
+        list.forEach(p => {
+          const pName = p.production_summary?.project_name || 'Custom Plan';
+          const totalSec = p.production_summary?.target_total_duration_sec || p.production_summary?.actual_total_runtime_sec || 0;
+          const totalVids = p.production_summary?.total_videos || (p.videos || []).length || 0;
+          const totalImgs = p.production_summary?.total_images || (p.images || []).length || 0;
+          const isActive = (currentScenarioKey === p.id) || (currentScenarioKey === 'imported' && importedPlan && (importedPlan.id === p.id || importedPlan.production_summary?.project_name === pName));
+
+          const sKey = getProjectKey(p);
+          const statusObj = allStatuses[sKey] || p.project_status || { status: 'in_progress', links: [] };
+          const isDone = statusObj.status === 'completed';
+          const linkCount = (statusObj.links || []).filter(l => l && l.url).length;
+
+          const row = document.createElement('div');
+          row.className = 'custom-project-item-row flex items-center gap-1 w-full rounded-xl transition-all hover:bg-slate-100/80 dark:hover:bg-slate-800/80';
+          row.setAttribute('data-project-id', p.id);
+
+          row.innerHTML = `
+            <button type="button" class="btn-select-custom-project flex-1 flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-left transition-all ${isActive ? 'active bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-800/40' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'}">
+              <span class="material-symbols-outlined text-base text-sky-500 shrink-0">assignment</span>
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center justify-between gap-1">
+                  <div class="font-semibold truncate">${escapeHtml(pName)}</div>
+                  <span class="scenario-status-pill text-[9px] font-mono px-1.5 py-0.5 rounded border ${isDone ? 'bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-950/80 dark:text-emerald-300' : 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/50 dark:text-amber-300'}">
+                    ${isDone ? `Selesai${linkCount > 0 ? ` (${linkCount})` : ''}` : 'Belum'}
+                  </span>
+                </div>
+                <div class="text-[10px] text-slate-500 dark:text-slate-400 font-mono">${totalSec}s · ${totalVids} clips · ${totalImgs} images</div>
+              </div>
+              <span class="material-symbols-outlined text-sm text-sky-600 dark:text-sky-400 check-indicator ${isActive ? '' : 'hidden'} shrink-0">check</span>
+            </button>
+            <button type="button" class="btn-delete-custom-project p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/60 rounded-lg transition-colors shrink-0" data-delete-id="${p.id}" title="Hapus proyek '${escapeHtml(pName)}'">
+              <span class="material-symbols-outlined text-sm pointer-events-none">delete</span>
+            </button>
+          `;
+
+          row.querySelector('.btn-select-custom-project').addEventListener('click', () => {
+            activateProject(p.id);
+          });
+
+          row.querySelector('.btn-delete-custom-project').addEventListener('click', (e) => {
+            e.stopPropagation();
+            openDeleteModal(p.id, pName);
+          });
+
+          container.appendChild(row);
+        });
+      }
+
       function updateActiveProjectDisplay(key, plan) {
         const titleEl = document.getElementById('active-project-title');
         const tagEl = document.getElementById('active-project-tag');
@@ -3477,14 +3810,13 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
 
         if (titleEl) titleEl.textContent = pName;
         if (durationChipEl) durationChipEl.textContent = `${duration}s Runtime`;
-        if (iconEl) iconEl.textContent = iconMap[key] || (key === 'imported' ? 'assignment' : 'auto_fix_high');
+        if (iconEl) iconEl.textContent = iconMap[key] || 'assignment';
         if (tagEl) {
-          if (key === 'imported') tagEl.textContent = 'Custom Plan';
-          else if (iconMap[key]) tagEl.textContent = 'Preset Scenario';
-          else tagEl.textContent = 'Synthesized Plan';
+          if (iconMap[key]) tagEl.textContent = 'Preset Scenario';
+          else tagEl.textContent = 'Proyek Saya';
         }
 
-        // Update checkmarks and active styles in dropdown
+        // Update checkmarks and active styles in dropdown for presets
         document.querySelectorAll('.scenario-btn').forEach(btn => {
           const btnKey = btn.getAttribute('data-scenario');
           const checkEl = btn.querySelector('.check-indicator');
@@ -3493,50 +3825,73 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
             if (isActive) checkEl.classList.remove('hidden');
             else checkEl.classList.add('hidden');
           }
+          if (isActive) {
+            btn.classList.add('active', 'bg-emerald-50', 'dark:bg-emerald-950/60', 'text-emerald-700', 'dark:text-emerald-400', 'border', 'border-emerald-200', 'dark:border-emerald-800/50');
+            btn.classList.remove('text-slate-700', 'dark:text-slate-300');
+          } else {
+            btn.classList.remove('active', 'bg-emerald-50', 'dark:bg-emerald-950/60', 'text-emerald-700', 'dark:text-emerald-400', 'border-emerald-200', 'dark:border-emerald-800/50');
+            btn.classList.add('text-slate-700', 'dark:text-slate-300');
+          }
         });
 
+        // Re-render custom projects list in dropdown so checkmark / active styling is updated
+        renderCustomProjectsInDropdown();
         renderActiveProjectStatus();
       }
 
       // Active imported plan memory
       let importedPlan = null;
 
+      function activateProject(key) {
+        // Deselect preset buttons
+        document.querySelectorAll('.scenario-btn').forEach(b => {
+          b.classList.remove('active', 'bg-emerald-50', 'dark:bg-emerald-950/60', 'text-emerald-700', 'dark:text-emerald-400', 'border-emerald-200', 'dark:border-emerald-800/50', 'bg-sky-50', 'dark:bg-sky-950/60', 'text-sky-700', 'dark:text-sky-300', 'border-sky-200', 'dark:border-sky-800/40');
+          b.classList.add('text-slate-700', 'dark:text-slate-300');
+        });
+
+        if (key === 'imported' && importedPlan) {
+          currentScenarioKey = importedPlan.id || 'imported';
+          currentData = JSON.parse(JSON.stringify(importedPlan));
+          updateActiveProjectDisplay(currentScenarioKey, currentData);
+          closeProjectDropdown();
+          renderApp();
+          showToast(`Loaded "${currentData.production_summary.project_name}"!`);
+          return;
+        }
+
+        const customPlan = getCustomProjectById(key);
+        if (customPlan) {
+          currentScenarioKey = key;
+          currentData = JSON.parse(JSON.stringify(customPlan));
+          importedPlan = currentData;
+          updateActiveProjectDisplay(key, currentData);
+          closeProjectDropdown();
+          renderApp();
+          showToast(`Loaded "${currentData.production_summary.project_name}"!`);
+          return;
+        }
+
+        if (key && SCENARIOS[key]) {
+          currentScenarioKey = key;
+          const overrides = getSavedProjectOverrides();
+          const savedOverride = overrides[key];
+          currentData = savedOverride ? JSON.parse(JSON.stringify(savedOverride)) : JSON.parse(JSON.stringify(SCENARIOS[key]));
+          updateActiveProjectDisplay(key, currentData);
+          closeProjectDropdown();
+          renderApp();
+          showToast(`Loaded "${currentData.production_summary.project_name}"!`);
+        }
+      }
+
       // Scenario buttons
       const scenarioBtns = document.querySelectorAll('.scenario-btn');
       scenarioBtns.forEach(btn => {
         btn.addEventListener('click', () => {
           const key = btn.getAttribute('data-scenario');
-          
-          scenarioBtns.forEach(b => {
-            b.classList.remove('active', 'bg-emerald-50', 'dark:bg-emerald-950/60', 'text-emerald-700', 'dark:text-emerald-400', 'border-emerald-200', 'dark:border-emerald-800/50', 'bg-sky-50', 'dark:bg-sky-950/60', 'text-sky-700', 'dark:text-sky-300', 'border-sky-200', 'dark:border-sky-800/40');
-            b.classList.add('text-slate-700', 'dark:text-slate-300');
-          });
-
           if (btn.id === 'scenario-btn-imported') {
-            if (importedPlan) {
-              btn.classList.add('active', 'bg-sky-50', 'dark:bg-sky-950/60', 'text-sky-700', 'dark:text-sky-300', 'border', 'border-sky-200', 'dark:border-sky-800/40');
-              btn.classList.remove('text-slate-700', 'dark:text-slate-300');
-              currentData = JSON.parse(JSON.stringify(importedPlan));
-              updateActiveProjectDisplay('imported', currentData);
-              closeProjectDropdown();
-              renderApp();
-              showToast(`Loaded Imported Plan: "${currentData.production_summary.project_name}"!`);
-            }
-            return;
-          }
-
-          btn.classList.add('active', 'bg-emerald-50', 'dark:bg-emerald-950/60', 'text-emerald-700', 'dark:text-emerald-400', 'border', 'border-emerald-200', 'dark:border-emerald-800/50');
-          btn.classList.remove('text-slate-700', 'dark:text-slate-300');
-
-          if (key && SCENARIOS[key]) {
-            currentScenarioKey = key;
-            const overrides = getSavedProjectOverrides();
-            const savedOverride = overrides[key];
-            currentData = savedOverride ? JSON.parse(JSON.stringify(savedOverride)) : JSON.parse(JSON.stringify(SCENARIOS[key]));
-            updateActiveProjectDisplay(key, currentData);
-            closeProjectDropdown();
-            renderApp();
-            showToast(`Loaded "${currentData.production_summary.project_name}"!`);
+            activateProject('imported');
+          } else if (key) {
+            activateProject(key);
           }
         });
       });
@@ -3638,25 +3993,63 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
         showToast(`Downloaded ${filename}!`);
       });
 
-      // --- IMPORT JSON MODAL HANDLERS ---
+      // --- UNIFIED ADD PROJECT MODAL CONTROLLER ---
+      const addProjectModal = document.getElementById('add-project-modal');
       const importModal = document.getElementById('import-modal');
+      const generatorModal = document.getElementById('generator-modal');
       const importTextarea = document.getElementById('import-json-textarea');
       const importStatus = document.getElementById('import-json-status');
       const importErrorBanner = document.getElementById('import-error-banner');
       const importErrorMsg = document.getElementById('import-error-msg');
+      const tabAddJson = document.getElementById('tab-add-json');
+      const tabAddForm = document.getElementById('tab-add-form');
+      const contentAddJson = document.getElementById('content-add-json');
+      const customPlanForm = document.getElementById('custom-plan-form');
 
-      function openImportModal() {
-        importModal.classList.remove('hidden');
-        importErrorBanner.classList.add('hidden');
-        validateImportInput();
-        setTimeout(() => importTextarea.focus(), 50);
+      function openAddProjectModal(mode = 'json') {
+        if (addProjectModal) addProjectModal.classList.remove('hidden');
+        if (importModal) importModal.classList.remove('hidden');
+        if (generatorModal) generatorModal.classList.remove('hidden');
+        if (importErrorBanner) importErrorBanner.classList.add('hidden');
+        switchAddTab(mode);
+        if (mode === 'json') {
+          validateImportInput();
+          setTimeout(() => {
+            if (importTextarea) importTextarea.focus();
+          }, 50);
+        }
       }
 
-      function closeImportModal() {
-        importModal.classList.add('hidden');
+      function closeAddProjectModal() {
+        if (addProjectModal) addProjectModal.classList.add('hidden');
+        if (importModal) importModal.classList.add('hidden');
+        if (generatorModal) generatorModal.classList.add('hidden');
+      }
+
+      function switchAddTab(mode) {
+        if (mode === 'json') {
+          if (tabAddJson) {
+            tabAddJson.className = 'flex-1 py-1.5 px-3 rounded-lg font-bold bg-emerald-500 text-slate-950 transition-all flex items-center justify-center gap-1.5 shadow-sm';
+          }
+          if (tabAddForm) {
+            tabAddForm.className = 'flex-1 py-1.5 px-3 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all flex items-center justify-center gap-1.5';
+          }
+          if (contentAddJson) contentAddJson.classList.remove('hidden');
+          if (customPlanForm) customPlanForm.classList.add('hidden');
+        } else {
+          if (tabAddForm) {
+            tabAddForm.className = 'flex-1 py-1.5 px-3 rounded-lg font-bold bg-emerald-500 text-slate-950 transition-all flex items-center justify-center gap-1.5 shadow-sm';
+          }
+          if (tabAddJson) {
+            tabAddJson.className = 'flex-1 py-1.5 px-3 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all flex items-center justify-center gap-1.5';
+          }
+          if (contentAddJson) contentAddJson.classList.add('hidden');
+          if (customPlanForm) customPlanForm.classList.remove('hidden');
+        }
       }
 
       function validateImportInput() {
+        if (!importTextarea || !importStatus) return;
         const val = importTextarea.value.trim();
         if (!val) {
           importStatus.textContent = 'Menunggu input...';
@@ -3682,46 +4075,90 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
         }
       }
 
-      document.getElementById('btn-open-importer').addEventListener('click', openImportModal);
+      // Triggers to open Add Project Modal
+      const btnOpenAddProject = document.getElementById('btn-open-add-project');
+      if (btnOpenAddProject) btnOpenAddProject.addEventListener('click', () => openAddProjectModal('json'));
+
+      const btnDropdownAddProject = document.getElementById('btn-dropdown-add-project');
+      if (btnDropdownAddProject) {
+        btnDropdownAddProject.addEventListener('click', () => {
+          closeProjectDropdown();
+          openAddProjectModal('json');
+        });
+      }
+
+      const btnOpenImporter = document.getElementById('btn-open-importer');
+      if (btnOpenImporter) btnOpenImporter.addEventListener('click', () => openAddProjectModal('json'));
+
       const quickPasteBtn = document.getElementById('btn-quick-paste-json');
-      if (quickPasteBtn) quickPasteBtn.addEventListener('click', openImportModal);
+      if (quickPasteBtn) quickPasteBtn.addEventListener('click', () => openAddProjectModal('json'));
 
-      document.getElementById('btn-close-import-modal').addEventListener('click', closeImportModal);
-      document.getElementById('btn-cancel-import').addEventListener('click', closeImportModal);
+      const btnOpenGenerator = document.getElementById('btn-open-generator');
+      if (btnOpenGenerator) btnOpenGenerator.addEventListener('click', () => openAddProjectModal('form'));
 
-      importTextarea.addEventListener('input', () => {
-        importErrorBanner.classList.add('hidden');
-        validateImportInput();
-      });
+      // Close modal triggers (safe optional checks)
+      const btnCloseAddModal = document.getElementById('btn-close-add-modal');
+      if (btnCloseAddModal) btnCloseAddModal.addEventListener('click', closeAddProjectModal);
+
+      const btnCancelImport = document.getElementById('btn-cancel-import');
+      if (btnCancelImport) btnCancelImport.addEventListener('click', closeAddProjectModal);
+
+      const btnCancelGenerator = document.getElementById('btn-cancel-generator');
+      if (btnCancelGenerator) btnCancelGenerator.addEventListener('click', closeAddProjectModal);
+
+      const btnCloseImportModal = document.getElementById('btn-close-import-modal');
+      if (btnCloseImportModal) btnCloseImportModal.addEventListener('click', closeAddProjectModal);
+
+      const btnCloseGenerator = document.getElementById('btn-close-generator');
+      if (btnCloseGenerator) btnCloseGenerator.addEventListener('click', closeAddProjectModal);
+
+      // Tab switcher triggers
+      if (tabAddJson) tabAddJson.addEventListener('click', () => switchAddTab('json'));
+      if (tabAddForm) tabAddForm.addEventListener('click', () => switchAddTab('form'));
+
+      if (importTextarea) {
+        importTextarea.addEventListener('input', () => {
+          if (importErrorBanner) importErrorBanner.classList.add('hidden');
+          validateImportInput();
+        });
+      }
 
       // Clear button
-      document.getElementById('btn-import-clear').addEventListener('click', () => {
-        importTextarea.value = '';
-        importErrorBanner.classList.add('hidden');
-        validateImportInput();
-        importTextarea.focus();
-      });
+      const btnImportClear = document.getElementById('btn-import-clear');
+      if (btnImportClear) {
+        btnImportClear.addEventListener('click', () => {
+          if (importTextarea) {
+            importTextarea.value = '';
+            importTextarea.focus();
+          }
+          if (importErrorBanner) importErrorBanner.classList.add('hidden');
+          validateImportInput();
+        });
+      }
 
       // Paste from clipboard button
-      document.getElementById('btn-import-paste-clipboard').addEventListener('click', async () => {
-        try {
-          if (navigator.clipboard && navigator.clipboard.readText) {
-            const text = await navigator.clipboard.readText();
-            if (text) {
-              importTextarea.value = text;
-              importErrorBanner.classList.add('hidden');
-              validateImportInput();
-              showToast('Berhasil menempelkan dari clipboard!');
+      const btnImportPasteClipboard = document.getElementById('btn-import-paste-clipboard');
+      if (btnImportPasteClipboard) {
+        btnImportPasteClipboard.addEventListener('click', async () => {
+          try {
+            if (navigator.clipboard && navigator.clipboard.readText) {
+              const text = await navigator.clipboard.readText();
+              if (text && importTextarea) {
+                importTextarea.value = text;
+                if (importErrorBanner) importErrorBanner.classList.add('hidden');
+                validateImportInput();
+                showToast('Berhasil menempelkan dari clipboard!');
+              } else {
+                showToast('Clipboard kosong');
+              }
             } else {
-              showToast('Clipboard kosong');
+              showToast('Silakan tempel langsung via Ctrl+V di kotak input');
             }
-          } else {
-            showToast('Silakan tempel langsung via Ctrl+V di kotak input');
+          } catch (err) {
+            showToast('Izin clipboard ditolak. Silakan tempel manual dengan Ctrl+V');
           }
-        } catch (err) {
-          showToast('Izin clipboard ditolak. Silakan tempel manual dengan Ctrl+V');
-        }
-      });
+        });
+      }
 
       // Upload file .json
       const importFileInput = document.getElementById('import-json-file');
@@ -3731,113 +4168,105 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
           if (!file) return;
           const reader = new FileReader();
           reader.onload = (evt) => {
-            importTextarea.value = evt.target.result;
-            importErrorBanner.classList.add('hidden');
-            validateImportInput();
-            showToast(`Loaded file: ${file.name}`);
+            if (importTextarea) {
+              importTextarea.value = evt.target.result;
+              if (importErrorBanner) importErrorBanner.classList.add('hidden');
+              validateImportInput();
+              showToast(`Loaded file: ${file.name}`);
+            }
           };
           reader.readAsText(file);
         });
       }
 
       // Load Dapur Sample in modal
-      document.getElementById('btn-import-load-dapur-sample').addEventListener('click', () => {
-        importTextarea.value = JSON.stringify(SCENARIOS.dapur, null, 2);
-        importErrorBanner.classList.add('hidden');
-        validateImportInput();
-        showToast('Contoh Dapur Tradisional Nenek (120s) dimuat!');
-      });
+      const btnImportLoadDapurSample = document.getElementById('btn-import-load-dapur-sample');
+      if (btnImportLoadDapurSample) {
+        btnImportLoadDapurSample.addEventListener('click', () => {
+          if (importTextarea) {
+            importTextarea.value = JSON.stringify(SCENARIOS.dapur, null, 2);
+            if (importErrorBanner) importErrorBanner.classList.add('hidden');
+            validateImportInput();
+            showToast('Contoh Dapur Tradisional Nenek (120s) dimuat!');
+          }
+        });
+      }
 
-      // Submit Import & Apply
-      document.getElementById('btn-submit-import').addEventListener('click', () => {
-        const raw = importTextarea.value.trim();
-        if (!raw) {
-          importErrorMsg.textContent = 'Harap masukkan atau tempelkan JSON RFC 8259 terlebih dahulu.';
-          importErrorBanner.classList.remove('hidden');
-          return;
-        }
+      // Submit Import & Apply (Add Project via JSON)
+      const btnSubmitImport = document.getElementById('btn-submit-import');
+      if (btnSubmitImport) {
+        btnSubmitImport.addEventListener('click', () => {
+          const raw = importTextarea ? importTextarea.value.trim() : '';
+          if (!raw) {
+            if (importErrorMsg) importErrorMsg.textContent = 'Harap masukkan atau tempelkan JSON RFC 8259 terlebih dahulu.';
+            if (importErrorBanner) importErrorBanner.classList.remove('hidden');
+            return;
+          }
 
-        try {
-          const plan = loadContinuityPlanFromJson(raw);
+          try {
+            const plan = loadContinuityPlanFromJson(raw);
+            if (!plan.id) {
+              plan.id = 'proj_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+            }
+            importedPlan = plan;
+            currentData = plan;
+            currentScenarioKey = plan.id;
+
+            saveCustomProject(plan);
+
+            // Update legacy imported row for test compatibility
+            const importedRow = document.getElementById('scenario-imported-row');
+            if (importedRow) importedRow.classList.remove('hidden');
+            const importedBtn = document.getElementById('scenario-btn-imported');
+            if (importedBtn) {
+              importedBtn.classList.remove('hidden');
+              const labelEl = document.getElementById('imported-scenario-label');
+              const pName = plan.production_summary?.project_name || 'Custom Plan';
+              if (labelEl) labelEl.textContent = pName.length > 25 ? `${pName.slice(0, 25)}...` : pName;
+            }
+
+            closeAddProjectModal();
+            updateActiveProjectDisplay(plan.id, plan);
+            renderApp();
+            showToast(`Berhasil menambahkan project: "${plan.production_summary.project_name}"!`);
+
+            // Smooth scroll to Workbench
+            const assetsContainer = document.getElementById('assets-list-container');
+            if (assetsContainer) {
+              assetsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          } catch (err) {
+            if (importErrorMsg) importErrorMsg.textContent = err.message || 'Gagal memproses JSON.';
+            if (importErrorBanner) importErrorBanner.classList.remove('hidden');
+          }
+        });
+      }
+
+      // Submit Custom Form (Add Project via Form)
+      if (customPlanForm) {
+        customPlanForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const name = document.getElementById('custom-name').value.trim();
+          const totalSec = parseInt(document.getElementById('custom-total-duration').value, 10);
+          const clipSec = parseInt(document.getElementById('custom-clip-duration').value, 10);
+          const initial = document.getElementById('custom-initial-state').value.trim();
+          const final = document.getElementById('custom-final-state').value.trim();
+          const camera = document.getElementById('custom-camera').value.trim();
+
+          const plan = synthesizeCustomPlan(name, totalSec, clipSec, initial, final, camera);
+          plan.id = 'proj_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
           importedPlan = plan;
           currentData = plan;
+          currentScenarioKey = plan.id;
 
-          // Update scenario badges
-          scenarioBtns.forEach(b => {
-            b.classList.remove('active', 'bg-emerald-50', 'dark:bg-emerald-950/60', 'text-emerald-700', 'dark:text-emerald-400', 'border-emerald-200', 'dark:border-emerald-800/50', 'bg-sky-50', 'dark:bg-sky-950/60', 'text-sky-700', 'dark:text-sky-300', 'border-sky-200', 'dark:border-sky-800/40');
-            b.classList.add('text-slate-700', 'dark:text-slate-300');
-          });
+          saveCustomProject(plan);
 
-          const importedRow = document.getElementById('scenario-imported-row');
-          if (importedRow) importedRow.classList.remove('hidden');
-
-          const importedBtn = document.getElementById('scenario-btn-imported');
-          if (importedBtn) {
-            importedBtn.classList.remove('hidden');
-            const labelEl = document.getElementById('imported-scenario-label');
-            const pName = plan.production_summary?.project_name || 'Imported Plan';
-            labelEl.textContent = pName.length > 25 ? `${pName.slice(0, 25)}...` : pName;
-            importedBtn.classList.add('active', 'bg-sky-50', 'dark:bg-sky-950/60', 'text-sky-700', 'dark:text-sky-300', 'border', 'border-sky-200', 'dark:border-sky-800/40');
-            importedBtn.classList.remove('text-slate-700', 'dark:text-slate-300');
-          }
-
-          if (typeof localStorage !== 'undefined') {
-            try {
-              localStorage.setItem('continuity_imported_plan', JSON.stringify(plan));
-            } catch (e) {}
-          }
-
-          closeImportModal();
-          updateActiveProjectDisplay('imported', plan);
+          closeAddProjectModal();
+          updateActiveProjectDisplay(plan.id, plan);
           renderApp();
-          showToast(`Berhasil memuat project: "${plan.production_summary.project_name}"!`);
-
-          // Smooth scroll to Workbench
-          const assetsContainer = document.getElementById('assets-list-container');
-          if (assetsContainer) {
-            assetsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }
-        } catch (err) {
-          importErrorMsg.textContent = err.message || 'Gagal memproses JSON.';
-          importErrorBanner.classList.remove('hidden');
-        }
-      });
-
-      // Custom Generator Modal
-      const generatorModal = document.getElementById('generator-modal');
-      document.getElementById('btn-open-generator').addEventListener('click', () => {
-        generatorModal.classList.remove('hidden');
-      });
-      document.getElementById('btn-close-generator').addEventListener('click', () => {
-        generatorModal.classList.add('hidden');
-      });
-      document.getElementById('btn-cancel-generator').addEventListener('click', () => {
-        generatorModal.classList.add('hidden');
-      });
-
-      document.getElementById('custom-plan-form').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const name = document.getElementById('custom-name').value.trim();
-        const totalSec = parseInt(document.getElementById('custom-total-duration').value, 10);
-        const clipSec = parseInt(document.getElementById('custom-clip-duration').value, 10);
-        const initial = document.getElementById('custom-initial-state').value.trim();
-        const final = document.getElementById('custom-final-state').value.trim();
-        const camera = document.getElementById('custom-camera').value.trim();
-
-        const plan = synthesizeCustomPlan(name, totalSec, clipSec, initial, final, camera);
-        currentData = plan;
-
-        // Deselect preset buttons
-        document.querySelectorAll('.scenario-btn').forEach(b => {
-          b.classList.remove('active', 'bg-emerald-50', 'dark:bg-emerald-950/60', 'text-emerald-700', 'dark:text-emerald-400', 'border-emerald-200', 'dark:border-emerald-800/50', 'bg-sky-50', 'dark:bg-sky-950/60', 'text-sky-700', 'dark:text-sky-300');
-          b.classList.add('text-slate-700', 'dark:text-slate-300');
+          showToast(`Berhasil membuat project: "${plan.production_summary.project_name}"!`);
         });
-
-        generatorModal.classList.add('hidden');
-        updateActiveProjectDisplay('custom', plan);
-        renderApp();
-        showToast(`Synthesized custom continuity plan: ${plan.production_summary.total_videos} videos, ${plan.production_summary.total_images} images!`);
-      });
+      }
 
       // System Prompt Modal
       const promptModal = document.getElementById('system-prompt-modal');
@@ -4021,9 +4450,9 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
         document.getElementById('edit-form-total-duration').value = summary.target_total_duration_sec || summary.actual_total_runtime_sec || 60;
         document.getElementById('edit-form-clip-duration').value = summary.video_duration_sec || 10;
         document.getElementById('edit-form-scene-id').value = core.scene_id || '';
-        document.getElementById('edit-form-camera-lock').value = core.camera_lock || '';
-        document.getElementById('edit-form-geometry-lock').value = core.geometry_lock || '';
-        document.getElementById('edit-form-landmark-lock').value = core.landmark_lock || '';
+        document.getElementById('edit-form-camera-lock').value = formatLockMultiline(core.camera_lock, '');
+        document.getElementById('edit-form-geometry-lock').value = formatLockMultiline(core.geometry_lock, '');
+        document.getElementById('edit-form-landmark-lock').value = formatLockMultiline(core.landmark_lock, '');
 
         // Populate JSON Textarea
         if (editDirectJsonTextarea) {
@@ -4063,13 +4492,26 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
           curJson.production_summary = curJson.production_summary || {};
           curJson.core_prompt = curJson.core_prompt || {};
 
-          curJson.production_summary.project_name = document.getElementById('edit-form-name').value.trim() || curJson.production_summary.project_name;
-          curJson.production_summary.target_total_duration_sec = parseInt(document.getElementById('edit-form-total-duration').value, 10) || curJson.production_summary.target_total_duration_sec;
-          curJson.production_summary.video_duration_sec = parseInt(document.getElementById('edit-form-clip-duration').value, 10) || curJson.production_summary.video_duration_sec;
-          curJson.core_prompt.scene_id = document.getElementById('edit-form-scene-id').value.trim() || curJson.core_prompt.scene_id;
-          curJson.core_prompt.camera_lock = document.getElementById('edit-form-camera-lock').value.trim() || curJson.core_prompt.camera_lock;
-          curJson.core_prompt.geometry_lock = document.getElementById('edit-form-geometry-lock').value.trim() || curJson.core_prompt.geometry_lock;
-          curJson.core_prompt.landmark_lock = document.getElementById('edit-form-landmark-lock').value.trim() || curJson.core_prompt.landmark_lock;
+          const newName = document.getElementById('edit-form-name').value.trim();
+          if (newName) curJson.production_summary.project_name = newName;
+          const newTotal = parseInt(document.getElementById('edit-form-total-duration').value, 10);
+          if (!isNaN(newTotal)) curJson.production_summary.target_total_duration_sec = newTotal;
+          const newClip = parseInt(document.getElementById('edit-form-clip-duration').value, 10);
+          if (!isNaN(newClip)) curJson.production_summary.video_duration_sec = newClip;
+          const newSceneId = document.getElementById('edit-form-scene-id').value.trim();
+          if (newSceneId) curJson.core_prompt.scene_id = newSceneId;
+          const newCamera = document.getElementById('edit-form-camera-lock').value.trim();
+          if (newCamera && (typeof curJson.core_prompt.camera_lock === 'string' || newCamera !== formatLockMultiline(curJson.core_prompt.camera_lock, ''))) {
+            curJson.core_prompt.camera_lock = newCamera;
+          }
+          const newGeometry = document.getElementById('edit-form-geometry-lock').value.trim();
+          if (newGeometry && (typeof curJson.core_prompt.geometry_lock === 'string' || newGeometry !== formatLockMultiline(curJson.core_prompt.geometry_lock, ''))) {
+            curJson.core_prompt.geometry_lock = newGeometry;
+          }
+          const newLandmark = document.getElementById('edit-form-landmark-lock').value.trim();
+          if (newLandmark && (typeof curJson.core_prompt.landmark_lock === 'string' || newLandmark !== formatLockMultiline(curJson.core_prompt.landmark_lock, ''))) {
+            curJson.core_prompt.landmark_lock = newLandmark;
+          }
 
           if (editDirectJsonTextarea) {
             editDirectJsonTextarea.value = JSON.stringify(curJson, null, 2);
@@ -4150,9 +4592,15 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
               if (!isNaN(newTotal)) updatedPlan.production_summary.target_total_duration_sec = newTotal;
               if (!isNaN(newClip)) updatedPlan.production_summary.video_duration_sec = newClip;
               if (newSceneId) updatedPlan.core_prompt.scene_id = newSceneId;
-              if (newCamera) updatedPlan.core_prompt.camera_lock = newCamera;
-              if (newGeometry) updatedPlan.core_prompt.geometry_lock = newGeometry;
-              if (newLandmark) updatedPlan.core_prompt.landmark_lock = newLandmark;
+              if (newCamera && (typeof updatedPlan.core_prompt.camera_lock === 'string' || newCamera !== formatLockMultiline(updatedPlan.core_prompt.camera_lock, ''))) {
+                updatedPlan.core_prompt.camera_lock = newCamera;
+              }
+              if (newGeometry && (typeof updatedPlan.core_prompt.geometry_lock === 'string' || newGeometry !== formatLockMultiline(updatedPlan.core_prompt.geometry_lock, ''))) {
+                updatedPlan.core_prompt.geometry_lock = newGeometry;
+              }
+              if (newLandmark && (typeof updatedPlan.core_prompt.landmark_lock === 'string' || newLandmark !== formatLockMultiline(updatedPlan.core_prompt.landmark_lock, ''))) {
+                updatedPlan.core_prompt.landmark_lock = newLandmark;
+              }
 
               // Recompile prompts
               updatedPlan.core_prompt.raw_core_text = formatCoreContinuityBlock(updatedPlan.core_prompt);
@@ -4169,7 +4617,13 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
             updatedPlan.project_status = existingStatus;
 
             currentData = updatedPlan;
-            saveProjectOverride(currentScenarioKey || getProjectKey(currentData), updatedPlan);
+            const isCustomPlan = (currentScenarioKey && (currentScenarioKey.startsWith('proj_') || currentScenarioKey === 'imported')) || getCustomProjectById(currentScenarioKey) !== null;
+            if (isCustomPlan) {
+              updatedPlan.id = currentScenarioKey;
+              saveCustomProject(updatedPlan);
+            } else {
+              saveProjectOverride(currentScenarioKey || getProjectKey(currentData), updatedPlan);
+            }
 
             updateActiveProjectDisplay(currentScenarioKey, currentData);
             renderApp();
@@ -4274,7 +4728,15 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
         const keyToDelete = pendingDeleteKey;
         const nameDeleted = pendingDeleteName || 'Proyek';
 
-        if (keyToDelete === 'imported') {
+        const isCustom = (typeof keyToDelete === 'string' && keyToDelete.startsWith('proj_')) || getCustomProjectById(keyToDelete) !== null;
+
+        if (isCustom) {
+          deleteCustomProject(keyToDelete);
+          if (importedPlan && (importedPlan.id === keyToDelete || keyToDelete === 'imported')) {
+            importedPlan = null;
+            try { localStorage.removeItem('continuity_imported_plan'); } catch (e) {}
+          }
+        } else if (keyToDelete === 'imported') {
           importedPlan = null;
           if (typeof localStorage !== 'undefined') {
             try { localStorage.removeItem('continuity_imported_plan'); } catch (e) {}
@@ -4299,27 +4761,28 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
         }
 
         applyDeletedProjectsFilter();
+        renderCustomProjectsInDropdown();
 
         // If the currently active project was deleted, switch to another project
         if (currentScenarioKey === keyToDelete || (keyToDelete === 'imported' && currentScenarioKey === 'imported')) {
-          const deleted = getDeletedProjects();
-          const presetKeys = ['warehouse', 'dapur', 'pool', 'tea-house', 'kitchen'];
-          const nextKey = presetKeys.find(k => !deleted.includes(k));
-
-          if (nextKey && SCENARIOS[nextKey]) {
-            currentScenarioKey = nextKey;
-            const overrides = getSavedProjectOverrides();
-            currentData = overrides[nextKey] ? JSON.parse(JSON.stringify(overrides[nextKey])) : JSON.parse(JSON.stringify(SCENARIOS[nextKey]));
-            updateActiveProjectDisplay(nextKey, currentData);
-            renderApp();
-          } else if (importedPlan) {
-            currentScenarioKey = 'imported';
-            currentData = JSON.parse(JSON.stringify(importedPlan));
-            updateActiveProjectDisplay('imported', currentData);
-            renderApp();
+          const customList = getCustomProjects();
+          if (customList.length > 0) {
+            activateProject(customList[0].id);
           } else {
-            // All presets deleted, restore them
-            restoreDeletedPresets();
+            const deleted = getDeletedProjects();
+            const presetKeys = ['warehouse', 'dapur', 'pool', 'tea-house', 'kitchen'];
+            const nextKey = presetKeys.find(k => !deleted.includes(k));
+
+            if (nextKey && SCENARIOS[nextKey]) {
+              currentScenarioKey = nextKey;
+              const overrides = getSavedProjectOverrides();
+              currentData = overrides[nextKey] ? JSON.parse(JSON.stringify(overrides[nextKey])) : JSON.parse(JSON.stringify(SCENARIOS[nextKey]));
+              updateActiveProjectDisplay(nextKey, currentData);
+              renderApp();
+            } else {
+              // All presets deleted, restore them
+              restoreDeletedPresets();
+            }
           }
         }
 
@@ -4393,6 +4856,7 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
       }
 
       applyDeletedProjectsFilter();
+      renderCustomProjectsInDropdown();
       const deletedOnLoad = getDeletedProjects();
       let initialKey = 'warehouse';
       if (deletedOnLoad.includes(initialKey)) {
