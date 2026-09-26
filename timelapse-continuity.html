@@ -421,7 +421,7 @@
             </div>
 
             <!-- Action buttons for active project -->
-            <div class="flex items-center gap-1.5 shrink-0 self-end sm:self-auto flex-wrap">
+            <div id="active-project-actions-container" class="flex items-center gap-1.5 shrink-0 self-end sm:self-auto flex-wrap">
               <button id="btn-quick-status" class="inline-flex items-center gap-1 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-white/10 px-2.5 py-1.5 rounded-lg transition-all shadow-sm" title="Ubah status dan tautan hasil">
                 <span class="material-symbols-outlined text-sm text-sky-500">link</span>
                 <span>Status &amp; Link</span>
@@ -536,6 +536,15 @@
         </div>
       </div>
 
+      <!-- Project Normalization Warnings Banner -->
+      <div id="project-warnings-container" class="hidden p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/40 text-xs text-amber-800 dark:text-amber-200 font-mono space-y-1.5">
+        <div class="flex items-center gap-2 font-bold text-amber-900 dark:text-amber-100">
+          <span class="material-symbols-outlined text-base text-amber-500">warning</span>
+          <span>Catatan Normalisasi JSON:</span>
+        </div>
+        <ul id="project-warnings-list" class="list-disc list-inside space-y-1 pl-1 text-[11px] leading-relaxed"></ul>
+      </div>
+
       <!-- Dynamic Cards Container -->
       <div id="assets-list-container" class="space-y-3.5">
         <!-- Rendered Image and Video sequence cards -->
@@ -641,6 +650,12 @@
         <div id="import-error-banner" class="hidden p-3 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800/50 text-xs text-rose-700 dark:text-rose-300 font-mono flex items-start gap-2">
           <span class="material-symbols-outlined text-base text-rose-500 shrink-0">error</span>
           <span id="import-error-msg"></span>
+        </div>
+
+        <!-- Warning banner -->
+        <div id="import-warning-banner" class="hidden p-3 rounded-xl bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800/50 text-xs text-amber-700 dark:text-amber-300 font-mono flex items-start gap-2">
+          <span class="material-symbols-outlined text-base text-amber-500 shrink-0">warning</span>
+          <div id="import-warning-msg" class="space-y-1"></div>
         </div>
 
         <div class="pt-2 border-t border-slate-200 dark:border-white/5 flex items-center justify-end gap-2.5">
@@ -1334,9 +1349,53 @@ ${equipmentFormatted}
 Global Negative Constraints: ${negativeRulesStr}`;
     }
 
+    // --- NEGATIVE CONSTRAINTS MERGER ---
+    function mergeNegativeConstraints(globalRules, localPrompt) {
+      const defaultGlobal = 'no magical transformations, no teleporting workers or machinery, no morphing structures, no camera position drift, no text, no watermarks';
+
+      function cleanPhrase(s) {
+        if (!s || typeof s !== 'string') return '';
+        return s.replace(/^NEGATIVE CONSTRAINTS:\s*/i, '').trim();
+      }
+
+      const rawGlobal = cleanPhrase(globalRules) || defaultGlobal;
+      const rawLocal = cleanPhrase(localPrompt);
+
+      const splitPhrases = (text) => {
+        if (!text) return [];
+        return text.split(/,\s*|\n+/).map(s => s.trim().replace(/\.$/, '')).filter(Boolean);
+      };
+
+      const globalList = splitPhrases(rawGlobal);
+      const localList = splitPhrases(rawLocal);
+
+      const seen = new Set();
+      const merged = [];
+
+      for (const phrase of globalList) {
+        const key = phrase.toLowerCase();
+        if (!seen.has(key)) {
+          seen.add(key);
+          merged.push(phrase);
+        }
+      }
+
+      for (const phrase of localList) {
+        const key = phrase.toLowerCase();
+        if (!seen.has(key)) {
+          seen.add(key);
+          merged.push(phrase);
+        }
+      }
+
+      const result = merged.join(', ');
+      return result ? (result.endsWith('.') ? result : result + '.') : '';
+    }
+
     function compileImageCopyReadyPrompt(core, img) {
       if (!img) return '';
       const coreBlock = formatCoreContinuityBlock(core);
+      const negLine = mergeNegativeConstraints(core ? core.global_negative_rules : '', img.local_negative_prompt);
       return `${coreBlock}
 
 ----------------------------------------
@@ -1352,12 +1411,13 @@ EQUIPMENT STATUS: ${img.equipment_state || 'Equipment positioned.'}
 MATERIAL & SUBSTRATE STATE: ${img.material_state || 'Standard substrate.'}
 TEMPORARY ELEMENTS: ${img.temporary_elements || 'None'}
 PHYSICAL EVIDENCE OF PROGRESS: ${img.physical_evidence || 'Observable progress markings.'}
-NEGATIVE CONSTRAINTS: no geometry drift, no camera drift, no landmark movement, no worker identity drift, no clothing changes, no floating objects, no sudden disappearance, no text, no watermarks.`;
+NEGATIVE CONSTRAINTS: ${negLine}`;
     }
 
     function compileVideoCopyReadyPrompt(core, vid) {
       if (!vid) return '';
       const coreBlock = formatCoreContinuityBlock(core);
+      const negLine = mergeNegativeConstraints(core ? core.global_negative_rules : '', vid.local_negative_prompt);
       return `${coreBlock}
 
 ----------------------------------------
@@ -1371,7 +1431,7 @@ MATERIAL MOVEMENT & LOGISTICS: ${vid.material_movement || 'Material staging and 
 TEMPORARY ELEMENTS: ${vid.temporary_element_changes || 'Tool staging and clearance'}
 TIMELAPSE BEHAVIOR: ${vid.timelapse_behavior || 'Accelerated realistic human and mechanical motion, task-oriented inertia, physical interaction with surfaces.'}
 END STATE CONVERGENCE: ${vid.end_state_convergence || `Final frame smoothly and precisely matches the exact layout, geometry, and material state of ${vid.to_image_id || 'next state'}.`}
-NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or machinery, no morphing structures, no camera position drift, no text, no watermarks.`;
+NEGATIVE CONSTRAINTS: ${negLine}`;
     }
 
     // --- PRE-BUILT COMPREHENSIVE PRODUCTION SCENARIOS ---
@@ -2598,6 +2658,9 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
         throw new Error('Root JSON harus berupa objek valid.');
       }
 
+      // Initialize non-blocking import warnings array
+      parsed._importWarnings = Array.isArray(parsed._importWarnings) ? parsed._importWarnings : [];
+
       // Check mandatory sections
       if (!parsed.images || !Array.isArray(parsed.images) || parsed.images.length === 0) {
         throw new Error('Properti "images" wajib ada dan harus berupa array non-kosong.');
@@ -2612,47 +2675,149 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
       const core = parsed.core_prompt;
       core.scene_id = core.scene_id || `SCENE_IMPORTED_${Date.now().toString().slice(-4)}`;
       core.project_description = core.project_description || "Physical transformation project";
+
+      // 6. Defensive Lock Fields Type-Coercion & Warnings
+      const lockFields = ['camera_lock', 'geometry_lock', 'landmark_lock', 'lighting_lock', 'environment_lock', 'material_lock'];
+      lockFields.forEach(field => {
+        const val = core[field];
+        if (val !== undefined && val !== null && typeof val !== 'string') {
+          const origType = Array.isArray(val) ? 'array' : typeof val;
+          core[field] = formatLockMultiline(val, '');
+          parsed._importWarnings.push(`${field} was auto-converted from ${origType} to string.`);
+        }
+      });
+
       core.camera_lock = core.camera_lock || "Fixed tripod position, rectilinear lens, zero drift.";
       core.geometry_lock = core.geometry_lock || "Fixed permanent walls and boundaries.";
       core.landmark_lock = core.landmark_lock || "1. Primary structural wall; 2. Entrance; 3. Central ceiling beam.";
       core.lighting_lock = core.lighting_lock || "Consistent balanced lighting.";
       core.environment_lock = core.environment_lock || "Controlled environment.";
-      core.worker_identity_registry = Array.isArray(core.worker_identity_registry) ? core.worker_identity_registry : [];
-      core.equipment_registry = Array.isArray(core.equipment_registry) ? core.equipment_registry : [];
+
+      // 2. Best-Effort Coercion for worker_identity_registry
+      if (Array.isArray(core.worker_identity_registry)) {
+        // already array
+      } else if (core.worker_identity_registry && typeof core.worker_identity_registry === 'object') {
+        const entries = Object.entries(core.worker_identity_registry);
+        if (entries.length === 0) {
+          core.worker_identity_registry = [];
+          parsed._importWarnings.push('worker_identity_registry was an empty object; reset to empty array.');
+        } else {
+          core.worker_identity_registry = entries.map(([k, v]) => {
+            if (v && typeof v === 'object' && !Array.isArray(v)) {
+              return {
+                worker_id: v.worker_id || v.id || k,
+                role: v.role || v.title || '',
+                visual_profile: v.visual_profile || v.profile || v.description || ''
+              };
+            }
+            if (typeof v === 'string') {
+              return { worker_id: k, role: '', visual_profile: v };
+            }
+            return { worker_id: k, role: '', visual_profile: String(v) };
+          });
+          parsed._importWarnings.push(`worker_identity_registry was provided as an object; auto-coerced to an array of ${core.worker_identity_registry.length} workers.`);
+        }
+      } else if (typeof core.worker_identity_registry === 'string' && core.worker_identity_registry.trim()) {
+        const lines = core.worker_identity_registry.split(/\r?\n+/).map(l => l.trim()).filter(Boolean);
+        core.worker_identity_registry = lines.map((line, idx) => {
+          const match = line.match(/^([^:]+):\s*(.*)$/);
+          if (match) {
+            return { worker_id: match[1].trim(), role: '', visual_profile: match[2].trim() };
+          }
+          return { worker_id: `WORKER ${String.fromCharCode(65 + idx)}`, role: '', visual_profile: line };
+        });
+        parsed._importWarnings.push(`worker_identity_registry was provided as a string; auto-coerced to an array of ${core.worker_identity_registry.length} workers.`);
+      } else {
+        if (core.worker_identity_registry !== undefined && core.worker_identity_registry !== null) {
+          parsed._importWarnings.push(`worker_identity_registry had invalid type (${typeof core.worker_identity_registry}); reset to empty array.`);
+        }
+        core.worker_identity_registry = [];
+      }
+
+      // 2. Best-Effort Coercion for equipment_registry
+      if (Array.isArray(core.equipment_registry)) {
+        // already array
+      } else if (core.equipment_registry && typeof core.equipment_registry === 'object') {
+        const entries = Object.entries(core.equipment_registry);
+        if (entries.length === 0) {
+          core.equipment_registry = [];
+          parsed._importWarnings.push('equipment_registry was an empty object; reset to empty array.');
+        } else {
+          core.equipment_registry = entries.map(([k, v]) => {
+            if (v && typeof v === 'object' && !Array.isArray(v)) {
+              return {
+                equipment_id: v.equipment_id || v.id || k,
+                type: v.type || v.model || v.category || '',
+                visual_profile: v.visual_profile || v.profile || v.description || ''
+              };
+            }
+            if (typeof v === 'string') {
+              return { equipment_id: k, type: '', visual_profile: v };
+            }
+            return { equipment_id: k, type: '', visual_profile: String(v) };
+          });
+          parsed._importWarnings.push(`equipment_registry was provided as an object; auto-coerced to an array of ${core.equipment_registry.length} equipment items.`);
+        }
+      } else if (typeof core.equipment_registry === 'string' && core.equipment_registry.trim()) {
+        const lines = core.equipment_registry.split(/\r?\n+/).map(l => l.trim()).filter(Boolean);
+        core.equipment_registry = lines.map((line, idx) => {
+          const match = line.match(/^([^:]+):\s*(.*)$/);
+          if (match) {
+            return { equipment_id: match[1].trim(), type: '', visual_profile: match[2].trim() };
+          }
+          return { equipment_id: `EQUIPMENT ${idx + 1}`, type: '', visual_profile: line };
+        });
+        parsed._importWarnings.push(`equipment_registry was provided as a string; auto-coerced to an array of ${core.equipment_registry.length} equipment items.`);
+      } else {
+        if (core.equipment_registry !== undefined && core.equipment_registry !== null) {
+          parsed._importWarnings.push(`equipment_registry had invalid type (${typeof core.equipment_registry}); reset to empty array.`);
+        }
+        core.equipment_registry = [];
+      }
+
       core.global_physics_rules = core.global_physics_rules || "Every visual alteration is physically caused.";
       core.global_timelapse_rules = core.global_timelapse_rules || "Accelerated realistic motion.";
       core.global_negative_rules = core.global_negative_rules || "no magical transformations, no teleporting workers or machinery, no morphing structures, no camera position drift, no text, no watermarks.";
-      
-      if (!core.raw_core_text) {
-        core.raw_core_text = formatCoreContinuityBlock(core);
-      }
 
-      // Production summary normalization
+      // 3. Production Summary Normalization & Real Counts Verification
+      const videoDuration = Number(parsed.videos[0]?.target_duration_sec) || 10;
+      const actualVideos = parsed.videos.length;
+      const actualImages = parsed.images.length;
+      const actualRuntime = parsed.videos.reduce((acc, v) => acc + (Number(v.target_duration_sec) || videoDuration), 0);
+
       if (!parsed.production_summary || typeof parsed.production_summary !== 'object') {
-        const videoDuration = Number(parsed.videos[0]?.target_duration_sec) || 10;
-        const totalVideos = parsed.videos.length;
-        const totalImages = parsed.images.length;
-        const calculatedRuntime = parsed.videos.reduce((acc, v) => acc + (Number(v.target_duration_sec) || videoDuration), 0);
         parsed.production_summary = {
           project_name: core.project_description?.slice(0, 60) || "Imported Continuity Project",
-          target_total_duration_sec: calculatedRuntime,
+          target_total_duration_sec: actualRuntime,
           video_duration_sec: videoDuration,
-          total_videos: totalVideos,
-          total_images: totalImages,
-          actual_total_runtime_sec: calculatedRuntime,
-          temporal_summary: `Sequence of ${totalVideos} videos (${videoDuration}s each) connecting ${totalImages} states.`
+          total_videos: actualVideos,
+          total_images: actualImages,
+          actual_total_runtime_sec: actualRuntime,
+          temporal_summary: `Sequence of ${actualVideos} videos (${videoDuration}s each) connecting ${actualImages} states.`
         };
       } else {
         const sum = parsed.production_summary;
-        sum.total_videos = sum.total_videos || parsed.videos.length;
-        sum.total_images = sum.total_images || parsed.images.length;
-        sum.video_duration_sec = sum.video_duration_sec || Number(parsed.videos[0]?.target_duration_sec) || 10;
-        sum.actual_total_runtime_sec = sum.actual_total_runtime_sec || parsed.videos.reduce((acc, v) => acc + (Number(v.target_duration_sec) || sum.video_duration_sec), 0);
-        sum.target_total_duration_sec = sum.target_total_duration_sec || sum.actual_total_runtime_sec;
+        if (sum.total_videos !== undefined && sum.total_videos !== actualVideos) {
+          parsed._importWarnings.push(`total_videos was ${sum.total_videos} in the JSON but ${actualVideos} video entries were found; corrected to ${actualVideos}.`);
+        }
+        sum.total_videos = actualVideos;
+
+        if (sum.total_images !== undefined && sum.total_images !== actualImages) {
+          parsed._importWarnings.push(`total_images was ${sum.total_images} in the JSON but ${actualImages} image entries were found; corrected to ${actualImages}.`);
+        }
+        sum.total_images = actualImages;
+
+        sum.video_duration_sec = Number(sum.video_duration_sec) || videoDuration;
+
+        if (sum.actual_total_runtime_sec !== undefined && sum.actual_total_runtime_sec !== actualRuntime) {
+          parsed._importWarnings.push(`actual_total_runtime_sec was ${sum.actual_total_runtime_sec} in the JSON but calculated runtime from videos is ${actualRuntime}s; corrected to ${actualRuntime}.`);
+        }
+        sum.actual_total_runtime_sec = actualRuntime;
+        sum.target_total_duration_sec = Number(sum.target_total_duration_sec) || actualRuntime;
       }
 
-      // Sequence map normalization
-      if (!parsed.sequence_map || !Array.isArray(parsed.sequence_map) || parsed.sequence_map.length === 0) {
+      // 4. Sequence Map Normalization & Strict Validation
+      function buildDefaultSequenceMap() {
         const seq = [];
         parsed.images.forEach((img, idx) => {
           seq.push(img.image_id || `IMAGE ${idx + 1}`);
@@ -2661,19 +2826,75 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
             seq.push(`${vid.video_id || `VIDEO ${idx + 1}`} (${vid.from_image_id || `IMAGE ${idx + 1}`} -> ${vid.to_image_id || `IMAGE ${idx + 2}`})`);
           }
         });
-        parsed.sequence_map = seq;
+        return seq;
       }
 
-      // Ensure every image and video has full_copy_ready_prompt
-      parsed.images.forEach(img => {
-        if (!img.full_copy_ready_prompt || img.full_copy_ready_prompt.trim().length === 0) {
-          img.full_copy_ready_prompt = compileImageCopyReadyPrompt(core, img);
+      if (!parsed.sequence_map || !Array.isArray(parsed.sequence_map) || parsed.sequence_map.length === 0) {
+        parsed.sequence_map = buildDefaultSequenceMap();
+      } else {
+        const validImgIds = new Set(parsed.images.map((img, idx) => img.image_id || `IMAGE ${idx + 1}`));
+        const validVidIds = new Set(parsed.videos.map((vid, idx) => vid.video_id || `VIDEO ${idx + 1}`));
+        let isSeqValid = true;
+        let invalidReason = '';
+
+        if (parsed.sequence_map.length !== (parsed.images.length + parsed.videos.length)) {
+          isSeqValid = false;
+          invalidReason = `length (${parsed.sequence_map.length}) does not match expected asset count (${parsed.images.length + parsed.videos.length})`;
+        } else {
+          for (let i = 0; i < parsed.sequence_map.length; i++) {
+            const entry = String(parsed.sequence_map[i]).trim();
+            const isEven = (i % 2 === 0);
+            if (isEven) {
+              const mentionsVideo = entry.toUpperCase().startsWith('VIDEO');
+              const numMatch = entry.match(/\b(?:IMAGE|IMG)\s*(\d+)\b/i);
+              const refNum = numMatch ? parseInt(numMatch[1], 10) : null;
+              if (mentionsVideo) {
+                isSeqValid = false;
+                invalidReason = `entry ${i} ("${entry}") is a video where an image was expected`;
+                break;
+              }
+              if (refNum !== null && refNum > parsed.images.length) {
+                isSeqValid = false;
+                invalidReason = `entry ${i} references "${entry}" but only ${parsed.images.length} images exist`;
+                break;
+              }
+              const matchesImg = validImgIds.has(entry) || (refNum !== null && refNum <= parsed.images.length) || entry.toUpperCase().includes('IMAGE') || entry.toUpperCase().includes('IMG');
+              if (!matchesImg) {
+                isSeqValid = false;
+                invalidReason = `entry ${i} ("${entry}") could not be resolved to a valid image`;
+                break;
+              }
+            } else {
+              const numMatch = entry.match(/\b(?:VIDEO|VID)\s*(\d+)\b/i);
+              const refNum = numMatch ? parseInt(numMatch[1], 10) : null;
+              if (refNum !== null && refNum > parsed.videos.length) {
+                isSeqValid = false;
+                invalidReason = `entry ${i} references "${entry}" but only ${parsed.videos.length} videos exist`;
+                break;
+              }
+              const mentionsImageOnly = (entry.toUpperCase().startsWith('IMAGE') || entry.toUpperCase().startsWith('IMG')) && !entry.toUpperCase().includes('VIDEO');
+              if (mentionsImageOnly) {
+                isSeqValid = false;
+                invalidReason = `entry ${i} ("${entry}") is an image where a video transition was expected`;
+                break;
+              }
+            }
+          }
         }
+
+        if (!isSeqValid) {
+          parsed.sequence_map = buildDefaultSequenceMap();
+          parsed._importWarnings.push(`sequence_map was invalid (${invalidReason}); rebuilt automatically from images and videos.`);
+        }
+      }
+
+      // 5. Always Recompute raw_core_text and Recompile Every Prompt
+      core.raw_core_text = formatCoreContinuityBlock(core);
+      parsed.images.forEach(img => {
+        img.full_copy_ready_prompt = compileImageCopyReadyPrompt(core, img);
       });
       parsed.videos.forEach(vid => {
-        if (!vid.full_copy_ready_prompt || vid.full_copy_ready_prompt.trim().length === 0) {
-          vid.full_copy_ready_prompt = compileVideoCopyReadyPrompt(core, vid);
-        }
+        vid.full_copy_ready_prompt = compileVideoCopyReadyPrompt(core, vid);
       });
 
       return parsed;
@@ -2687,7 +2908,41 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
     window.formatCoreContinuityBlock = formatCoreContinuityBlock;
     window.compileImageCopyReadyPrompt = compileImageCopyReadyPrompt;
     window.compileVideoCopyReadyPrompt = compileVideoCopyReadyPrompt;
+    window.mergeNegativeConstraints = mergeNegativeConstraints;
     window.AUTHORITATIVE_SYSTEM_PROMPT = AUTHORITATIVE_SYSTEM_PROMPT;
+
+    // --- EMPTY STATE FALLBACK PLAN ---
+    const EMPTY_PLAN = {
+      id: 'empty',
+      production_summary: {
+        project_name: "Belum Ada Proyek",
+        target_total_duration_sec: 0,
+        video_duration_sec: 0,
+        total_videos: 0,
+        total_images: 0,
+        actual_total_runtime_sec: 0,
+        temporal_summary: "Tidak ada proyek yang aktif."
+      },
+      sequence_map: [],
+      core_prompt: {
+        scene_id: "-",
+        project_description: "Belum ada proyek aktif.",
+        camera_lock: "-",
+        geometry_lock: "-",
+        landmark_lock: "-",
+        lighting_lock: "-",
+        environment_lock: "-",
+        worker_identity_registry: [],
+        equipment_registry: [],
+        global_physics_rules: "-",
+        global_timelapse_rules: "-",
+        global_negative_rules: "-",
+        raw_core_text: ""
+      },
+      images: [],
+      videos: []
+    };
+    window.EMPTY_PLAN = EMPTY_PLAN;
 
     // --- APPLICATION STATE ---
     let currentScenarioKey = 'warehouse';
@@ -2696,9 +2951,28 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
     let activeFilter = 'all'; // 'all', 'images', 'videos', 'json'
 
     // --- UI RENDER FUNCTIONS ---
+    function renderImportWarnings() {
+      const warningsContainer = document.getElementById('project-warnings-container');
+      const warningsList = document.getElementById('project-warnings-list');
+      if (!warningsContainer || !warningsList) return;
+
+      if (currentData && Array.isArray(currentData._importWarnings) && currentData._importWarnings.length > 0) {
+        warningsList.innerHTML = '';
+        currentData._importWarnings.forEach(w => {
+          const li = document.createElement('li');
+          li.textContent = w;
+          warningsList.appendChild(li);
+        });
+        warningsContainer.classList.remove('hidden');
+      } else {
+        warningsContainer.classList.add('hidden');
+      }
+    }
+
     function renderApp() {
       renderSceneBible();
       renderStats();
+      renderImportWarnings();
       renderSequenceStepper();
       renderAssets();
       renderJsonOutput();
@@ -2712,7 +2986,7 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
       const summary = currentData.production_summary || {};
       document.getElementById('stat-videos-count').textContent = summary.total_videos || 0;
       document.getElementById('stat-images-count').textContent = summary.total_images || 0;
-      document.getElementById('stat-video-duration').textContent = `${summary.video_duration_sec || 10}s/clip`;
+      document.getElementById('stat-video-duration').textContent = `${summary.video_duration_sec || 0}s/clip`;
       document.getElementById('stat-total-duration').textContent = `${summary.target_total_duration_sec || summary.actual_total_runtime_sec || 0}s Total Runtime`;
     }
 
@@ -2820,7 +3094,16 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
       const stepper = document.getElementById('sequence-stepper');
       stepper.innerHTML = '';
 
-      (currentData.sequence_map || []).forEach((item, idx) => {
+      const seqMap = currentData.sequence_map || [];
+      if (seqMap.length === 0) {
+        const emptyMsg = document.createElement('div');
+        emptyMsg.className = 'text-xs text-slate-400 dark:text-slate-500 italic font-mono py-1';
+        emptyMsg.textContent = 'Belum ada sekuens aktif';
+        stepper.appendChild(emptyMsg);
+        return;
+      }
+
+      seqMap.forEach((item, idx) => {
         const isImage = item.startsWith('IMAGE') || item.startsWith('IMG');
         const badge = document.createElement('button');
         badge.className = `flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-semibold transition-all border ${
@@ -2899,6 +3182,55 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
       } else {
         container.classList.remove('hidden');
         document.getElementById('json-viewer-container').classList.add('hidden');
+      }
+
+      const images = currentData.images || [];
+      const videos = currentData.videos || [];
+
+      // If empty project or no assets
+      if (images.length === 0 && videos.length === 0) {
+        const emptyCard = document.createElement('div');
+        emptyCard.id = 'empty-state-assets-card';
+        emptyCard.className = 'glass-card rounded-2xl p-8 sm:p-12 border border-slate-200 dark:border-white/10 text-center space-y-4';
+        emptyCard.innerHTML = `
+          <div class="w-16 h-16 mx-auto rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 flex items-center justify-center">
+            <span class="material-symbols-outlined text-3xl">inventory_2</span>
+          </div>
+          <div class="space-y-1 max-w-md mx-auto">
+            <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">Tidak Ada Proyek Aktif</h3>
+            <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+              Semua proyek telah dihapus atau belum ada proyek yang dipilih. Anda dapat membuat proyek baru atau memulihkan preset default bawaan aplikasi.
+            </p>
+          </div>
+          <div class="flex items-center justify-center gap-3 pt-2 flex-wrap">
+            <button type="button" id="btn-empty-add-project" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-slate-950 bg-emerald-500 hover:bg-emerald-400 transition-all shadow-sm">
+              <span class="material-symbols-outlined text-base">add_circle</span>
+              <span>+ Tambah Project Baru</span>
+            </button>
+            <button type="button" id="btn-empty-restore-presets" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-white/10 transition-all shadow-sm">
+              <span class="material-symbols-outlined text-base">restart_alt</span>
+              <span>Pulihkan Preset Default</span>
+            </button>
+          </div>
+        `;
+        container.appendChild(emptyCard);
+
+        const btnEmptyAdd = emptyCard.querySelector('#btn-empty-add-project');
+        if (btnEmptyAdd) {
+          btnEmptyAdd.addEventListener('click', () => {
+            const btnOpenAdd = document.getElementById('btn-open-add-project');
+            if (btnOpenAdd) btnOpenAdd.click();
+          });
+        }
+        const btnEmptyRestore = emptyCard.querySelector('#btn-empty-restore-presets');
+        if (btnEmptyRestore) {
+          btnEmptyRestore.addEventListener('click', () => {
+            if (typeof window.restoreDeletedPresets === 'function') {
+              window.restoreDeletedPresets();
+            }
+          });
+        }
+        return;
       }
 
       // Merge sequentially based on sequence_map
@@ -3151,6 +3483,14 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
       const images = currentData.images || [];
       const videos = currentData.videos || [];
       const summary = currentData.production_summary || {};
+
+      if (images.length === 0 && videos.length === 0) {
+        const emptyLi = document.createElement('div');
+        emptyLi.className = 'flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-slate-900/50 text-xs text-slate-400 italic font-mono';
+        emptyLi.innerHTML = '<span class="material-symbols-outlined text-base text-slate-400">info</span> <span>Proyek kosong — tidak ada aset yang diuji kontinuitasnya.</span>';
+        list.appendChild(emptyLi);
+        return;
+      }
 
       // 1. images.length == videos.length + 1
       const rule1Passed = images.length === videos.length + 1;
@@ -3569,12 +3909,21 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
       }
 
       function renderActiveProjectStatus() {
-        const statusObj = getProjectStatus(currentData);
-        const isCompleted = statusObj.status === 'completed';
         const badgeBtn = document.getElementById('btn-active-status-badge');
         const iconEl = document.getElementById('active-status-icon');
         const textEl = document.getElementById('active-status-text');
         const linksContainer = document.getElementById('active-project-links-list');
+
+        if (!currentData || currentData.id === 'empty' || !currentScenarioKey) {
+          if (badgeBtn) badgeBtn.classList.add('hidden');
+          if (linksContainer) linksContainer.innerHTML = '';
+          updateDropdownStatuses();
+          return;
+        }
+
+        if (badgeBtn) badgeBtn.classList.remove('hidden');
+        const statusObj = getProjectStatus(currentData);
+        const isCompleted = statusObj.status === 'completed';
 
         if (badgeBtn && iconEl && textEl) {
           if (isCompleted) {
@@ -3710,8 +4059,13 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
             const legacy = localStorage.getItem('continuity_imported_plan');
             if (legacy) {
               const legObj = JSON.parse(legacy);
-              if (legObj && (legObj.id === id || legObj.id === 'proj_imported_legacy')) {
+              if (!legObj || legObj.id === id || legObj.id === 'proj_imported_legacy' || list.length === 0) {
                 localStorage.removeItem('continuity_imported_plan');
+                importedPlan = null;
+                const importedRow = document.getElementById('scenario-imported-row');
+                if (importedRow) importedRow.classList.add('hidden');
+                const importedBtn = document.getElementById('scenario-btn-imported');
+                if (importedBtn) importedBtn.classList.add('hidden');
               }
             }
           } catch (e) {}
@@ -3796,7 +4150,12 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
         const tagEl = document.getElementById('active-project-tag');
         const durationChipEl = document.getElementById('active-project-duration-chip');
         const iconEl = document.getElementById('active-project-icon');
+        const badgeBtn = document.getElementById('btn-active-status-badge');
+        const actionsContainer = document.getElementById('active-project-actions-container');
+        const btnActionEdit = document.getElementById('btn-action-edit-project');
         
+        const isEmpty = !key || !plan || plan.id === 'empty';
+
         const iconMap = {
           warehouse: 'factory',
           dapur: 'soup_kitchen',
@@ -3805,22 +4164,35 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
           kitchen: 'skillet'
         };
 
-        const pName = plan?.production_summary?.project_name || 'Continuity Project';
-        const duration = plan?.production_summary?.target_total_duration_sec || plan?.production_summary?.actual_total_runtime_sec || 0;
+        if (isEmpty) {
+          if (titleEl) titleEl.textContent = 'Belum Ada Proyek';
+          if (durationChipEl) durationChipEl.textContent = '0s Runtime';
+          if (iconEl) iconEl.textContent = 'folder_off';
+          if (tagEl) tagEl.textContent = 'Tidak Ada Proyek';
+          if (badgeBtn) badgeBtn.classList.add('hidden');
+          if (actionsContainer) actionsContainer.classList.add('hidden');
+          if (btnActionEdit) btnActionEdit.classList.add('hidden');
+        } else {
+          const pName = plan?.production_summary?.project_name || 'Continuity Project';
+          const duration = plan?.production_summary?.target_total_duration_sec || plan?.production_summary?.actual_total_runtime_sec || 0;
 
-        if (titleEl) titleEl.textContent = pName;
-        if (durationChipEl) durationChipEl.textContent = `${duration}s Runtime`;
-        if (iconEl) iconEl.textContent = iconMap[key] || 'assignment';
-        if (tagEl) {
-          if (iconMap[key]) tagEl.textContent = 'Preset Scenario';
-          else tagEl.textContent = 'Proyek Saya';
+          if (titleEl) titleEl.textContent = pName;
+          if (durationChipEl) durationChipEl.textContent = `${duration}s Runtime`;
+          if (iconEl) iconEl.textContent = iconMap[key] || 'assignment';
+          if (tagEl) {
+            if (iconMap[key]) tagEl.textContent = 'Preset Scenario';
+            else tagEl.textContent = 'Proyek Saya';
+          }
+          if (badgeBtn) badgeBtn.classList.remove('hidden');
+          if (actionsContainer) actionsContainer.classList.remove('hidden');
+          if (btnActionEdit) btnActionEdit.classList.remove('hidden');
         }
 
         // Update checkmarks and active styles in dropdown for presets
         document.querySelectorAll('.scenario-btn').forEach(btn => {
           const btnKey = btn.getAttribute('data-scenario');
           const checkEl = btn.querySelector('.check-indicator');
-          const isActive = (key && btnKey === key) || (key === 'imported' && btn.id === 'scenario-btn-imported');
+          const isActive = !isEmpty && ((key && btnKey === key) || (key === 'imported' && btn.id === 'scenario-btn-imported'));
           if (checkEl) {
             if (isActive) checkEl.classList.remove('hidden');
             else checkEl.classList.add('hidden');
@@ -3943,6 +4315,10 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
 
       // Copy All Prompts Button
       document.getElementById('btn-copy-all-prompts').addEventListener('click', () => {
+        if (!currentData || currentData.id === 'empty' || (!currentData.images?.length && !currentData.videos?.length)) {
+          showToast("Tidak ada prompt untuk disalin (proyek kosong).");
+          return;
+        }
         let fullText = `=== ${currentData.production_summary.project_name} ===\nTotal Target Duration: ${currentData.production_summary.target_total_duration_sec}s\n\n`;
         (currentData.sequence_map || []).forEach(entry => {
           if (entry.startsWith('IMAGE') || entry.startsWith('IMG')) {
@@ -3979,6 +4355,10 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
 
       // Download JSON File
       document.getElementById('btn-download-json').addEventListener('click', () => {
+        if (!currentData || currentData.id === 'empty') {
+          showToast("Tidak ada proyek aktif untuk diunduh.");
+          return;
+        }
         const jsonStr = JSON.stringify(currentData, null, 2);
         const blob = new Blob([jsonStr], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
@@ -4001,6 +4381,8 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
       const importStatus = document.getElementById('import-json-status');
       const importErrorBanner = document.getElementById('import-error-banner');
       const importErrorMsg = document.getElementById('import-error-msg');
+      const importWarningBanner = document.getElementById('import-warning-banner');
+      const importWarningMsg = document.getElementById('import-warning-msg');
       const tabAddJson = document.getElementById('tab-add-json');
       const tabAddForm = document.getElementById('tab-add-form');
       const contentAddJson = document.getElementById('content-add-json');
@@ -4011,6 +4393,7 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
         if (importModal) importModal.classList.remove('hidden');
         if (generatorModal) generatorModal.classList.remove('hidden');
         if (importErrorBanner) importErrorBanner.classList.add('hidden');
+        if (importWarningBanner) importWarningBanner.classList.add('hidden');
         switchAddTab(mode);
         if (mode === 'json') {
           validateImportInput();
@@ -4228,7 +4611,11 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
             closeAddProjectModal();
             updateActiveProjectDisplay(plan.id, plan);
             renderApp();
-            showToast(`Berhasil menambahkan project: "${plan.production_summary.project_name}"!`);
+            if (plan._importWarnings && plan._importWarnings.length > 0) {
+              showToast(`Project dibuka: "${plan.production_summary.project_name}" (${plan._importWarnings.length} penyesuaian otomatis)`);
+            } else {
+              showToast(`Berhasil menambahkan project: "${plan.production_summary.project_name}"!`);
+            }
 
             // Smooth scroll to Workbench
             const assetsContainer = document.getElementById('assets-list-container');
@@ -4295,6 +4682,10 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
       const statusRequiredStar = document.getElementById('status-required-star');
 
       function openStatusModal() {
+        if (!currentData || currentData.id === 'empty' || !currentScenarioKey) {
+          showToast("Tidak ada proyek aktif.");
+          return;
+        }
         if (!statusModal) return;
         statusModal.classList.remove('hidden');
         if (statusErrorBanner) statusErrorBanner.classList.add('hidden');
@@ -4438,6 +4829,10 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
       let activeEditTab = 'form';
 
       function openEditProjectModal() {
+        if (!currentData || currentData.id === 'empty' || !currentScenarioKey) {
+          showToast("Tidak ada proyek aktif untuk diedit.");
+          return;
+        }
         if (!editProjectModal) return;
         editProjectModal.classList.remove('hidden');
         if (editErrorBanner) editErrorBanner.classList.add('hidden');
@@ -4668,7 +5063,11 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
       }
 
       function openDeleteModal(key, name) {
-        pendingDeleteKey = key || currentScenarioKey || 'warehouse';
+        if (!key && (!currentScenarioKey || currentScenarioKey === 'empty')) {
+          showToast("Tidak ada proyek untuk dihapus.");
+          return;
+        }
+        pendingDeleteKey = key || currentScenarioKey;
         pendingDeleteName = name || currentData?.production_summary?.project_name || 'Proyek';
         if (deleteModalProjectName) deleteModalProjectName.textContent = `"${pendingDeleteName}"`;
         if (deleteConfirmModal) deleteConfirmModal.classList.remove('hidden');
@@ -4712,13 +5111,17 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
         const restoreContainer = document.getElementById('restore-presets-container');
         if (restoreContainer) restoreContainer.classList.add('hidden');
 
-        // If current project is not visible, switch to first preset
-        const firstPreset = 'warehouse';
-        if (SCENARIOS[firstPreset]) {
-          currentScenarioKey = firstPreset;
-          const overrides = getSavedProjectOverrides();
-          currentData = overrides[firstPreset] ? JSON.parse(JSON.stringify(overrides[firstPreset])) : JSON.parse(JSON.stringify(SCENARIOS[firstPreset]));
-          updateActiveProjectDisplay(firstPreset, currentData);
+        // If current project is empty or was deleted, switch to warehouse preset
+        if (!currentScenarioKey || currentScenarioKey === 'empty' || currentData?.id === 'empty') {
+          const firstPreset = 'warehouse';
+          if (SCENARIOS[firstPreset]) {
+            currentScenarioKey = firstPreset;
+            const overrides = getSavedProjectOverrides();
+            currentData = overrides[firstPreset] ? JSON.parse(JSON.stringify(overrides[firstPreset])) : JSON.parse(JSON.stringify(SCENARIOS[firstPreset]));
+            updateActiveProjectDisplay(firstPreset, currentData);
+            renderApp();
+          }
+        } else {
           renderApp();
         }
       }
@@ -4780,8 +5183,13 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
               updateActiveProjectDisplay(nextKey, currentData);
               renderApp();
             } else {
-              // All presets deleted, restore them
-              restoreDeletedPresets();
+              // All presets and all custom projects deleted!
+              // DO NOT auto-restore! Keep them deleted and show empty state.
+              currentScenarioKey = null;
+              currentData = JSON.parse(JSON.stringify(EMPTY_PLAN));
+              importedPlan = null;
+              updateActiveProjectDisplay(null, currentData);
+              renderApp();
             }
           }
         }
@@ -4838,7 +5246,8 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
       if (typeof localStorage !== 'undefined') {
         try {
           const savedImported = localStorage.getItem('continuity_imported_plan');
-          if (savedImported) {
+          const customList = getCustomProjects();
+          if (savedImported && customList.length > 0) {
             importedPlan = JSON.parse(savedImported);
             const importedRow = document.getElementById('scenario-imported-row');
             if (importedRow) importedRow.classList.remove('hidden');
@@ -4851,24 +5260,47 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
                 labelEl.textContent = pName.length > 25 ? `${pName.slice(0, 25)}...` : pName;
               }
             }
+          } else {
+            importedPlan = null;
+            try { localStorage.removeItem('continuity_imported_plan'); } catch (e) {}
           }
         } catch (e) {}
       }
 
       applyDeletedProjectsFilter();
       renderCustomProjectsInDropdown();
+
       const deletedOnLoad = getDeletedProjects();
-      let initialKey = 'warehouse';
-      if (deletedOnLoad.includes(initialKey)) {
-        const presetKeys = ['warehouse', 'dapur', 'pool', 'tea-house', 'kitchen'];
-        initialKey = presetKeys.find(k => !deletedOnLoad.includes(k)) || 'warehouse';
+      const presetKeys = ['warehouse', 'dapur', 'pool', 'tea-house', 'kitchen'];
+      const availablePresetKey = presetKeys.find(k => !deletedOnLoad.includes(k));
+      const customList = getCustomProjects();
+
+      let initialKey = null;
+      let initialPlan = null;
+
+      if (!deletedOnLoad.includes('warehouse')) {
+        // Warehouse preset is available and not deleted
+        initialKey = 'warehouse';
+        const overrides = getSavedProjectOverrides();
+        initialPlan = overrides['warehouse'] ? JSON.parse(JSON.stringify(overrides['warehouse'])) : JSON.parse(JSON.stringify(SCENARIOS['warehouse']));
+      } else if (customList.length > 0) {
+        // Warehouse was deleted, but custom projects exist: use first custom project
+        initialKey = customList[0].id;
+        initialPlan = JSON.parse(JSON.stringify(customList[0]));
+        importedPlan = initialPlan;
+      } else if (availablePresetKey && SCENARIOS[availablePresetKey]) {
+        // Another preset is available
+        initialKey = availablePresetKey;
+        const overrides = getSavedProjectOverrides();
+        initialPlan = overrides[availablePresetKey] ? JSON.parse(JSON.stringify(overrides[availablePresetKey])) : JSON.parse(JSON.stringify(SCENARIOS[availablePresetKey]));
+      } else {
+        // All presets and custom projects are deleted! Show empty state.
+        initialKey = null;
+        initialPlan = JSON.parse(JSON.stringify(EMPTY_PLAN));
       }
 
-      if (SCENARIOS[initialKey]) {
-        currentScenarioKey = initialKey;
-        const overrides = getSavedProjectOverrides();
-        currentData = overrides[initialKey] ? JSON.parse(JSON.stringify(overrides[initialKey])) : JSON.parse(JSON.stringify(SCENARIOS[initialKey]));
-      }
+      currentScenarioKey = initialKey;
+      currentData = initialPlan;
 
       // Initial active project display & render
       updateActiveProjectDisplay(currentScenarioKey, currentData);
