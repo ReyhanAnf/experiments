@@ -1,20 +1,22 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Timelapse & Physical Transformation Continuity Engine | AI Video & Image Director</title>
-  <meta name="description" content="AI Physical-Reality & Construction Continuity Director. Plan physically realistic sequential transformations and generate strict RFC 8259 JSON copy-ready prompts for AI video and image models.">
+  <title>Timelapse &amp; Physical Transformation Continuity Engine | AI Video &amp; Image Director</title>
+  <meta name="description" content="AI Physical-Reality &amp; Construction Continuity Director. Plan physically realistic sequential transformations and generate strict RFC 8259 JSON copy-ready prompts for AI video and image models.">
 
-  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <!-- Google Fonts: Plus Jakarta Sans, JetBrains Mono & Google Material Symbols -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
+      darkMode: 'class',
       theme: {
         extend: {
           fontFamily: {
@@ -47,9 +49,32 @@
   </script>
 
   <style>
+    :root {
+      --bg-main: #f8fafc;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --panel-bg: rgba(255, 255, 255, 0.9);
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --card-border: #e2e8f0;
+      --subtle-border: #e2e8f0;
+      --header-bg: rgba(255, 255, 255, 0.88);
+    }
+    html.dark {
+      --bg-main: #080c14;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --panel-bg: rgba(15, 23, 42, 0.75);
+      --card-bg: rgba(17, 24, 39, 0.7);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --subtle-border: rgba(255, 255, 255, 0.06);
+      --header-bg: rgba(2, 6, 23, 0.85);
+    }
     body {
-      background-color: #080c14;
-      color: #f1f5f9;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+    html.dark body {
       background-image: 
         radial-gradient(at 0% 0%, rgba(34, 197, 94, 0.08) 0px, transparent 45%),
         radial-gradient(at 100% 0%, rgba(59, 130, 246, 0.08) 0px, transparent 45%),
@@ -57,23 +82,42 @@
         radial-gradient(at 50% 50%, rgba(15, 23, 42, 0.75) 0px, transparent 100%);
       background-attachment: fixed;
     }
+    html.light body {
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(34, 197, 94, 0.06) 0px, transparent 45%),
+        radial-gradient(at 100% 0%, rgba(59, 130, 246, 0.06) 0px, transparent 45%),
+        radial-gradient(at 50% 100%, rgba(245, 158, 11, 0.04) 0px, transparent 50%);
+      background-attachment: fixed;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      vertical-align: middle;
+      line-height: 1;
+      display: inline-block;
+      user-select: none;
+    }
     .glass-panel {
-      background: rgba(15, 23, 42, 0.75);
+      background: var(--panel-bg);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--subtle-border);
     }
     .glass-card {
-      background: rgba(17, 24, 39, 0.7);
+      background: var(--card-bg);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.07);
+      border: 1px solid var(--card-border);
       transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .glass-card:hover {
+    html.dark .glass-card:hover {
       border-color: rgba(59, 130, 246, 0.4);
       transform: translateY(-2px);
       box-shadow: 0 16px 30px -10px rgba(0, 0, 0, 0.5);
+    }
+    html.light .glass-card:hover {
+      border-color: #3b82f6;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px -6px rgba(0, 0, 0, 0.08);
     }
     .active-card {
       border-color: rgba(34, 197, 94, 0.6) !important;
@@ -87,15 +131,22 @@
       width: 6px;
       height: 6px;
     }
-    ::-webkit-scrollbar-track {
+    html.dark ::-webkit-scrollbar-track {
       background: #080c14;
     }
-    ::-webkit-scrollbar-thumb {
+    html.light ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    html.dark ::-webkit-scrollbar-thumb {
       background: #1e293b;
       border-radius: 4px;
     }
+    html.light ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
     ::-webkit-scrollbar-thumb:hover {
-      background: #334155;
+      background: #94a3b8;
     }
     .no-scrollbar::-webkit-scrollbar {
       display: none;
@@ -115,33 +166,37 @@
 <body class="min-h-screen flex flex-col antialiased selection:bg-emerald-500 selection:text-slate-950 font-sans">
 
   <!-- TOP HEADER / NAV -->
-  <header class="border-b border-white/5 bg-slate-950/85 backdrop-blur-md sticky top-0 z-50">
+  <header class="border-b border-slate-200 dark:border-white/5 bg-white/85 dark:bg-slate-950/85 backdrop-blur-md sticky top-0 z-50 transition-colors">
     <div class="max-w-7xl mx-auto px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between">
       <div class="flex items-center gap-2 sm:gap-3">
-        <a href="./" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-300 hover:text-white bg-slate-900/90 hover:bg-slate-800 border border-white/10 px-2.5 py-1.5 rounded-lg transition-all">
-          <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+        <a href="./" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-900/90 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-white/10 px-2.5 py-1.5 rounded-lg transition-all shadow-sm">
+          <span class="material-symbols-outlined text-sm text-emerald-500">arrow_back</span>
           <span class="hidden xs:inline">Hub</span>
         </a>
-        <span class="text-slate-700">/</span>
+        <span class="text-slate-300 dark:text-slate-700">/</span>
         <div class="flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span class="text-xs sm:text-sm font-bold tracking-tight text-white">Continuity Engine</span>
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-xs sm:text-sm font-bold tracking-tight text-slate-900 dark:text-white">Continuity Engine</span>
         </div>
       </div>
 
       <div class="flex items-center gap-1.5 sm:gap-2">
-        <button id="btn-open-importer" class="inline-flex items-center gap-1.5 text-xs font-semibold text-sky-300 hover:text-white bg-sky-950/70 hover:bg-sky-900/80 border border-sky-600/50 px-2.5 sm:px-3 py-1.5 rounded-lg transition-all shadow-sm">
-          <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+        <button id="btn-open-importer" class="inline-flex items-center gap-1.5 text-xs font-semibold text-sky-700 dark:text-sky-300 hover:text-sky-900 dark:hover:text-white bg-sky-50 dark:bg-sky-950/70 hover:bg-sky-100 dark:hover:bg-sky-900/80 border border-sky-200 dark:border-sky-600/50 px-2.5 sm:px-3 py-1.5 rounded-lg transition-all shadow-sm">
+          <span class="material-symbols-outlined text-base">file_upload</span>
           <span class="hidden sm:inline">Paste / Import JSON</span>
           <span class="sm:hidden">Import</span>
         </button>
-        <button id="btn-open-generator" class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-300 hover:text-white bg-emerald-950/60 hover:bg-emerald-900/60 border border-emerald-700/50 px-2.5 sm:px-3 py-1.5 rounded-lg transition-all shadow-sm">
-          <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+        <button id="btn-open-generator" class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 dark:text-emerald-300 hover:text-emerald-900 dark:hover:text-white bg-emerald-50 dark:bg-emerald-950/60 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 border border-emerald-200 dark:border-emerald-700/50 px-2.5 sm:px-3 py-1.5 rounded-lg transition-all shadow-sm">
+          <span class="material-symbols-outlined text-base">add</span>
           <span class="hidden sm:inline">Custom</span>
         </button>
-        <button id="btn-open-system-prompt" class="inline-flex items-center gap-1 text-xs font-medium text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800 border border-white/10 px-2 sm:px-2.5 py-1.5 rounded-lg transition-all" title="Director System Rules">
-          <svg class="w-3.5 h-3.5 text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+        <button id="btn-open-system-prompt" class="inline-flex items-center gap-1 text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-white/10 px-2 sm:px-2.5 py-1.5 rounded-lg transition-all" title="Director System Rules">
+          <span class="material-symbols-outlined text-base text-amber-500">menu_book</span>
           <span class="hidden md:inline">Rules</span>
+        </button>
+        <button id="btn-theme-toggle" class="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all shadow-sm" title="Toggle Light / Dark Mode" aria-label="Toggle theme">
+          <span class="material-symbols-outlined text-base dark:hidden">dark_mode</span>
+          <span class="material-symbols-outlined text-base hidden dark:inline">light_mode</span>
         </button>
       </div>
     </div>
@@ -152,127 +207,196 @@
 
     <!-- HERO & SUMMARY -->
     <div class="mb-5 sm:mb-6">
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-white/5">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-slate-200 dark:border-white/5">
         <div>
-          <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight text-white flex items-center gap-2">
+          <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
             <span>Timelapse Continuity</span>
-            <span class="text-[11px] font-mono font-semibold text-emerald-400 bg-emerald-950/70 border border-emerald-800/40 px-2 py-0.5 rounded-full">v2.0 Mobile</span>
+            <span class="text-[11px] font-mono font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-200 dark:border-emerald-800/40 px-2 py-0.5 rounded-full">v2.0 Mobile</span>
           </h1>
-          <p class="text-slate-400 text-xs mt-1">
+          <p class="text-slate-500 dark:text-slate-400 text-xs mt-1">
             Prompt sequence generator berkesinambungan tanpa distorsi visual dan pergantian objek acak.
           </p>
         </div>
 
         <!-- DURATION STATS BAR (COMPACT & CLEAN) -->
         <div class="flex items-center gap-2 text-xs font-mono flex-wrap">
-          <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 border border-white/5">
-            <span class="w-2 h-2 rounded-full bg-sky-400"></span>
-            <span id="stat-videos-count" class="font-bold text-sky-400">6</span>
-            <span class="text-slate-400">Videos</span>
-            <span class="text-slate-600">·</span>
-            <span id="stat-video-duration" class="text-slate-400">10s/clip</span>
+          <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/5">
+            <span class="w-2 h-2 rounded-full bg-sky-500"></span>
+            <span id="stat-videos-count" class="font-bold text-sky-600 dark:text-sky-400">6</span>
+            <span class="text-slate-500 dark:text-slate-400">Videos</span>
+            <span class="text-slate-300 dark:text-slate-600">·</span>
+            <span id="stat-video-duration" class="text-slate-500 dark:text-slate-400">10s/clip</span>
           </div>
-          <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 border border-white/5">
-            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-            <span id="stat-images-count" class="font-bold text-emerald-400">7</span>
-            <span class="text-slate-400">Images</span>
+          <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/5">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            <span id="stat-images-count" class="font-bold text-emerald-600 dark:text-emerald-400">7</span>
+            <span class="text-slate-500 dark:text-slate-400">Images</span>
           </div>
-          <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 border border-white/5">
-            <span class="text-amber-400 font-bold" id="stat-total-duration">60s Total Runtime</span>
+          <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/5">
+            <span class="text-amber-600 dark:text-amber-400 font-bold" id="stat-total-duration">60s Total Runtime</span>
           </div>
         </div>
       </div>
 
-      <!-- PRESET SCENARIOS & QUICK CONTROLS -->
-      <div class="mt-3 space-y-2.5">
-        <!-- Preset selector pills -->
-        <div class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar -mx-3 px-3 sm:mx-0 sm:px-0" id="preset-selector-bar">
-          <button data-scenario="warehouse" class="scenario-btn active px-3 py-1.5 rounded-xl text-xs font-medium transition-all bg-emerald-500 text-slate-950 font-semibold shadow-sm shrink-0">
-            🏭 Warehouse (60s)
-          </button>
-          <button data-scenario="dapur" class="scenario-btn px-3 py-1.5 rounded-xl text-xs font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-900 border border-white/5 shrink-0">
-            👵 Dapur Nenek (120s)
-          </button>
-          <button data-scenario="pool" class="scenario-btn px-3 py-1.5 rounded-xl text-xs font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-900 border border-white/5 shrink-0">
-            🏊 Infinity Pool (40s)
-          </button>
-          <button data-scenario="tea-house" class="scenario-btn px-3 py-1.5 rounded-xl text-xs font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-900 border border-white/5 shrink-0">
-            🍵 Tea House (50s)
-          </button>
-          <button data-scenario="kitchen" class="scenario-btn px-3 py-1.5 rounded-xl text-xs font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-900 border border-white/5 shrink-0">
-            🍳 Chef Kitchen (30s)
-          </button>
-          <button id="scenario-btn-imported" class="scenario-btn hidden px-3 py-1.5 rounded-xl text-xs font-medium transition-all text-sky-400 bg-sky-950/70 border border-sky-600/50 shadow-sm shrink-0">
-            📋 <span id="imported-scenario-label">Custom Plan</span>
-          </button>
+      <!-- ACTIVE PROJECT CARD & INTUITIVE SWITCHER -->
+      <div class="mt-4 space-y-3">
+        <div class="glass-panel rounded-2xl p-3.5 sm:p-4 border border-slate-200 dark:border-white/10 shadow-sm relative">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-start sm:items-center gap-3 min-w-0">
+              <div class="w-10 h-10 rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/25">
+                <span class="material-symbols-outlined text-xl" id="active-project-icon">factory</span>
+              </div>
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="text-[10px] font-mono font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400" id="active-project-tag">Preset Scenario</span>
+                  <span class="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/80 px-2 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800/40" id="active-project-duration-chip">60s Runtime</span>
+                </div>
+                <h2 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white truncate mt-0.5" id="active-project-title">
+                  Urban Industrial Warehouse to Biophilic Architectural Studio
+                </h2>
+              </div>
+            </div>
+
+            <!-- Project Switcher Dropdown Trigger -->
+            <div class="relative shrink-0 flex items-center gap-2 self-end sm:self-auto">
+              <button id="project-dropdown-btn" class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-white/10 transition-all shadow-sm">
+                <span class="material-symbols-outlined text-base text-emerald-600 dark:text-emerald-400">swap_horiz</span>
+                <span>Pilih Project</span>
+                <span class="material-symbols-outlined text-sm transition-transform duration-200" id="project-dropdown-arrow">expand_more</span>
+              </button>
+
+              <!-- Dropdown Menu -->
+              <div id="project-dropdown-menu" class="hidden absolute right-0 top-full mt-2 w-72 sm:w-80 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-2xl p-2 z-40 space-y-1">
+                <div class="px-2.5 py-1.5 text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-slate-500">Pilih Preset / Custom Plan</div>
+                
+                <button data-scenario="warehouse" class="scenario-btn active w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-left transition-all bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/50">
+                  <span class="material-symbols-outlined text-base text-emerald-600 dark:text-emerald-400">factory</span>
+                  <div class="min-w-0 flex-1">
+                    <div class="font-semibold truncate">Warehouse to Studio</div>
+                    <div class="text-[10px] text-slate-500 dark:text-slate-400 font-mono">60s · 6 clips · 7 images</div>
+                  </div>
+                  <span class="material-symbols-outlined text-sm text-emerald-600 dark:text-emerald-400 check-indicator">check</span>
+                </button>
+
+                <button data-scenario="dapur" class="scenario-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-left transition-all text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+                  <span class="material-symbols-outlined text-base text-amber-600 dark:text-amber-400">soup_kitchen</span>
+                  <div class="min-w-0 flex-1">
+                    <div class="font-semibold truncate">Dapur Tradisional Nenek</div>
+                    <div class="text-[10px] text-slate-500 dark:text-slate-400 font-mono">120s · 6 clips · 7 images</div>
+                  </div>
+                  <span class="material-symbols-outlined text-sm text-emerald-600 dark:text-emerald-400 check-indicator hidden">check</span>
+                </button>
+
+                <button data-scenario="pool" class="scenario-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-left transition-all text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+                  <span class="material-symbols-outlined text-base text-sky-600 dark:text-sky-400">pool</span>
+                  <div class="min-w-0 flex-1">
+                    <div class="font-semibold truncate">Infinity Pool &amp; Decking</div>
+                    <div class="text-[10px] text-slate-500 dark:text-slate-400 font-mono">40s · 4 clips · 5 images</div>
+                  </div>
+                  <span class="material-symbols-outlined text-sm text-emerald-600 dark:text-emerald-400 check-indicator hidden">check</span>
+                </button>
+
+                <button data-scenario="tea-house" class="scenario-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-left transition-all text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+                  <span class="material-symbols-outlined text-base text-emerald-600 dark:text-emerald-400">local_cafe</span>
+                  <div class="min-w-0 flex-1">
+                    <div class="font-semibold truncate">Minimalist Tea Pavilion</div>
+                    <div class="text-[10px] text-slate-500 dark:text-slate-400 font-mono">50s · 5 clips · 6 images</div>
+                  </div>
+                  <span class="material-symbols-outlined text-sm text-emerald-600 dark:text-emerald-400 check-indicator hidden">check</span>
+                </button>
+
+                <button data-scenario="kitchen" class="scenario-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-left transition-all text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+                  <span class="material-symbols-outlined text-base text-rose-600 dark:text-rose-400">skillet</span>
+                  <div class="min-w-0 flex-1">
+                    <div class="font-semibold truncate">Chef's Kitchen</div>
+                    <div class="text-[10px] text-slate-500 dark:text-slate-400 font-mono">30s · 3 clips · 4 images</div>
+                  </div>
+                  <span class="material-symbols-outlined text-sm text-emerald-600 dark:text-emerald-400 check-indicator hidden">check</span>
+                </button>
+
+                <button id="scenario-btn-imported" class="scenario-btn hidden w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-left transition-all text-sky-700 dark:text-sky-300 bg-sky-50 dark:bg-sky-950/60 border border-sky-200 dark:border-sky-800/40">
+                  <span class="material-symbols-outlined text-base text-sky-500">assignment</span>
+                  <div class="min-w-0 flex-1">
+                    <div class="font-semibold truncate" id="imported-scenario-label">Custom Plan</div>
+                    <div class="text-[10px] text-slate-500 dark:text-slate-400 font-mono" id="imported-scenario-meta">Custom JSON Payload</div>
+                  </div>
+                  <span class="material-symbols-outlined text-sm text-sky-600 dark:text-sky-400 check-indicator hidden">check</span>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Action bar -->
         <div class="flex items-center justify-between gap-2 flex-wrap">
           <div class="flex items-center gap-2 flex-wrap">
-            <button id="btn-quick-paste-json" class="inline-flex items-center gap-1.5 text-xs font-medium text-sky-300 hover:text-white bg-sky-950/50 hover:bg-sky-900/60 border border-sky-800/50 px-3 py-1.5 rounded-lg transition-all">
-              <svg class="w-3.5 h-3.5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+            <button id="btn-quick-paste-json" class="inline-flex items-center gap-1.5 text-xs font-medium text-sky-700 dark:text-sky-300 hover:text-sky-900 dark:hover:text-white bg-sky-50 dark:bg-sky-950/50 hover:bg-sky-100 dark:hover:bg-sky-900/60 border border-sky-200 dark:border-sky-800/50 px-3 py-1.5 rounded-lg transition-all shadow-sm">
+              <span class="material-symbols-outlined text-base text-sky-500">content_paste</span>
               <span>Paste JSON</span>
             </button>
-            <button id="btn-copy-all-prompts" class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-white/10 px-3 py-1.5 rounded-lg transition-all">
-              <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+            <button id="btn-copy-all-prompts" class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-white/10 px-3 py-1.5 rounded-lg transition-all shadow-sm">
+              <span class="material-symbols-outlined text-base text-slate-500 dark:text-slate-400">content_copy</span>
               <span>Copy All Prompts</span>
             </button>
-            <button id="btn-download-json" class="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-400 hover:text-emerald-300 bg-emerald-950/50 hover:bg-emerald-900/60 border border-emerald-800/50 px-3 py-1.5 rounded-lg transition-all">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            <button id="btn-download-json" class="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-700 dark:text-emerald-400 hover:text-emerald-900 dark:hover:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/50 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 border border-emerald-200 dark:border-emerald-800/50 px-3 py-1.5 rounded-lg transition-all shadow-sm">
+              <span class="material-symbols-outlined text-base">download</span>
               <span>Download JSON</span>
             </button>
           </div>
 
-          <button id="btn-toggle-scene-bible" class="inline-flex items-center gap-1.5 text-xs font-medium text-amber-300 hover:text-white bg-amber-950/40 hover:bg-amber-900/60 border border-amber-800/40 px-3 py-1.5 rounded-lg transition-all">
-            <span>🔒 Scene Bible &amp; Locks</span>
-            <span id="bible-toggle-arrow" class="text-[10px]">▾</span>
+          <button id="btn-toggle-scene-bible" class="inline-flex items-center gap-1.5 text-xs font-medium text-amber-700 dark:text-amber-300 hover:text-amber-900 dark:hover:text-white bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-900/60 border border-amber-200 dark:border-amber-800/40 px-3 py-1.5 rounded-lg transition-all shadow-sm">
+            <span class="material-symbols-outlined text-base text-amber-500">lock</span>
+            <span>Scene Bible &amp; Locks</span>
+            <span class="material-symbols-outlined text-sm transition-transform duration-200" id="bible-toggle-arrow">expand_more</span>
           </button>
         </div>
       </div>
     </div>
 
     <!-- COLLAPSIBLE MASTER SCENE BIBLE & LOCKS PANEL -->
-    <div id="scene-bible-container" class="hidden mb-6 glass-panel rounded-2xl p-4 sm:p-5 border border-white/10 space-y-4">
-      <div class="flex items-center justify-between pb-3 border-b border-white/5">
+    <div id="scene-bible-container" class="hidden mb-6 glass-panel rounded-2xl p-4 sm:p-5 border border-slate-200 dark:border-white/10 space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-white/5">
         <div class="flex items-center gap-2">
-          <span class="text-amber-400 font-bold text-sm">🔒</span>
-          <h2 class="text-xs sm:text-sm font-bold text-white font-mono uppercase">Master Scene Bible &amp; Continuity Locks</h2>
+          <span class="material-symbols-outlined text-amber-500 text-base">lock</span>
+          <h2 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white font-mono uppercase">Master Scene Bible &amp; Continuity Locks</h2>
         </div>
-        <button id="btn-close-scene-bible" class="text-xs text-slate-400 hover:text-white px-2 py-1 rounded bg-slate-900 border border-white/5">Tutup ✕</button>
+        <button id="btn-close-scene-bible" class="inline-flex items-center gap-1 text-xs text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/5">
+          <span>Tutup</span>
+          <span class="material-symbols-outlined text-sm">close</span>
+        </button>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
-        <div class="bg-slate-950/60 p-3 rounded-xl border border-white/5 space-y-1.5">
-          <span class="text-[10px] font-mono text-slate-400 uppercase font-semibold block">Project &amp; Scene ID</span>
-          <div class="text-white font-semibold" id="bible-project-name">Urban Warehouse to Studio</div>
-          <div class="text-[11px] text-slate-400 font-mono" id="bible-scene-id">SCENE_WH_TO_STUDIO_001</div>
+        <div class="bg-slate-50 dark:bg-slate-950/60 p-3 rounded-xl border border-slate-200 dark:border-white/5 space-y-1.5">
+          <span class="text-[10px] font-mono text-slate-500 dark:text-slate-400 uppercase font-semibold block">Project &amp; Scene ID</span>
+          <div class="text-slate-900 dark:text-white font-semibold" id="bible-project-name">Urban Warehouse to Studio</div>
+          <div class="text-[11px] text-slate-500 dark:text-slate-400 font-mono" id="bible-scene-id">SCENE_WH_TO_STUDIO_001</div>
         </div>
 
-        <div class="bg-slate-950/60 p-3 rounded-xl border border-white/5 space-y-1">
-          <span class="text-[10px] font-mono text-emerald-400 uppercase font-semibold block">Camera Lock (Zero Drift)</span>
-          <p class="text-slate-300 text-[11px] leading-relaxed" id="bible-camera-lock"></p>
+        <div class="bg-slate-50 dark:bg-slate-950/60 p-3 rounded-xl border border-slate-200 dark:border-white/5 space-y-1">
+          <span class="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 uppercase font-semibold block">Camera Lock (Zero Drift)</span>
+          <p class="text-slate-700 dark:text-slate-300 text-[11px] leading-relaxed" id="bible-camera-lock"></p>
         </div>
 
-        <div class="bg-slate-950/60 p-3 rounded-xl border border-white/5 space-y-1">
-          <span class="text-[10px] font-mono text-sky-400 uppercase font-semibold block">Lighting &amp; Environment</span>
-          <p class="text-slate-300 text-[11px] leading-relaxed" id="bible-lighting-lock"></p>
+        <div class="bg-slate-50 dark:bg-slate-950/60 p-3 rounded-xl border border-slate-200 dark:border-white/5 space-y-1">
+          <span class="text-[10px] font-mono text-sky-600 dark:text-sky-400 uppercase font-semibold block">Lighting &amp; Environment</span>
+          <p class="text-slate-700 dark:text-slate-300 text-[11px] leading-relaxed" id="bible-lighting-lock"></p>
         </div>
       </div>
 
-      <div class="bg-slate-950/60 p-3 rounded-xl border border-white/5 space-y-2 text-xs">
-        <span class="text-[10px] font-mono text-amber-300 uppercase font-semibold block">Geometry &amp; Permanent Landmarks</span>
-        <p class="text-slate-300 text-[11px] leading-relaxed" id="bible-geometry-lock"></p>
+      <div class="bg-slate-50 dark:bg-slate-950/60 p-3 rounded-xl border border-slate-200 dark:border-white/5 space-y-2 text-xs">
+        <span class="text-[10px] font-mono text-amber-600 dark:text-amber-300 uppercase font-semibold block">Geometry &amp; Permanent Landmarks</span>
+        <p class="text-slate-700 dark:text-slate-300 text-[11px] leading-relaxed" id="bible-geometry-lock"></p>
         <div class="flex flex-wrap gap-1.5 pt-1" id="bible-landmarks-list"></div>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
         <div class="space-y-2">
-          <span class="text-[10px] font-mono text-sky-400 uppercase font-semibold block">Worker Registry</span>
+          <span class="text-[10px] font-mono text-sky-600 dark:text-sky-400 uppercase font-semibold block">Worker Registry</span>
           <div class="space-y-2" id="bible-workers-list"></div>
         </div>
         <div class="space-y-2">
-          <span class="text-[10px] font-mono text-amber-400 uppercase font-semibold block">Equipment Registry</span>
+          <span class="text-[10px] font-mono text-amber-600 dark:text-amber-400 uppercase font-semibold block">Equipment Registry</span>
           <div class="space-y-2" id="bible-equipment-list"></div>
         </div>
       </div>
@@ -282,11 +406,11 @@
     <div class="space-y-4">
       <!-- Filter Tabs & Stepper Bar -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div class="flex items-center gap-1 bg-slate-900/90 p-1 rounded-xl border border-white/5 text-xs font-mono overflow-x-auto no-scrollbar">
+        <div class="flex items-center gap-1 bg-slate-100 dark:bg-slate-900/90 p-1 rounded-xl border border-slate-200 dark:border-white/5 text-xs font-mono overflow-x-auto no-scrollbar">
           <button id="filter-all-assets" class="view-filter-btn active px-3 py-1.5 rounded-lg bg-emerald-500 text-slate-950 font-bold transition-all shrink-0">All Assets</button>
-          <button id="filter-images-only" class="view-filter-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all shrink-0">Images Only</button>
-          <button id="filter-videos-only" class="view-filter-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all shrink-0">Videos Only</button>
-          <button id="filter-json-view" class="view-filter-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all shrink-0">JSON &amp; Audit</button>
+          <button id="filter-images-only" class="view-filter-btn px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all shrink-0">Images Only</button>
+          <button id="filter-videos-only" class="view-filter-btn px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all shrink-0">Videos Only</button>
+          <button id="filter-json-view" class="view-filter-btn px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all shrink-0">JSON &amp; Audit</button>
         </div>
       </div>
 
@@ -303,15 +427,15 @@
       </div>
 
       <!-- JSON & Audit Viewer Container -->
-      <div id="json-viewer-container" class="hidden glass-panel rounded-2xl p-4 sm:p-6 border border-white/10 space-y-6">
+      <div id="json-viewer-container" class="hidden glass-panel rounded-2xl p-4 sm:p-6 border border-slate-200 dark:border-white/10 space-y-6">
         <!-- RFC 8259 Validator Audit Checklist -->
-        <div class="bg-slate-950/70 rounded-xl p-4 border border-white/5 space-y-3">
-          <div class="flex items-center justify-between pb-2 border-b border-white/5">
-            <h3 class="text-xs font-bold text-white uppercase tracking-wider font-mono flex items-center gap-1.5">
-              <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+        <div class="bg-slate-50 dark:bg-slate-950/70 rounded-xl p-4 border border-slate-200 dark:border-white/5 space-y-3">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-white/5">
+            <h3 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider font-mono flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-base text-emerald-500">verified</span>
               RFC 8259 Validator Audit
             </h3>
-            <span class="text-[10px] font-mono text-emerald-400 font-bold bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800/40">100% PASS</span>
+            <span class="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-50 dark:bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800/40">100% PASS</span>
           </div>
           <div class="space-y-2 text-[11px] font-mono" id="validation-checklist">
             <!-- Checked items -->
@@ -321,14 +445,14 @@
         <!-- Strict RFC 8259 JSON Console -->
         <div class="space-y-3">
           <div class="flex items-center justify-between">
-            <h3 class="text-sm font-bold text-white font-mono">Raw RFC 8259 JSON</h3>
+            <h3 class="text-sm font-bold text-slate-900 dark:text-white font-mono">Raw RFC 8259 JSON</h3>
             <button id="btn-copy-raw-json" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-950 bg-emerald-400 hover:bg-emerald-300 px-3 py-1.5 rounded-lg transition-all font-mono shadow-sm">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+              <span class="material-symbols-outlined text-sm">content_copy</span>
               <span>Copy RFC 8259 JSON</span>
             </button>
           </div>
-          <div class="relative bg-slate-950 rounded-xl p-4 border border-white/5 overflow-x-auto max-h-[600px]">
-            <pre><code class="text-xs text-slate-300 font-mono leading-relaxed" id="raw-json-output"></code></pre>
+          <div class="relative bg-slate-100 dark:bg-slate-950 rounded-xl p-4 border border-slate-200 dark:border-white/5 overflow-x-auto max-h-[600px]">
+            <pre><code class="text-xs text-slate-800 dark:text-slate-300 font-mono leading-relaxed" id="raw-json-output"></code></pre>
           </div>
         </div>
       </div>
@@ -337,58 +461,58 @@
 
   <!-- CUSTOM PROJECT GENERATOR MODAL -->
   <div id="generator-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-4">
-    <div class="bg-slate-900 border border-white/10 rounded-2xl max-w-xl w-full p-4 sm:p-6 max-h-[92vh] overflow-y-auto shadow-2xl">
-      <div class="flex items-center justify-between pb-3 border-b border-white/5 mb-4">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-2xl max-w-xl w-full p-4 sm:p-6 max-h-[92vh] overflow-y-auto shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-white/5 mb-4">
         <div class="flex items-center gap-2">
-          <div class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs border border-emerald-500/30">
-            ⚡
+          <div class="w-8 h-8 rounded-lg bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold text-xs border border-emerald-500/25 shrink-0">
+            <span class="material-symbols-outlined text-base">auto_fix_high</span>
           </div>
           <div>
-            <h3 class="text-sm sm:text-base font-bold text-white">Generate Custom Continuity Plan</h3>
-            <p class="text-[11px] text-slate-400">Adaptive sequence synthesis based on physical complexity</p>
+            <h3 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white">Generate Custom Continuity Plan</h3>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400">Adaptive sequence synthesis based on physical complexity</p>
           </div>
         </div>
-        <button id="btn-close-generator" class="text-slate-400 hover:text-white p-1 rounded-lg">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        <button id="btn-close-generator" class="text-slate-400 hover:text-slate-700 dark:hover:text-white p-1 rounded-lg transition-colors">
+          <span class="material-symbols-outlined">close</span>
         </button>
       </div>
 
       <form id="custom-plan-form" class="space-y-3.5 text-xs">
         <div>
-          <label class="block text-[11px] font-mono text-slate-400 uppercase mb-1">Project Name</label>
-          <input type="text" id="custom-name" required value="Suburban Garage to High-Tech Music Production Studio" class="w-full bg-slate-950 border border-white/10 rounded-xl px-3 py-2 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-sans">
+          <label class="block text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase mb-1">Project Name</label>
+          <input type="text" id="custom-name" required value="Suburban Garage to High-Tech Music Production Studio" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-white/10 rounded-xl px-3 py-2 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-sans transition-colors">
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block text-[11px] font-mono text-slate-400 uppercase mb-1">Target Total Duration (s)</label>
-            <input type="number" id="custom-total-duration" required min="10" max="300" step="5" value="40" class="w-full bg-slate-950 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-500 font-mono">
+            <label class="block text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase mb-1">Target Total Duration (s)</label>
+            <input type="number" id="custom-total-duration" required min="10" max="300" step="5" value="40" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-white/10 rounded-xl px-3 py-2 text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 font-mono transition-colors">
             <span class="text-[10px] text-slate-500 font-mono">Total duration constraint</span>
           </div>
           <div>
-            <label class="block text-[11px] font-mono text-slate-400 uppercase mb-1">Clip Duration (s)</label>
-            <input type="number" id="custom-clip-duration" required min="5" max="30" step="1" value="10" class="w-full bg-slate-950 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-500 font-mono">
+            <label class="block text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase mb-1">Clip Duration (s)</label>
+            <input type="number" id="custom-clip-duration" required min="5" max="30" step="1" value="10" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-white/10 rounded-xl px-3 py-2 text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 font-mono transition-colors">
             <span class="text-[10px] text-slate-500 font-mono">Per-video clip length</span>
           </div>
         </div>
 
         <div>
-          <label class="block text-[11px] font-mono text-slate-400 uppercase mb-1">Initial State (IMAGE 1)</label>
-          <textarea id="custom-initial-state" required rows="2" class="w-full bg-slate-950 border border-white/10 rounded-xl p-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-sans">Cluttered suburban concrete garage with exposed 2x4 stud walls, bare cement floor with oil stains, overhead steel garage door tracks, and unorganized tool boxes.</textarea>
+          <label class="block text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase mb-1">Initial State (IMAGE 1)</label>
+          <textarea id="custom-initial-state" required rows="2" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-white/10 rounded-xl p-2.5 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-sans transition-colors">Cluttered suburban concrete garage with exposed 2x4 stud walls, bare cement floor with oil stains, overhead steel garage door tracks, and unorganized tool boxes.</textarea>
         </div>
 
         <div>
-          <label class="block text-[11px] font-mono text-slate-400 uppercase mb-1">Final Desired State (IMAGE N)</label>
-          <textarea id="custom-final-state" required rows="2" class="w-full bg-slate-950 border border-white/10 rounded-xl p-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-sans">Acoustically isolated professional music recording studio with custom walnut acoustic slat diffusers, floating hardwood flooring, recessed halo lighting, and dual synth workstations.</textarea>
+          <label class="block text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase mb-1">Final Desired State (IMAGE N)</label>
+          <textarea id="custom-final-state" required rows="2" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-white/10 rounded-xl p-2.5 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-sans transition-colors">Acoustically isolated professional music recording studio with custom walnut acoustic slat diffusers, floating hardwood flooring, recessed halo lighting, and dual synth workstations.</textarea>
         </div>
 
         <div>
-          <label class="block text-[11px] font-mono text-slate-400 uppercase mb-1">Camera Lock Specs</label>
-          <input type="text" id="custom-camera" value="Tripod locked at 1.5m eye-level in southwest doorway corner, 24mm wide angle, looking northeast at 45-degree angle. Zero pan, tilt, or dolly." class="w-full bg-slate-950 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-500 font-sans">
+          <label class="block text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase mb-1">Camera Lock Specs</label>
+          <input type="text" id="custom-camera" value="Tripod locked at 1.5m eye-level in southwest doorway corner, 24mm wide angle, looking northeast at 45-degree angle. Zero pan, tilt, or dolly." class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-white/10 rounded-xl px-3 py-2 text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 font-sans transition-colors">
         </div>
 
-        <div class="pt-3 border-t border-white/5 flex items-center justify-end gap-2.5">
-          <button type="button" id="btn-cancel-generator" class="px-3.5 py-2 rounded-xl text-slate-400 hover:text-white font-medium text-xs">
+        <div class="pt-3 border-t border-slate-200 dark:border-white/5 flex items-center justify-end gap-2.5">
+          <button type="button" id="btn-cancel-generator" class="px-3.5 py-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white font-medium text-xs transition-colors">
             Cancel
           </button>
           <button type="submit" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-bold px-4 py-2 rounded-xl shadow-md transition-all font-mono text-xs">
@@ -398,52 +522,55 @@
       </form>
     </div>
   </div>
+
   <!-- IMPORT JSON MODAL -->
   <div id="import-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-white/10 rounded-2xl max-w-3xl w-full p-6 max-h-[92vh] overflow-y-auto shadow-2xl space-y-4">
-      <div class="flex items-center justify-between pb-3 border-b border-white/5">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-2xl max-w-3xl w-full p-5 sm:p-6 max-h-[92vh] overflow-y-auto shadow-2xl space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-white/5">
         <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center font-bold text-sm border border-sky-500/30">
-            📥
+          <div class="w-8 h-8 rounded-lg bg-sky-500/15 text-sky-600 dark:text-sky-400 flex items-center justify-center font-bold text-sm border border-sky-500/25 shrink-0">
+            <span class="material-symbols-outlined text-base">file_upload</span>
           </div>
           <div>
-            <h3 class="text-base font-bold text-white">Paste or Import RFC 8259 Continuity JSON</h3>
-            <p class="text-xs text-slate-400">Instantly render, validate, and extract copy-ready prompts from your custom project JSON</p>
+            <h3 class="text-base font-bold text-slate-900 dark:text-white">Paste or Import RFC 8259 Continuity JSON</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Instantly render, validate, and extract copy-ready prompts from your custom project JSON</p>
           </div>
         </div>
-        <button id="btn-close-import-modal" class="text-slate-400 hover:text-white p-1 rounded-lg">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        <button id="btn-close-import-modal" class="text-slate-400 hover:text-slate-700 dark:hover:text-white p-1 rounded-lg transition-colors">
+          <span class="material-symbols-outlined">close</span>
         </button>
       </div>
 
       <!-- Quick action helpers -->
       <div class="flex flex-wrap items-center justify-between gap-2 text-xs">
         <div class="flex flex-wrap items-center gap-2">
-          <button type="button" id="btn-import-paste-clipboard" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-white/10 font-mono transition-all">
-            <svg class="w-3.5 h-3.5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+          <button type="button" id="btn-import-paste-clipboard" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-white/10 font-mono transition-all">
+            <span class="material-symbols-outlined text-sm text-sky-500">content_paste</span>
             <span>Tempel dari Clipboard</span>
           </button>
-          <label class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-white/10 font-mono cursor-pointer transition-all">
-            <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+          <label class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-white/10 font-mono cursor-pointer transition-all">
+            <span class="material-symbols-outlined text-sm text-emerald-500">upload_file</span>
             <span>Upload File .json</span>
             <input type="file" id="import-json-file" accept=".json,application/json" class="hidden">
           </label>
-          <button type="button" id="btn-import-load-dapur-sample" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-950/60 hover:bg-amber-900/70 text-amber-300 border border-amber-800/40 font-mono transition-all">
+          <button type="button" id="btn-import-load-dapur-sample" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/60 dark:hover:bg-amber-900/70 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800/40 font-mono transition-all">
+            <span class="material-symbols-outlined text-sm text-amber-500">soup_kitchen</span>
             <span>Contoh: Dapur Nenek (120s)</span>
           </button>
         </div>
-        <button type="button" id="btn-import-clear" class="text-xs font-mono text-slate-500 hover:text-rose-400 transition-colors">
-          Bersihkan
+        <button type="button" id="btn-import-clear" class="inline-flex items-center gap-1 text-xs font-mono text-slate-500 hover:text-rose-500 transition-colors">
+          <span class="material-symbols-outlined text-sm">delete</span>
+          <span>Bersihkan</span>
         </button>
       </div>
 
       <!-- JSON Input Textarea -->
       <div class="space-y-1.5">
         <div class="flex items-center justify-between text-[11px] font-mono">
-          <label for="import-json-textarea" class="text-slate-400">JSON Payload (RFC 8259):</label>
+          <label for="import-json-textarea" class="text-slate-500 dark:text-slate-400">JSON Payload (RFC 8259):</label>
           <span id="import-json-status" class="text-slate-500">Menunggu input...</span>
         </div>
-        <textarea id="import-json-textarea" rows="12" class="w-full bg-slate-950 border border-white/10 rounded-xl p-3.5 text-xs font-mono text-slate-200 placeholder-slate-600 focus:outline-none focus:border-sky-500 selection:bg-sky-500 selection:text-slate-950 leading-relaxed" placeholder='Tempelkan JSON RFC 8259 di sini...
+        <textarea id="import-json-textarea" rows="12" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-white/10 rounded-xl p-3.5 text-xs font-mono text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:border-sky-500 leading-relaxed transition-colors" placeholder='Tempelkan JSON RFC 8259 di sini...
 {
   "production_summary": { ... },
   "sequence_map": [ ... ],
@@ -454,17 +581,17 @@
       </div>
 
       <!-- Feedback / Error alert banner -->
-      <div id="import-error-banner" class="hidden p-3 rounded-xl bg-rose-950/60 border border-rose-800/50 text-xs text-rose-300 font-mono flex items-start gap-2">
-        <svg class="w-4 h-4 text-rose-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      <div id="import-error-banner" class="hidden p-3 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800/50 text-xs text-rose-700 dark:text-rose-300 font-mono flex items-start gap-2">
+        <span class="material-symbols-outlined text-base text-rose-500 shrink-0">error</span>
         <span id="import-error-msg"></span>
       </div>
 
-      <div class="pt-3 border-t border-white/5 flex items-center justify-end gap-3">
-        <button type="button" id="btn-cancel-import" class="px-4 py-2 rounded-xl text-slate-400 hover:text-white font-semibold text-xs">
+      <div class="pt-3 border-t border-slate-200 dark:border-white/5 flex items-center justify-end gap-3">
+        <button type="button" id="btn-cancel-import" class="px-4 py-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white font-semibold text-xs transition-colors">
           Batal
         </button>
         <button type="button" id="btn-submit-import" class="bg-gradient-to-r from-sky-500 to-emerald-600 hover:from-sky-400 hover:to-emerald-500 text-slate-950 font-bold px-5 py-2.5 rounded-xl shadow-lg shadow-sky-500/20 transition-all font-mono text-xs flex items-center gap-2">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+          <span class="material-symbols-outlined text-base">check</span>
           <span>Terapkan &amp; Buka Proyek</span>
         </button>
       </div>
@@ -473,48 +600,51 @@
 
   <!-- SYSTEM PROMPT VIEWER MODAL -->
   <div id="system-prompt-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-white/10 rounded-2xl max-w-3xl w-full p-6 max-h-[90vh] overflow-y-auto shadow-2xl space-y-4">
-      <div class="flex items-center justify-between pb-3 border-b border-white/5">
-        <div>
-          <h3 class="text-base font-bold text-white">Timelapse &amp; Physical Continuity Director System Prompt</h3>
-          <p class="text-xs text-slate-400 font-mono">Authoritative LLM &amp; AI Generator Metaprompt</p>
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-2xl max-w-3xl w-full p-5 sm:p-6 max-h-[90vh] overflow-y-auto shadow-2xl space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-white/5">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-amber-500 text-lg">menu_book</span>
+          <div>
+            <h3 class="text-base font-bold text-slate-900 dark:text-white">Timelapse &amp; Physical Continuity Director System Prompt</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 font-mono">Authoritative LLM &amp; AI Generator Metaprompt</p>
+          </div>
         </div>
-        <button id="btn-close-prompt-modal" class="text-slate-400 hover:text-white p-1 rounded-lg">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        <button id="btn-close-prompt-modal" class="text-slate-400 hover:text-slate-700 dark:hover:text-white p-1 rounded-lg transition-colors">
+          <span class="material-symbols-outlined">close</span>
         </button>
       </div>
 
       <div class="flex justify-end">
-        <button id="btn-copy-system-prompt" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-950 bg-emerald-400 hover:bg-emerald-300 px-3.5 py-1.5 rounded-lg transition-all font-mono">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+        <button id="btn-copy-system-prompt" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-950 bg-emerald-400 hover:bg-emerald-300 px-3.5 py-1.5 rounded-lg transition-all font-mono shadow-sm">
+          <span class="material-symbols-outlined text-sm">content_copy</span>
           <span>Copy System Prompt</span>
         </button>
       </div>
 
-      <div class="bg-slate-950 rounded-xl p-4 border border-white/5 max-h-[450px] overflow-y-auto">
-        <pre class="text-xs text-slate-300 font-mono whitespace-pre-wrap leading-relaxed" id="system-prompt-text"></pre>
+      <div class="bg-slate-100 dark:bg-slate-950 rounded-xl p-4 border border-slate-200 dark:border-white/5 max-h-[450px] overflow-y-auto">
+        <pre class="text-xs text-slate-800 dark:text-slate-300 font-mono whitespace-pre-wrap leading-relaxed" id="system-prompt-text"></pre>
       </div>
     </div>
   </div>
 
   <!-- TOAST NOTIFICATION -->
   <div id="toast" class="fixed bottom-6 right-6 z-50 bg-emerald-500 text-slate-950 px-4 py-2.5 rounded-xl font-bold font-mono text-xs shadow-2xl flex items-center gap-2 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
-    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+    <span class="material-symbols-outlined text-base">check_circle</span>
     <span id="toast-message">Copied to clipboard!</span>
   </div>
 
   <!-- FOOTER -->
-  <footer class="border-t border-white/5 bg-slate-950/80 py-8 text-center text-xs text-slate-500 mt-12">
+  <footer class="border-t border-slate-200 dark:border-white/5 bg-slate-100/80 dark:bg-slate-950/80 py-8 text-center text-xs text-slate-500 mt-12 transition-colors">
     <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
       <div>
-        © 2026 <a href="https://reyhananf.web.id" class="text-slate-400 hover:text-white font-medium transition-colors">Reyhan Anf</a>. Built for cinematic AI video &amp; physical reality continuity.
+        © 2026 <a href="https://reyhananf.web.id" class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium transition-colors">Reyhan Anf</a>. Built for cinematic AI video &amp; physical reality continuity.
       </div>
       <div class="flex items-center gap-4">
-        <a href="./" class="text-slate-400 hover:text-emerald-400 transition-colors">Semua Eksperimen</a>
-        <span class="text-slate-700">•</span>
-        <a href="https://github.com/ReyhanAnf/experiments" target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-emerald-400 transition-colors">GitHub Repository</a>
-        <span class="text-slate-700">•</span>
-        <a href="#top" class="text-slate-400 hover:text-white transition-colors">Kembali ke Atas ↑</a>
+        <a href="./" class="text-slate-600 dark:text-slate-400 hover:text-emerald-500 transition-colors">Semua Eksperimen</a>
+        <span class="text-slate-400 dark:text-slate-700">•</span>
+        <a href="https://github.com/ReyhanAnf/experiments" target="_blank" rel="noopener noreferrer" class="text-slate-600 dark:text-slate-400 hover:text-emerald-500 transition-colors">GitHub Repository</a>
+        <span class="text-slate-400 dark:text-slate-700">•</span>
+        <a href="#top" class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">Kembali ke Atas ↑</a>
       </div>
     </div>
   </footer>
@@ -2175,8 +2305,8 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
         const badge = document.createElement('button');
         badge.className = `flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-semibold transition-all border ${
           isImage 
-            ? 'bg-slate-900 text-emerald-400 border-emerald-500/30 hover:border-emerald-500' 
-            : 'bg-slate-950 text-sky-400 border-sky-500/30 hover:border-sky-500'
+            ? 'bg-emerald-50 dark:bg-slate-900 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-500/30 hover:border-emerald-500' 
+            : 'bg-sky-50 dark:bg-slate-950 text-sky-700 dark:text-sky-400 border-sky-200 dark:border-sky-500/30 hover:border-sky-500'
         }`;
         
         let label = item;
@@ -2186,7 +2316,7 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
         }
 
         badge.innerHTML = `
-          <span>${isImage ? '📸' : '🎬'}</span>
+          <span class="material-symbols-outlined text-sm align-middle">${isImage ? 'photo_camera' : 'videocam'}</span>
           <span>${label}</span>
         `;
 
@@ -2198,8 +2328,8 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
 
         if (idx < currentData.sequence_map.length - 1) {
           const arrow = document.createElement('span');
-          arrow.className = 'text-slate-600 font-mono text-xs';
-          arrow.textContent = '⟶';
+          arrow.className = 'text-slate-400 dark:text-slate-600 font-mono text-xs flex items-center';
+          arrow.innerHTML = '<span class="material-symbols-outlined text-xs">arrow_forward</span>';
           stepper.appendChild(arrow);
         }
       });
@@ -2280,41 +2410,42 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
       const numMatch = (img.image_id || '').match(/\d+/);
       const num = numMatch ? numMatch[0] : (seqIdx + 1);
       card.id = `card-image-${num}`;
-      card.className = 'glass-card rounded-2xl p-4 sm:p-5 border border-white/10 space-y-3.5';
+      card.className = 'glass-card rounded-2xl p-4 sm:p-5 border border-slate-200 dark:border-white/10 space-y-3.5';
 
       const hasShortPrompt = Boolean(img.asset_prompt_only);
       const shortPromptSection = hasShortPrompt ? `
-        <div class="bg-emerald-950/30 p-3 sm:p-3.5 rounded-xl border border-emerald-800/30 space-y-2">
+        <div class="bg-emerald-50/80 dark:bg-emerald-950/30 p-3 sm:p-3.5 rounded-xl border border-emerald-200 dark:border-emerald-800/30 space-y-2">
           <div class="flex items-center justify-between">
-            <span class="text-[10px] font-mono text-emerald-400 uppercase font-semibold flex items-center gap-1">
-              <svg class="w-3 h-3 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+            <span class="text-[10px] font-mono text-emerald-700 dark:text-emerald-400 uppercase font-semibold flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-sm text-emerald-500">auto_awesome</span>
               Direct Visual Prompt (Midjourney / Flux / SD)
             </span>
-            <button class="btn-copy-short-prompt text-xs font-semibold text-emerald-300 hover:text-white bg-emerald-900/60 hover:bg-emerald-800/80 px-2.5 py-1 rounded-lg border border-emerald-700/50 transition-all shadow-sm" data-type="image" data-id="${img.image_id}">
-              Copy Short Prompt
+            <button class="btn-copy-short-prompt inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 dark:text-emerald-300 hover:text-emerald-900 dark:hover:text-white bg-emerald-100/80 dark:bg-emerald-900/60 hover:bg-emerald-200 dark:hover:bg-emerald-800/80 px-2.5 py-1 rounded-lg border border-emerald-300 dark:border-emerald-700/50 transition-all shadow-sm" data-type="image" data-id="${img.image_id}">
+              <span class="material-symbols-outlined text-xs">content_copy</span>
+              <span>Copy Short Prompt</span>
             </button>
           </div>
-          <p class="text-slate-200 text-xs sm:text-[13px] leading-relaxed select-all font-sans">${escapeHtml(img.asset_prompt_only)}</p>
+          <p class="text-slate-800 dark:text-slate-200 text-xs sm:text-[13px] leading-relaxed select-all font-sans">${escapeHtml(img.asset_prompt_only)}</p>
         </div>
       ` : '';
 
       card.innerHTML = `
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3 border-b border-white/5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3 border-b border-slate-200 dark:border-white/5">
           <div class="flex items-center gap-2.5">
-            <span class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm border border-emerald-500/30 shrink-0">
-              📸
+            <span class="w-8 h-8 rounded-lg bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold text-sm border border-emerald-500/25 shrink-0">
+              <span class="material-symbols-outlined text-base">photo_camera</span>
             </span>
             <div>
               <div class="flex items-center gap-1.5 flex-wrap">
-                <span class="text-sm font-bold text-white font-mono">${img.image_id || `IMAGE ${num}`}</span>
-                <span class="text-[10px] font-mono font-semibold text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800/40">${img.state_id || `STATE_${String(num).padStart(2, '0')}`}</span>
+                <span class="text-sm font-bold text-slate-900 dark:text-white font-mono">${img.image_id || `IMAGE ${num}`}</span>
+                <span class="text-[10px] font-mono font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800/40">${img.state_id || `STATE_${String(num).padStart(2, '0')}`}</span>
               </div>
-              <p class="text-xs text-slate-300 mt-0.5 line-clamp-1 sm:line-clamp-none">${escapeHtml(img.state_purpose || '')}</p>
+              <p class="text-xs text-slate-600 dark:text-slate-300 mt-0.5 line-clamp-1 sm:line-clamp-none">${escapeHtml(img.state_purpose || '')}</p>
             </div>
           </div>
           <div class="flex items-center gap-2 self-start sm:self-auto shrink-0">
             <button class="btn-copy-prompt inline-flex items-center gap-1.5 text-xs font-semibold text-slate-950 bg-emerald-400 hover:bg-emerald-300 px-3 py-1.5 rounded-lg shadow-sm transition-all font-mono" data-copy-type="image" data-id="${img.image_id}">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+              <span class="material-symbols-outlined text-sm">content_copy</span>
               <span>Copy Full Prompt</span>
             </button>
           </div>
@@ -2323,43 +2454,44 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
         ${shortPromptSection}
 
         <!-- TECHNICAL DETAILS (COLLAPSIBLE TO AVOID CLUTTER) -->
-        <details class="group bg-slate-950/50 rounded-xl border border-white/5 overflow-hidden">
-          <summary class="cursor-pointer px-3.5 py-2 text-xs font-medium text-slate-400 hover:text-slate-200 flex items-center justify-between transition-colors">
+        <details class="group bg-slate-50 dark:bg-slate-950/50 rounded-xl border border-slate-200 dark:border-white/5 overflow-hidden">
+          <summary class="cursor-pointer px-3.5 py-2 text-xs font-medium text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 flex items-center justify-between transition-colors">
             <span class="flex items-center gap-1.5">
-              <span>⚙️ Technical Causality Details</span>
+              <span class="material-symbols-outlined text-sm text-slate-400">tune</span>
+              <span>Technical Causality Details</span>
             </span>
-            <span class="group-open:rotate-180 transition-transform text-[10px]">▼</span>
+            <span class="material-symbols-outlined text-sm group-open:rotate-180 transition-transform">expand_more</span>
           </summary>
-          <div class="p-3 border-t border-white/5 grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
-            <div class="bg-slate-900/60 p-2.5 rounded-lg border border-white/5">
-              <span class="text-[10px] font-mono text-emerald-400 uppercase font-semibold block">Completed Work</span>
-              <p class="text-slate-300 text-[11px] leading-relaxed mt-0.5">${escapeHtml(img.completed_work || '-')}</p>
+          <div class="p-3 border-t border-slate-200 dark:border-white/5 grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+            <div class="bg-white dark:bg-slate-900/60 p-2.5 rounded-lg border border-slate-200 dark:border-white/5">
+              <span class="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 uppercase font-semibold block">Completed Work</span>
+              <p class="text-slate-700 dark:text-slate-300 text-[11px] leading-relaxed mt-0.5">${escapeHtml(img.completed_work || '-')}</p>
             </div>
-            <div class="bg-slate-900/60 p-2.5 rounded-lg border border-white/5">
-              <span class="text-[10px] font-mono text-sky-400 uppercase font-semibold block">Active Work In Frame</span>
-              <p class="text-slate-300 text-[11px] leading-relaxed mt-0.5">${escapeHtml(img.active_work || '-')}</p>
+            <div class="bg-white dark:bg-slate-900/60 p-2.5 rounded-lg border border-slate-200 dark:border-white/5">
+              <span class="text-[10px] font-mono text-sky-600 dark:text-sky-400 uppercase font-semibold block">Active Work In Frame</span>
+              <p class="text-slate-700 dark:text-slate-300 text-[11px] leading-relaxed mt-0.5">${escapeHtml(img.active_work || '-')}</p>
             </div>
-            <div class="bg-slate-900/60 p-2.5 rounded-lg border border-white/5">
-              <span class="text-[10px] font-mono text-amber-400 uppercase font-semibold block">Worker Actions &amp; Positions</span>
-              <p class="text-slate-300 text-[11px] leading-relaxed mt-0.5">${escapeHtml(img.worker_actions || '-')}</p>
+            <div class="bg-white dark:bg-slate-900/60 p-2.5 rounded-lg border border-slate-200 dark:border-white/5">
+              <span class="text-[10px] font-mono text-amber-600 dark:text-amber-400 uppercase font-semibold block">Worker Actions &amp; Positions</span>
+              <p class="text-slate-700 dark:text-slate-300 text-[11px] leading-relaxed mt-0.5">${escapeHtml(img.worker_actions || '-')}</p>
             </div>
-            <div class="bg-slate-900/60 p-2.5 rounded-lg border border-white/5">
-              <span class="text-[10px] font-mono text-indigo-400 uppercase font-semibold block">Material &amp; Substrate State</span>
-              <p class="text-slate-300 text-[11px] leading-relaxed mt-0.5">${escapeHtml(img.material_state || '-')}</p>
+            <div class="bg-white dark:bg-slate-900/60 p-2.5 rounded-lg border border-slate-200 dark:border-white/5">
+              <span class="text-[10px] font-mono text-indigo-600 dark:text-indigo-400 uppercase font-semibold block">Material &amp; Substrate State</span>
+              <p class="text-slate-700 dark:text-slate-300 text-[11px] leading-relaxed mt-0.5">${escapeHtml(img.material_state || '-')}</p>
             </div>
           </div>
         </details>
 
         <!-- COLLAPSIBLE FULL COPY-READY PROMPT -->
-        <details class="group bg-slate-950/80 rounded-xl border border-white/5 overflow-hidden">
-          <summary class="cursor-pointer px-3.5 py-2 text-[11px] font-mono text-slate-400 hover:text-white flex items-center justify-between transition-colors">
+        <details class="group bg-slate-50 dark:bg-slate-950/80 rounded-xl border border-slate-200 dark:border-white/5 overflow-hidden">
+          <summary class="cursor-pointer px-3.5 py-2 text-[11px] font-mono text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white flex items-center justify-between transition-colors">
             <span class="flex items-center gap-1.5">
-              <span class="text-emerald-400">⚡</span>
+              <span class="material-symbols-outlined text-sm text-emerald-500">terminal</span>
               <span>View Pre-Combined Prompt (${(img.full_copy_ready_prompt || '').length} chars)</span>
             </span>
-            <span class="group-open:rotate-180 transition-transform">▼</span>
+            <span class="material-symbols-outlined text-sm group-open:rotate-180 transition-transform">expand_more</span>
           </summary>
-          <div class="p-3 border-t border-white/5 bg-slate-950 text-slate-300 font-mono text-[11px] leading-relaxed whitespace-pre-wrap select-all max-h-56 overflow-y-auto">${escapeHtml(img.full_copy_ready_prompt || '')}</div>
+          <div class="p-3 border-t border-slate-200 dark:border-white/5 bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-300 font-mono text-[11px] leading-relaxed whitespace-pre-wrap select-all max-h-56 overflow-y-auto">${escapeHtml(img.full_copy_ready_prompt || '')}</div>
         </details>
       `;
 
@@ -2382,42 +2514,43 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
       const numMatch = (vid.video_id || '').match(/\d+/);
       const num = numMatch ? numMatch[0] : (seqIdx + 1);
       card.id = `card-video-${num}`;
-      card.className = 'glass-card rounded-2xl p-4 sm:p-5 border border-white/10 space-y-3.5';
+      card.className = 'glass-card rounded-2xl p-4 sm:p-5 border border-slate-200 dark:border-white/10 space-y-3.5';
 
       const hasShortPrompt = Boolean(vid.asset_prompt_only);
       const shortPromptSection = hasShortPrompt ? `
-        <div class="bg-sky-950/30 p-3 sm:p-3.5 rounded-xl border border-sky-800/30 space-y-2">
+        <div class="bg-sky-50/80 dark:bg-sky-950/30 p-3 sm:p-3.5 rounded-xl border border-sky-200 dark:border-sky-800/30 space-y-2">
           <div class="flex items-center justify-between">
-            <span class="text-[10px] font-mono text-sky-400 uppercase font-semibold flex items-center gap-1">
-              <svg class="w-3 h-3 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            <span class="text-[10px] font-mono text-sky-700 dark:text-sky-400 uppercase font-semibold flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-sm text-sky-500">movie_filter</span>
               Direct Video Prompt (Sora / Kling / Runway / Luma)
             </span>
-            <button class="btn-copy-short-prompt text-xs font-semibold text-sky-300 hover:text-white bg-sky-900/60 hover:bg-sky-800/80 px-2.5 py-1 rounded-lg border border-sky-700/50 transition-all shadow-sm" data-type="video" data-id="${vid.video_id}">
-              Copy Short Prompt
+            <button class="btn-copy-short-prompt inline-flex items-center gap-1 text-xs font-semibold text-sky-700 dark:text-sky-300 hover:text-sky-900 dark:hover:text-white bg-sky-100/80 dark:bg-sky-900/60 hover:bg-sky-200 dark:hover:bg-sky-800/80 px-2.5 py-1 rounded-lg border border-sky-300 dark:border-sky-700/50 transition-all shadow-sm" data-type="video" data-id="${vid.video_id}">
+              <span class="material-symbols-outlined text-xs">content_copy</span>
+              <span>Copy Short Prompt</span>
             </button>
           </div>
-          <p class="text-slate-200 text-xs sm:text-[13px] leading-relaxed select-all font-sans">${escapeHtml(vid.asset_prompt_only)}</p>
+          <p class="text-slate-800 dark:text-slate-200 text-xs sm:text-[13px] leading-relaxed select-all font-sans">${escapeHtml(vid.asset_prompt_only)}</p>
         </div>
       ` : '';
 
       card.innerHTML = `
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3 border-b border-white/5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3 border-b border-slate-200 dark:border-white/5">
           <div class="flex items-center gap-2.5">
-            <span class="w-8 h-8 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center font-bold text-sm border border-sky-500/30 shrink-0">
-              🎬
+            <span class="w-8 h-8 rounded-lg bg-sky-500/15 text-sky-600 dark:text-sky-400 flex items-center justify-center font-bold text-sm border border-sky-500/25 shrink-0">
+              <span class="material-symbols-outlined text-base">videocam</span>
             </span>
             <div>
               <div class="flex items-center gap-1.5 flex-wrap">
-                <span class="text-sm font-bold text-white font-mono">${vid.video_id || `VIDEO ${num}`}</span>
-                <span class="text-[10px] font-mono font-semibold text-sky-400 bg-sky-950/80 px-2 py-0.5 rounded border border-sky-800/40">${vid.from_image_id} ⟶ ${vid.to_image_id}</span>
-                <span class="text-[10px] font-mono text-amber-300 bg-amber-950/60 px-2 py-0.5 rounded">${vid.target_duration_sec}s TIMELAPSE</span>
+                <span class="text-sm font-bold text-slate-900 dark:text-white font-mono">${vid.video_id || `VIDEO ${num}`}</span>
+                <span class="text-[10px] font-mono font-semibold text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-sky-950/80 px-2 py-0.5 rounded border border-sky-200 dark:border-sky-800/40">${vid.from_image_id} ⟶ ${vid.to_image_id}</span>
+                <span class="text-[10px] font-mono text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 px-2 py-0.5 rounded border border-amber-200 dark:border-amber-800/30">${vid.target_duration_sec}s TIMELAPSE</span>
               </div>
-              <p class="text-xs text-slate-300 mt-0.5 font-mono line-clamp-1 sm:line-clamp-none">${escapeHtml(vid.temporal_compression_level || '')}</p>
+              <p class="text-xs text-slate-600 dark:text-slate-300 mt-0.5 font-mono line-clamp-1 sm:line-clamp-none">${escapeHtml(vid.temporal_compression_level || '')}</p>
             </div>
           </div>
           <div class="flex items-center gap-2 self-start sm:self-auto shrink-0">
             <button class="btn-copy-prompt inline-flex items-center gap-1.5 text-xs font-semibold text-slate-950 bg-sky-400 hover:bg-sky-300 px-3 py-1.5 rounded-lg shadow-sm transition-all font-mono" data-copy-type="video" data-id="${vid.video_id}">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+              <span class="material-symbols-outlined text-sm">content_copy</span>
               <span>Copy Full Prompt</span>
             </button>
           </div>
@@ -2426,43 +2559,44 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
         ${shortPromptSection}
 
         <!-- TECHNICAL DETAILS (COLLAPSIBLE) -->
-        <details class="group bg-slate-950/50 rounded-xl border border-white/5 overflow-hidden">
-          <summary class="cursor-pointer px-3.5 py-2 text-xs font-medium text-slate-400 hover:text-slate-200 flex items-center justify-between transition-colors">
+        <details class="group bg-slate-50 dark:bg-slate-950/50 rounded-xl border border-slate-200 dark:border-white/5 overflow-hidden">
+          <summary class="cursor-pointer px-3.5 py-2 text-xs font-medium text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 flex items-center justify-between transition-colors">
             <span class="flex items-center gap-1.5">
-              <span>⚙️ Technical Action Details</span>
+              <span class="material-symbols-outlined text-sm text-slate-400">tune</span>
+              <span>Technical Action Details</span>
             </span>
-            <span class="group-open:rotate-180 transition-transform text-[10px]">▼</span>
+            <span class="material-symbols-outlined text-sm group-open:rotate-180 transition-transform">expand_more</span>
           </summary>
-          <div class="p-3 border-t border-white/5 grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
-            <div class="bg-slate-900/60 p-2.5 rounded-lg border border-white/5">
-              <span class="text-[10px] font-mono text-emerald-400 uppercase font-semibold block">Physical Workload</span>
-              <p class="text-slate-300 text-[11px] leading-relaxed mt-0.5">${escapeHtml(vid.physical_workload || '-')}</p>
+          <div class="p-3 border-t border-slate-200 dark:border-white/5 grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+            <div class="bg-white dark:bg-slate-900/60 p-2.5 rounded-lg border border-slate-200 dark:border-white/5">
+              <span class="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 uppercase font-semibold block">Physical Workload</span>
+              <p class="text-slate-700 dark:text-slate-300 text-[11px] leading-relaxed mt-0.5">${escapeHtml(vid.physical_workload || '-')}</p>
             </div>
-            <div class="bg-slate-900/60 p-2.5 rounded-lg border border-white/5">
-              <span class="text-[10px] font-mono text-sky-400 uppercase font-semibold block">Action Sequence</span>
-              <p class="text-slate-300 text-[11px] leading-relaxed mt-0.5">${escapeHtml(vid.physical_action_sequence || '-')}</p>
+            <div class="bg-white dark:bg-slate-900/60 p-2.5 rounded-lg border border-slate-200 dark:border-white/5">
+              <span class="text-[10px] font-mono text-sky-600 dark:text-sky-400 uppercase font-semibold block">Action Sequence</span>
+              <p class="text-slate-700 dark:text-slate-300 text-[11px] leading-relaxed mt-0.5">${escapeHtml(vid.physical_action_sequence || '-')}</p>
             </div>
-            <div class="bg-slate-900/60 p-2.5 rounded-lg border border-white/5">
-              <span class="text-[10px] font-mono text-amber-400 uppercase font-semibold block">Material Movement &amp; Logistics</span>
-              <p class="text-slate-300 text-[11px] leading-relaxed mt-0.5">${escapeHtml(vid.material_movement || '-')}</p>
+            <div class="bg-white dark:bg-slate-900/60 p-2.5 rounded-lg border border-slate-200 dark:border-white/5">
+              <span class="text-[10px] font-mono text-amber-600 dark:text-amber-400 uppercase font-semibold block">Material Movement &amp; Logistics</span>
+              <p class="text-slate-700 dark:text-slate-300 text-[11px] leading-relaxed mt-0.5">${escapeHtml(vid.material_movement || '-')}</p>
             </div>
-            <div class="bg-slate-900/60 p-2.5 rounded-lg border border-white/5">
-              <span class="text-[10px] font-mono text-indigo-400 uppercase font-semibold block">End State Convergence</span>
-              <p class="text-slate-300 text-[11px] leading-relaxed mt-0.5">${escapeHtml(vid.end_state_convergence || '-')}</p>
+            <div class="bg-white dark:bg-slate-900/60 p-2.5 rounded-lg border border-slate-200 dark:border-white/5">
+              <span class="text-[10px] font-mono text-indigo-600 dark:text-indigo-400 uppercase font-semibold block">End State Convergence</span>
+              <p class="text-slate-700 dark:text-slate-300 text-[11px] leading-relaxed mt-0.5">${escapeHtml(vid.end_state_convergence || '-')}</p>
             </div>
           </div>
         </details>
 
         <!-- COLLAPSIBLE FULL COPY-READY PROMPT -->
-        <details class="group bg-slate-950/80 rounded-xl border border-white/5 overflow-hidden">
-          <summary class="cursor-pointer px-3.5 py-2 text-[11px] font-mono text-slate-400 hover:text-white flex items-center justify-between transition-colors">
+        <details class="group bg-slate-50 dark:bg-slate-950/80 rounded-xl border border-slate-200 dark:border-white/5 overflow-hidden">
+          <summary class="cursor-pointer px-3.5 py-2 text-[11px] font-mono text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white flex items-center justify-between transition-colors">
             <span class="flex items-center gap-1.5">
-              <span class="text-sky-400">⚡</span>
+              <span class="material-symbols-outlined text-sm text-sky-500">terminal</span>
               <span>View Pre-Combined Prompt (${(vid.full_copy_ready_prompt || '').length} chars)</span>
             </span>
-            <span class="group-open:rotate-180 transition-transform">▼</span>
+            <span class="material-symbols-outlined text-sm group-open:rotate-180 transition-transform">expand_more</span>
           </summary>
-          <div class="p-3 border-t border-white/5 bg-slate-950 text-slate-300 font-mono text-[11px] leading-relaxed whitespace-pre-wrap select-all max-h-56 overflow-y-auto">${escapeHtml(vid.full_copy_ready_prompt || '')}</div>
+          <div class="p-3 border-t border-slate-200 dark:border-white/5 bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-300 font-mono text-[11px] leading-relaxed whitespace-pre-wrap select-all max-h-56 overflow-y-auto">${escapeHtml(vid.full_copy_ready_prompt || '')}</div>
         </details>
       `;
 
@@ -2540,10 +2674,10 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
 
     function addCheckItem(container, passed, text) {
       const item = document.createElement('div');
-      item.className = 'flex items-start gap-2 text-slate-300';
+      item.className = 'flex items-start gap-2 text-slate-700 dark:text-slate-300';
       item.innerHTML = `
-        <span class="${passed ? 'text-emerald-400' : 'text-rose-500 font-bold'}">${passed ? '✓' : '✗'}</span>
-        <span class="${passed ? '' : 'text-rose-400'}">${text}</span>
+        <span class="material-symbols-outlined text-sm shrink-0 ${passed ? 'text-emerald-500' : 'text-rose-500 font-bold'}">${passed ? 'check_circle' : 'cancel'}</span>
+        <span class="${passed ? '' : 'text-rose-600 dark:text-rose-400'}">${text}</span>
       `;
       container.appendChild(item);
     }
@@ -2754,7 +2888,122 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
 
     // --- EVENT LISTENERS ---
     document.addEventListener('DOMContentLoaded', () => {
-      // Scenario buttons
+      // --- THEME MANAGEMENT ---
+      const themeToggleBtn = document.getElementById('btn-theme-toggle');
+
+      function applyTheme(isDark) {
+        if (typeof document !== 'undefined' && document.documentElement) {
+          if (isDark) {
+            document.documentElement.classList.add('dark');
+            document.documentElement.classList.remove('light');
+          } else {
+            document.documentElement.classList.remove('dark');
+            document.documentElement.classList.add('light');
+          }
+        }
+      }
+
+      function initTheme() {
+        const saved = typeof localStorage !== 'undefined' ? localStorage.getItem('continuity_theme') : null;
+        let isDark = true;
+        if (saved === 'light') {
+          isDark = false;
+        } else if (saved === 'dark') {
+          isDark = true;
+        } else if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+          isDark = false;
+        }
+        applyTheme(isDark);
+      }
+
+      if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', () => {
+          const isDark = document.documentElement.classList.contains('dark');
+          const newTheme = !isDark;
+          applyTheme(newTheme);
+          if (typeof localStorage !== 'undefined') {
+            localStorage.setItem('continuity_theme', newTheme ? 'dark' : 'light');
+          }
+          showToast(newTheme ? 'Tema Gelap Diaktifkan' : 'Tema Terang Diaktifkan');
+        });
+      }
+
+      initTheme();
+
+      // --- PROJECT DROPDOWN CONTROLLER ---
+      const projectDropdownBtn = document.getElementById('project-dropdown-btn');
+      const projectDropdownMenu = document.getElementById('project-dropdown-menu');
+      const projectDropdownArrow = document.getElementById('project-dropdown-arrow');
+
+      function toggleProjectDropdown() {
+        if (!projectDropdownMenu) return;
+        const isHidden = projectDropdownMenu.classList.contains('hidden');
+        if (isHidden) {
+          projectDropdownMenu.classList.remove('hidden');
+          if (projectDropdownArrow) projectDropdownArrow.style.transform = 'rotate(180deg)';
+        } else {
+          closeProjectDropdown();
+        }
+      }
+
+      function closeProjectDropdown() {
+        if (projectDropdownMenu) {
+          projectDropdownMenu.classList.add('hidden');
+          if (projectDropdownArrow) projectDropdownArrow.style.transform = 'rotate(0deg)';
+        }
+      }
+
+      if (projectDropdownBtn) {
+        projectDropdownBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleProjectDropdown();
+        });
+      }
+
+      document.addEventListener('click', (e) => {
+        if (projectDropdownMenu && !projectDropdownMenu.contains(e.target) && (!projectDropdownBtn || !projectDropdownBtn.contains(e.target))) {
+          closeProjectDropdown();
+        }
+      });
+
+      function updateActiveProjectDisplay(key, plan) {
+        const titleEl = document.getElementById('active-project-title');
+        const tagEl = document.getElementById('active-project-tag');
+        const durationChipEl = document.getElementById('active-project-duration-chip');
+        const iconEl = document.getElementById('active-project-icon');
+        
+        const iconMap = {
+          warehouse: 'factory',
+          dapur: 'soup_kitchen',
+          pool: 'pool',
+          'tea-house': 'local_cafe',
+          kitchen: 'skillet'
+        };
+
+        const pName = plan?.production_summary?.project_name || 'Continuity Project';
+        const duration = plan?.production_summary?.target_total_duration_sec || plan?.production_summary?.actual_total_runtime_sec || 0;
+
+        if (titleEl) titleEl.textContent = pName;
+        if (durationChipEl) durationChipEl.textContent = `${duration}s Runtime`;
+        if (iconEl) iconEl.textContent = iconMap[key] || (key === 'imported' ? 'assignment' : 'auto_fix_high');
+        if (tagEl) {
+          if (key === 'imported') tagEl.textContent = 'Custom Plan';
+          else if (iconMap[key]) tagEl.textContent = 'Preset Scenario';
+          else tagEl.textContent = 'Synthesized Plan';
+        }
+
+        // Update checkmarks and active styles in dropdown
+        document.querySelectorAll('.scenario-btn').forEach(btn => {
+          const btnKey = btn.getAttribute('data-scenario');
+          const checkEl = btn.querySelector('.check-indicator');
+          const isActive = (key && btnKey === key) || (key === 'imported' && btn.id === 'scenario-btn-imported');
+          if (checkEl) {
+            if (isActive) checkEl.classList.remove('hidden');
+            else checkEl.classList.add('hidden');
+          }
+        });
+      }
+
       // Active imported plan memory
       let importedPlan = null;
 
@@ -2765,27 +3014,31 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
           const key = btn.getAttribute('data-scenario');
           
           scenarioBtns.forEach(b => {
-            b.classList.remove('active', 'bg-emerald-500', 'bg-sky-500', 'text-slate-950', 'shadow-md', 'shadow-emerald-500/20', 'shadow-sky-500/20');
-            b.classList.add('text-slate-400', 'border', 'border-white/5');
+            b.classList.remove('active', 'bg-emerald-50', 'dark:bg-emerald-950/60', 'text-emerald-700', 'dark:text-emerald-400', 'border-emerald-200', 'dark:border-emerald-800/50', 'bg-sky-50', 'dark:bg-sky-950/60', 'text-sky-700', 'dark:text-sky-300', 'border-sky-200', 'dark:border-sky-800/40');
+            b.classList.add('text-slate-700', 'dark:text-slate-300');
           });
 
           if (btn.id === 'scenario-btn-imported') {
             if (importedPlan) {
-              btn.classList.add('active', 'bg-sky-500', 'text-slate-950', 'shadow-md', 'shadow-sky-500/20');
-              btn.classList.remove('text-slate-400', 'border-white/5');
+              btn.classList.add('active', 'bg-sky-50', 'dark:bg-sky-950/60', 'text-sky-700', 'dark:text-sky-300', 'border', 'border-sky-200', 'dark:border-sky-800/40');
+              btn.classList.remove('text-slate-700', 'dark:text-slate-300');
               currentData = JSON.parse(JSON.stringify(importedPlan));
+              updateActiveProjectDisplay('imported', currentData);
+              closeProjectDropdown();
               renderApp();
               showToast(`Loaded Imported Plan: "${currentData.production_summary.project_name}"!`);
             }
             return;
           }
 
-          btn.classList.add('active', 'bg-emerald-500', 'text-slate-950', 'shadow-md', 'shadow-emerald-500/20');
-          btn.classList.remove('text-slate-400', 'border-white/5');
+          btn.classList.add('active', 'bg-emerald-50', 'dark:bg-emerald-950/60', 'text-emerald-700', 'dark:text-emerald-400', 'border', 'border-emerald-200', 'dark:border-emerald-800/50');
+          btn.classList.remove('text-slate-700', 'dark:text-slate-300');
 
           if (key && SCENARIOS[key]) {
             currentScenarioKey = key;
             currentData = JSON.parse(JSON.stringify(SCENARIOS[key]));
+            updateActiveProjectDisplay(key, currentData);
+            closeProjectDropdown();
             renderApp();
             showToast(`Loaded "${currentData.production_summary.project_name}"!`);
           }
@@ -2798,10 +3051,10 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
         btn.addEventListener('click', () => {
           filterBtns.forEach(b => {
             b.classList.remove('active', 'bg-emerald-500', 'text-slate-950', 'font-bold');
-            b.classList.add('text-slate-400');
+            b.classList.add('text-slate-600', 'dark:text-slate-400');
           });
           btn.classList.add('active', 'bg-emerald-500', 'text-slate-950', 'font-bold');
-          btn.classList.remove('text-slate-400');
+          btn.classList.remove('text-slate-600', 'dark:text-slate-400');
 
           if (btn.id === 'filter-all-assets') activeFilter = 'all';
           else if (btn.id === 'filter-images-only') activeFilter = 'images';
@@ -2823,18 +3076,18 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
         const isHidden = bibleContainer.classList.contains('hidden');
         if (isHidden) {
           bibleContainer.classList.remove('hidden');
-          if (bibleArrow) bibleArrow.textContent = '▴';
+          if (bibleArrow) bibleArrow.style.transform = 'rotate(180deg)';
           bibleContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         } else {
           bibleContainer.classList.add('hidden');
-          if (bibleArrow) bibleArrow.textContent = '▾';
+          if (bibleArrow) bibleArrow.style.transform = 'rotate(0deg)';
         }
       }
 
       if (toggleBibleBtn) toggleBibleBtn.addEventListener('click', toggleSceneBible);
       if (closeBibleBtn) closeBibleBtn.addEventListener('click', () => {
         if (bibleContainer) bibleContainer.classList.add('hidden');
-        if (bibleArrow) bibleArrow.textContent = '▾';
+        if (bibleArrow) bibleArrow.style.transform = 'rotate(0deg)';
       });
 
       // Copy All Prompts Button
@@ -2921,15 +3174,15 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
             const hasVideos = Array.isArray(parsed.videos) && parsed.videos.length > 0;
             if (hasImages && hasVideos) {
               importStatus.textContent = `✓ Valid RFC 8259 JSON (${parsed.images.length} images, ${parsed.videos.length} videos)`;
-              importStatus.className = 'text-emerald-400 font-mono font-bold';
+              importStatus.className = 'text-emerald-500 dark:text-emerald-400 font-mono font-bold';
             } else {
-              importStatus.textContent = '⚠️ Valid JSON (pastikan terdapat array images dan videos)';
-              importStatus.className = 'text-amber-400 font-mono';
+              importStatus.textContent = 'Perhatian: Pastikan terdapat array images dan videos';
+              importStatus.className = 'text-amber-500 dark:text-amber-400 font-mono';
             }
           }
         } catch (e) {
           importStatus.textContent = 'Syntax JSON belum valid';
-          importStatus.className = 'text-rose-400 font-mono';
+          importStatus.className = 'text-rose-500 dark:text-rose-400 font-mono';
         }
       }
 
@@ -3015,8 +3268,8 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
 
           // Update scenario badges
           scenarioBtns.forEach(b => {
-            b.classList.remove('active', 'bg-emerald-500', 'bg-sky-500', 'text-slate-950', 'shadow-md', 'shadow-emerald-500/20', 'shadow-sky-500/20');
-            b.classList.add('text-slate-400', 'border', 'border-white/5');
+            b.classList.remove('active', 'bg-emerald-50', 'dark:bg-emerald-950/60', 'text-emerald-700', 'dark:text-emerald-400', 'border-emerald-200', 'dark:border-emerald-800/50', 'bg-sky-50', 'dark:bg-sky-950/60', 'text-sky-700', 'dark:text-sky-300', 'border-sky-200', 'dark:border-sky-800/40');
+            b.classList.add('text-slate-700', 'dark:text-slate-300');
           });
 
           const importedBtn = document.getElementById('scenario-btn-imported');
@@ -3025,11 +3278,12 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
             const labelEl = document.getElementById('imported-scenario-label');
             const pName = plan.production_summary?.project_name || 'Imported Plan';
             labelEl.textContent = pName.length > 25 ? `${pName.slice(0, 25)}...` : pName;
-            importedBtn.classList.add('active', 'bg-sky-500', 'text-slate-950', 'shadow-md', 'shadow-sky-500/20');
-            importedBtn.classList.remove('text-slate-400', 'border-white/5');
+            importedBtn.classList.add('active', 'bg-sky-50', 'dark:bg-sky-950/60', 'text-sky-700', 'dark:text-sky-300', 'border', 'border-sky-200', 'dark:border-sky-800/40');
+            importedBtn.classList.remove('text-slate-700', 'dark:text-slate-300');
           }
 
           closeImportModal();
+          updateActiveProjectDisplay('imported', plan);
           renderApp();
           showToast(`Berhasil memuat project: "${plan.production_summary.project_name}"!`);
 
@@ -3070,11 +3324,12 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
 
         // Deselect preset buttons
         document.querySelectorAll('.scenario-btn').forEach(b => {
-          b.classList.remove('active', 'bg-emerald-500', 'bg-sky-500', 'text-slate-950', 'shadow-md', 'shadow-emerald-500/20', 'shadow-sky-500/20');
-          b.classList.add('text-slate-400', 'border', 'border-white/5');
+          b.classList.remove('active', 'bg-emerald-50', 'dark:bg-emerald-950/60', 'text-emerald-700', 'dark:text-emerald-400', 'border-emerald-200', 'dark:border-emerald-800/50', 'bg-sky-50', 'dark:bg-sky-950/60', 'text-sky-700', 'dark:text-sky-300');
+          b.classList.add('text-slate-700', 'dark:text-slate-300');
         });
 
         generatorModal.classList.add('hidden');
+        updateActiveProjectDisplay('custom', plan);
         renderApp();
         showToast(`Synthesized custom continuity plan: ${plan.production_summary.total_videos} videos, ${plan.production_summary.total_images} images!`);
       });
@@ -3092,7 +3347,8 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
         copyToClipboard(AUTHORITATIVE_SYSTEM_PROMPT, "Copied Director System Prompt!");
       });
 
-      // Initial render
+      // Initial active project display & render
+      updateActiveProjectDisplay('warehouse', currentData);
       renderApp();
     });
   </script>
