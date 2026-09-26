@@ -84,11 +84,11 @@
     }
     /* Custom Scrollbar */
     ::-webkit-scrollbar {
-      width: 7px;
-      height: 7px;
+      width: 6px;
+      height: 6px;
     }
     ::-webkit-scrollbar-track {
-      background: #0b0f19;
+      background: #080c14;
     }
     ::-webkit-scrollbar-thumb {
       background: #1e293b;
@@ -96,6 +96,16 @@
     }
     ::-webkit-scrollbar-thumb:hover {
       background: #334155;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    button, a {
+      touch-action: manipulation;
     }
     .timeline-line {
       background: linear-gradient(90deg, #22c55e 0%, #3b82f6 50%, #f59e0b 100%);
@@ -105,234 +115,198 @@
 <body class="min-h-screen flex flex-col antialiased selection:bg-emerald-500 selection:text-slate-950 font-sans">
 
   <!-- TOP HEADER / NAV -->
-  <header class="border-b border-white/5 bg-slate-950/70 backdrop-blur-md sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <a href="./" class="inline-flex items-center gap-2 text-xs font-semibold text-slate-300 hover:text-white bg-slate-900/80 hover:bg-slate-800 border border-white/10 px-3 py-1.5 rounded-lg transition-all group">
-          <svg class="w-3.5 h-3.5 text-emerald-400 group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-          <span>Hub Eksperimen</span>
+  <header class="border-b border-white/5 bg-slate-950/85 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2 sm:gap-3">
+        <a href="./" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-300 hover:text-white bg-slate-900/90 hover:bg-slate-800 border border-white/10 px-2.5 py-1.5 rounded-lg transition-all">
+          <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+          <span class="hidden xs:inline">Hub</span>
         </a>
-        <span class="text-slate-600 font-light">/</span>
+        <span class="text-slate-700">/</span>
         <div class="flex items-center gap-2">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 bg-emerald-950/60 border border-emerald-800/50 px-2.5 py-0.5 rounded-full">
-            Continuity Engine
-          </span>
+          <span class="text-xs sm:text-sm font-bold tracking-tight text-white">Continuity Engine</span>
         </div>
       </div>
 
-      <div class="flex items-center gap-2 sm:gap-2.5">
-        <button id="btn-open-importer" class="inline-flex items-center gap-1.5 text-xs font-semibold text-sky-300 hover:text-white bg-sky-950/70 hover:bg-sky-900/80 border border-sky-600/50 px-3 sm:px-3.5 py-1.5 rounded-lg shadow-sm transition-all">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-          <span>Paste / Import JSON</span>
+      <div class="flex items-center gap-1.5 sm:gap-2">
+        <button id="btn-open-importer" class="inline-flex items-center gap-1.5 text-xs font-semibold text-sky-300 hover:text-white bg-sky-950/70 hover:bg-sky-900/80 border border-sky-600/50 px-2.5 sm:px-3 py-1.5 rounded-lg transition-all shadow-sm">
+          <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+          <span class="hidden sm:inline">Paste / Import JSON</span>
+          <span class="sm:hidden">Import</span>
         </button>
-        <button id="btn-open-system-prompt" class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-white/10 px-3 py-1.5 rounded-lg transition-all">
-          <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-          <span class="hidden sm:inline">Director Rules</span>
+        <button id="btn-open-generator" class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-300 hover:text-white bg-emerald-950/60 hover:bg-emerald-900/60 border border-emerald-700/50 px-2.5 sm:px-3 py-1.5 rounded-lg transition-all shadow-sm">
+          <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+          <span class="hidden sm:inline">Custom</span>
         </button>
-        <button id="btn-open-generator" class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-300 hover:text-white bg-emerald-950/60 hover:bg-emerald-900/60 border border-emerald-700/50 px-3.5 py-1.5 rounded-lg shadow-sm transition-all">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-          <span class="hidden sm:inline">Custom Project</span>
-          <span class="sm:hidden">Custom</span>
+        <button id="btn-open-system-prompt" class="inline-flex items-center gap-1 text-xs font-medium text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800 border border-white/10 px-2 sm:px-2.5 py-1.5 rounded-lg transition-all" title="Director System Rules">
+          <svg class="w-3.5 h-3.5 text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+          <span class="hidden md:inline">Rules</span>
         </button>
       </div>
     </div>
   </header>
 
   <!-- MAIN CONTAINER -->
-  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 py-8 w-full">
+  <main class="flex-grow max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-6 w-full">
 
-    <!-- HERO & DIRECTIVE BANNER -->
-    <div class="mb-8">
-      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-white/5">
+    <!-- HERO & SUMMARY -->
+    <div class="mb-5 sm:mb-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-white/5">
         <div>
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/80 border border-emerald-500/20 text-xs font-mono text-emerald-400 mb-3">
-            <span>RFC 8259 VALIDATED</span>
-            <span class="text-slate-600">•</span>
-            <span>PHYSICAL CAUSALITY LOCK</span>
-            <span class="text-slate-600">•</span>
-            <span>AI VIDEO &amp; IMAGE PROMPTS</span>
-          </div>
-          <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-white mb-2">
-            Timelapse &amp; Physical Transformation <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-sky-400 to-amber-300">Continuity Engine</span>
+          <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight text-white flex items-center gap-2">
+            <span>Timelapse Continuity</span>
+            <span class="text-[11px] font-mono font-semibold text-emerald-400 bg-emerald-950/70 border border-emerald-800/40 px-2 py-0.5 rounded-full">v2.0 Mobile</span>
           </h1>
-          <p class="text-slate-400 text-xs sm:text-sm max-w-3xl leading-relaxed">
-            Architectural director for physically realistic sequential transformations. Eliminates visual morphing and temporal hallucinations by locking camera tripods, geometry landmarks, worker IDs, and mechanical cause-and-effect across continuous AI image and video states.
+          <p class="text-slate-400 text-xs mt-1">
+            Prompt sequence generator berkesinambungan tanpa distorsi visual dan pergantian objek acak.
           </p>
         </div>
 
-        <!-- MATHEMATICAL DURATION PLANNING DISPLAY -->
-        <div class="bg-slate-900/90 border border-white/10 rounded-2xl p-4 sm:p-5 flex flex-col justify-between min-w-[280px] shadow-xl">
-          <div class="flex items-center justify-between text-xs text-slate-400 mb-3 font-mono">
-            <span class="flex items-center gap-1.5 font-semibold text-white">
-              <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-              Duration Equation
-            </span>
-            <span class="text-[10px] text-emerald-400 font-bold bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800/40">Adaptive N</span>
+        <!-- DURATION STATS BAR (COMPACT & CLEAN) -->
+        <div class="flex items-center gap-2 text-xs font-mono flex-wrap">
+          <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 border border-white/5">
+            <span class="w-2 h-2 rounded-full bg-sky-400"></span>
+            <span id="stat-videos-count" class="font-bold text-sky-400">6</span>
+            <span class="text-slate-400">Videos</span>
+            <span class="text-slate-600">·</span>
+            <span id="stat-video-duration" class="text-slate-400">10s/clip</span>
           </div>
-          <div class="grid grid-cols-2 gap-3 text-center mb-3">
-            <div class="bg-slate-950/70 p-2.5 rounded-xl border border-white/5">
-              <span class="text-[10px] text-slate-400 uppercase tracking-wider font-mono block">Video Clips ($N_{vid}$)</span>
-              <span id="stat-videos-count" class="text-xl font-extrabold text-sky-400 font-mono">6</span>
-              <span class="text-[10px] text-slate-500 block font-mono" id="stat-video-duration">10s / clip</span>
-            </div>
-            <div class="bg-slate-950/70 p-2.5 rounded-xl border border-white/5">
-              <span class="text-[10px] text-slate-400 uppercase tracking-wider font-mono block">Anchor States ($N_{img}$)</span>
-              <span id="stat-images-count" class="text-xl font-extrabold text-emerald-400 font-mono">7</span>
-              <span class="text-[10px] text-slate-500 block font-mono">$N_{vid} + 1$</span>
-            </div>
+          <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 border border-white/5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span id="stat-images-count" class="font-bold text-emerald-400">7</span>
+            <span class="text-slate-400">Images</span>
           </div>
-          <div class="text-[11px] font-mono text-slate-400 bg-slate-950/90 px-3 py-1.5 rounded-lg border border-white/5 flex items-center justify-between">
-            <span>Total Target Runtime:</span>
-            <span id="stat-total-duration" class="font-bold text-amber-300">60 seconds</span>
+          <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 border border-white/5">
+            <span class="text-amber-400 font-bold" id="stat-total-duration">60s Total Runtime</span>
           </div>
         </div>
       </div>
 
-      <!-- PRESET SCENARIOS & ENGINE CONTROLS -->
-      <div class="mt-6 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
-        <!-- Preset selector -->
-        <div class="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0" id="preset-selector-bar">
-          <span class="text-xs font-mono text-slate-500 whitespace-nowrap">Preset Scenarios:</span>
-          <button data-scenario="warehouse" class="scenario-btn active px-3 py-1.5 rounded-lg text-xs font-semibold font-mono transition-all bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20 whitespace-nowrap">
-            🏭 Warehouse to Studio (60s)
+      <!-- PRESET SCENARIOS & QUICK CONTROLS -->
+      <div class="mt-3 space-y-2.5">
+        <!-- Preset selector pills -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar -mx-3 px-3 sm:mx-0 sm:px-0" id="preset-selector-bar">
+          <button data-scenario="warehouse" class="scenario-btn active px-3 py-1.5 rounded-xl text-xs font-medium transition-all bg-emerald-500 text-slate-950 font-semibold shadow-sm shrink-0">
+            🏭 Warehouse (60s)
           </button>
-          <button data-scenario="dapur" class="scenario-btn px-3 py-1.5 rounded-lg text-xs font-semibold font-mono transition-all text-slate-400 hover:text-white hover:bg-slate-900 border border-white/5 whitespace-nowrap">
-            👵 Dapur Tungku Nenek (120s)
+          <button data-scenario="dapur" class="scenario-btn px-3 py-1.5 rounded-xl text-xs font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-900 border border-white/5 shrink-0">
+            👵 Dapur Nenek (120s)
           </button>
-          <button data-scenario="pool" class="scenario-btn px-3 py-1.5 rounded-lg text-xs font-semibold font-mono transition-all text-slate-400 hover:text-white hover:bg-slate-900 border border-white/5 whitespace-nowrap">
-            🏊 Backyard to Infinity Pool (40s)
+          <button data-scenario="pool" class="scenario-btn px-3 py-1.5 rounded-xl text-xs font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-900 border border-white/5 shrink-0">
+            🏊 Infinity Pool (40s)
           </button>
-          <button data-scenario="tea-house" class="scenario-btn px-3 py-1.5 rounded-lg text-xs font-semibold font-mono transition-all text-slate-400 hover:text-white hover:bg-slate-900 border border-white/5 whitespace-nowrap">
-            🍵 Concrete Shell to Tea Pavilion (50s)
+          <button data-scenario="tea-house" class="scenario-btn px-3 py-1.5 rounded-xl text-xs font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-900 border border-white/5 shrink-0">
+            🍵 Tea House (50s)
           </button>
-          <button data-scenario="kitchen" class="scenario-btn px-3 py-1.5 rounded-lg text-xs font-semibold font-mono transition-all text-slate-400 hover:text-white hover:bg-slate-900 border border-white/5 whitespace-nowrap">
-            🍳 1970s Kitchen to Chef Suite (30s)
+          <button data-scenario="kitchen" class="scenario-btn px-3 py-1.5 rounded-xl text-xs font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-900 border border-white/5 shrink-0">
+            🍳 Chef Kitchen (30s)
           </button>
-          <button id="scenario-btn-imported" class="scenario-btn hidden px-3 py-1.5 rounded-lg text-xs font-semibold font-mono transition-all text-sky-400 bg-sky-950/70 border border-sky-600/50 shadow-md shadow-sky-500/20 whitespace-nowrap">
-            📋 <span id="imported-scenario-label">Imported Plan</span>
+          <button id="scenario-btn-imported" class="scenario-btn hidden px-3 py-1.5 rounded-xl text-xs font-medium transition-all text-sky-400 bg-sky-950/70 border border-sky-600/50 shadow-sm shrink-0">
+            📋 <span id="imported-scenario-label">Custom Plan</span>
           </button>
         </div>
 
-        <!-- Quick actions -->
-        <div class="flex items-center gap-2 sm:gap-2.5 flex-wrap sm:flex-nowrap">
-          <button id="btn-quick-paste-json" class="inline-flex items-center gap-1.5 text-xs font-semibold text-sky-300 hover:text-white bg-sky-950/60 hover:bg-sky-900/60 border border-sky-700/60 px-3 py-1.5 rounded-lg transition-all">
-            <svg class="w-3.5 h-3.5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
-            <span>Paste JSON</span>
-          </button>
-          <button id="btn-copy-all-prompts" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-white/10 px-3 py-1.5 rounded-lg transition-all">
-            <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
-            <span>Copy All Prompts</span>
-          </button>
-          <button id="btn-download-json" class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-400 hover:text-emerald-300 bg-emerald-950/60 hover:bg-emerald-900/60 border border-emerald-800/60 px-3 py-1.5 rounded-lg transition-all">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-            <span>Download JSON</span>
+        <!-- Action bar -->
+        <div class="flex items-center justify-between gap-2 flex-wrap">
+          <div class="flex items-center gap-2 flex-wrap">
+            <button id="btn-quick-paste-json" class="inline-flex items-center gap-1.5 text-xs font-medium text-sky-300 hover:text-white bg-sky-950/50 hover:bg-sky-900/60 border border-sky-800/50 px-3 py-1.5 rounded-lg transition-all">
+              <svg class="w-3.5 h-3.5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+              <span>Paste JSON</span>
+            </button>
+            <button id="btn-copy-all-prompts" class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-white/10 px-3 py-1.5 rounded-lg transition-all">
+              <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+              <span>Copy All Prompts</span>
+            </button>
+            <button id="btn-download-json" class="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-400 hover:text-emerald-300 bg-emerald-950/50 hover:bg-emerald-900/60 border border-emerald-800/50 px-3 py-1.5 rounded-lg transition-all">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+              <span>Download JSON</span>
+            </button>
+          </div>
+
+          <button id="btn-toggle-scene-bible" class="inline-flex items-center gap-1.5 text-xs font-medium text-amber-300 hover:text-white bg-amber-950/40 hover:bg-amber-900/60 border border-amber-800/40 px-3 py-1.5 rounded-lg transition-all">
+            <span>🔒 Scene Bible &amp; Locks</span>
+            <span id="bible-toggle-arrow" class="text-[10px]">▾</span>
           </button>
         </div>
       </div>
     </div>
 
-    <!-- MAIN WORKBENCH GRID -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <!-- COLLAPSIBLE MASTER SCENE BIBLE & LOCKS PANEL -->
+    <div id="scene-bible-container" class="hidden mb-6 glass-panel rounded-2xl p-4 sm:p-5 border border-white/10 space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-white/5">
+        <div class="flex items-center gap-2">
+          <span class="text-amber-400 font-bold text-sm">🔒</span>
+          <h2 class="text-xs sm:text-sm font-bold text-white font-mono uppercase">Master Scene Bible &amp; Continuity Locks</h2>
+        </div>
+        <button id="btn-close-scene-bible" class="text-xs text-slate-400 hover:text-white px-2 py-1 rounded bg-slate-900 border border-white/5">Tutup ✕</button>
+      </div>
 
-      <!-- LEFT COLUMN: MASTER SCENE BIBLE & CONTINUITY LOCKS (4 COLS) -->
-      <div class="lg:col-span-4 space-y-6">
-
-        <!-- SCENE CONTINUITY BIBLE CARD -->
-        <div class="glass-panel rounded-2xl p-5 sm:p-6 border border-white/10">
-          <div class="flex items-center justify-between pb-3 mb-4 border-b border-white/5">
-            <div class="flex items-center gap-2">
-              <span class="w-6 h-6 rounded-md bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs border border-emerald-500/30">
-                🔒
-              </span>
-              <h2 class="text-sm font-bold text-white tracking-wide uppercase font-mono">Master Scene Bible</h2>
-            </div>
-            <span class="text-[10px] font-mono uppercase tracking-wider text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800/40">
-              Continuity Locked
-            </span>
-          </div>
-
-          <!-- PROJECT SUMMARY -->
-          <div class="space-y-4 text-xs">
-            <div>
-              <span class="text-[10px] font-mono text-slate-500 uppercase tracking-wider block">Project Name &amp; Scene ID</span>
-              <div class="text-white font-semibold font-mono mt-0.5" id="bible-project-name">Urban Warehouse to Biophilic Architectural Studio</div>
-              <div class="text-[11px] text-slate-400 font-mono" id="bible-scene-id">SCENE_WH_TO_STUDIO_001</div>
-            </div>
-
-            <div class="pt-3 border-t border-white/5">
-              <span class="text-[10px] font-mono text-emerald-400 uppercase tracking-wider font-semibold block flex items-center gap-1">
-                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                Camera Lock (Zero Drift)
-              </span>
-              <p class="text-slate-300 text-[11px] leading-relaxed mt-1" id="bible-camera-lock">
-                Locked tripod position, eye-level at 1.6m elevation. 28mm wide prime lens, orthogonal 45-degree isometric corner perspective looking from southwest corner. Zero pan, tilt, or zoom drift permitted across any generation.
-              </p>
-            </div>
-
-            <div class="pt-3 border-t border-white/5">
-              <span class="text-[10px] font-mono text-sky-400 uppercase tracking-wider font-semibold block flex items-center gap-1">
-                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                Geometry &amp; Permanent Landmarks (3–7 Locks)
-              </span>
-              <p class="text-slate-300 text-[11px] leading-relaxed mt-1" id="bible-geometry-lock">
-                Original red brick structural perimeter walls, overhead heavy timber king-post trusses with steel tie rods, concrete subfloor slab, and northern arched window apertures remain strictly fixed in space.
-              </p>
-              <div class="mt-2 flex flex-wrap gap-1.5" id="bible-landmarks-list">
-                <!-- Injected landmarks -->
-              </div>
-            </div>
-
-            <div class="pt-3 border-t border-white/5">
-              <span class="text-[10px] font-mono text-amber-300 uppercase tracking-wider font-semibold block flex items-center gap-1">
-                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                Lighting, Material &amp; Environment Lock
-              </span>
-              <p class="text-slate-300 text-[11px] leading-relaxed mt-1" id="bible-lighting-lock">
-                Consistent soft overcast daylight filtered through northern clerestory windows (5600K ambient daylight), complemented by high-CRI 3500K warm interior construction floodlights during interior phases.
-              </p>
-            </div>
-          </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+        <div class="bg-slate-950/60 p-3 rounded-xl border border-white/5 space-y-1.5">
+          <span class="text-[10px] font-mono text-slate-400 uppercase font-semibold block">Project &amp; Scene ID</span>
+          <div class="text-white font-semibold" id="bible-project-name">Urban Warehouse to Studio</div>
+          <div class="text-[11px] text-slate-400 font-mono" id="bible-scene-id">SCENE_WH_TO_STUDIO_001</div>
         </div>
 
-        <!-- WORKER REGISTRY (PERSISTENT IDs) -->
-        <div class="glass-panel rounded-2xl p-5 sm:p-6 border border-white/10">
-          <div class="flex items-center justify-between pb-3 mb-3 border-b border-white/5">
-            <div class="flex items-center gap-2">
-              <span class="w-6 h-6 rounded-md bg-sky-500/20 text-sky-400 flex items-center justify-center font-bold text-xs border border-sky-500/30">
-                👷
-              </span>
-              <h2 class="text-sm font-bold text-white tracking-wide uppercase font-mono">Worker Registry</h2>
-            </div>
-            <span class="text-[10px] font-mono text-slate-400">Zero Identity Drift</span>
-          </div>
-          <p class="text-[11px] text-slate-400 mb-3">
-            Persistent identifiers and standardized PPE apparel prevent worker teleportation or morphing between image and video clips.
-          </p>
-          <div class="space-y-2.5" id="bible-workers-list">
-            <!-- Injected workers -->
-          </div>
+        <div class="bg-slate-950/60 p-3 rounded-xl border border-white/5 space-y-1">
+          <span class="text-[10px] font-mono text-emerald-400 uppercase font-semibold block">Camera Lock (Zero Drift)</span>
+          <p class="text-slate-300 text-[11px] leading-relaxed" id="bible-camera-lock"></p>
         </div>
 
-        <!-- EQUIPMENT REGISTRY (PERSISTENT IDs) -->
-        <div class="glass-panel rounded-2xl p-5 sm:p-6 border border-white/10">
-          <div class="flex items-center justify-between pb-3 mb-3 border-b border-white/5">
-            <div class="flex items-center gap-2">
-              <span class="w-6 h-6 rounded-md bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-xs border border-amber-500/30">
-                🚜
-              </span>
-              <h2 class="text-sm font-bold text-white tracking-wide uppercase font-mono">Equipment Registry</h2>
-            </div>
-            <span class="text-[10px] font-mono text-slate-400">Fixed Inventory</span>
-          </div>
-          <div class="space-y-2.5" id="bible-equipment-list">
-            <!-- Injected equipment -->
-          </div>
+        <div class="bg-slate-950/60 p-3 rounded-xl border border-white/5 space-y-1">
+          <span class="text-[10px] font-mono text-sky-400 uppercase font-semibold block">Lighting &amp; Environment</span>
+          <p class="text-slate-300 text-[11px] leading-relaxed" id="bible-lighting-lock"></p>
         </div>
+      </div>
 
-        <!-- PRE-COMPLETION VALIDATION CHECKLIST -->
-        <div class="glass-panel rounded-2xl p-5 sm:p-6 border border-white/10 bg-slate-950/40">
-          <div class="flex items-center justify-between pb-3 mb-3 border-b border-white/5">
+      <div class="bg-slate-950/60 p-3 rounded-xl border border-white/5 space-y-2 text-xs">
+        <span class="text-[10px] font-mono text-amber-300 uppercase font-semibold block">Geometry &amp; Permanent Landmarks</span>
+        <p class="text-slate-300 text-[11px] leading-relaxed" id="bible-geometry-lock"></p>
+        <div class="flex flex-wrap gap-1.5 pt-1" id="bible-landmarks-list"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+        <div class="space-y-2">
+          <span class="text-[10px] font-mono text-sky-400 uppercase font-semibold block">Worker Registry</span>
+          <div class="space-y-2" id="bible-workers-list"></div>
+        </div>
+        <div class="space-y-2">
+          <span class="text-[10px] font-mono text-amber-400 uppercase font-semibold block">Equipment Registry</span>
+          <div class="space-y-2" id="bible-equipment-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN WORKBENCH: VIEW TABS & SEQUENCE -->
+    <div class="space-y-4">
+      <!-- Filter Tabs & Stepper Bar -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="flex items-center gap-1 bg-slate-900/90 p-1 rounded-xl border border-white/5 text-xs font-mono overflow-x-auto no-scrollbar">
+          <button id="filter-all-assets" class="view-filter-btn active px-3 py-1.5 rounded-lg bg-emerald-500 text-slate-950 font-bold transition-all shrink-0">All Assets</button>
+          <button id="filter-images-only" class="view-filter-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all shrink-0">Images Only</button>
+          <button id="filter-videos-only" class="view-filter-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all shrink-0">Videos Only</button>
+          <button id="filter-json-view" class="view-filter-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all shrink-0">JSON &amp; Audit</button>
+        </div>
+      </div>
+
+      <!-- Horizontal Sequence Timeline Stepper -->
+      <div class="overflow-x-auto pb-2 no-scrollbar -mx-3 px-3 sm:mx-0 sm:px-0" id="sequence-stepper-container">
+        <div class="flex items-center gap-2 min-w-max py-1" id="sequence-stepper">
+          <!-- Injected stepper badges -->
+        </div>
+      </div>
+
+      <!-- Dynamic Cards Container -->
+      <div id="assets-list-container" class="space-y-3.5">
+        <!-- Rendered Image and Video sequence cards -->
+      </div>
+
+      <!-- JSON & Audit Viewer Container -->
+      <div id="json-viewer-container" class="hidden glass-panel rounded-2xl p-4 sm:p-6 border border-white/10 space-y-6">
+        <!-- RFC 8259 Validator Audit Checklist -->
+        <div class="bg-slate-950/70 rounded-xl p-4 border border-white/5 space-y-3">
+          <div class="flex items-center justify-between pb-2 border-b border-white/5">
             <h3 class="text-xs font-bold text-white uppercase tracking-wider font-mono flex items-center gap-1.5">
               <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
               RFC 8259 Validator Audit
@@ -340,112 +314,38 @@
             <span class="text-[10px] font-mono text-emerald-400 font-bold bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800/40">100% PASS</span>
           </div>
           <div class="space-y-2 text-[11px] font-mono" id="validation-checklist">
-            <div class="flex items-start gap-2 text-slate-300">
-              <span class="text-emerald-400">✓</span>
-              <span><code class="text-white font-bold">images.length == videos.length + 1</code> (Adaptive Planning)</span>
-            </div>
-            <div class="flex items-start gap-2 text-slate-300">
-              <span class="text-emerald-400">✓</span>
-              <span>Every transition $k$ connects <code class="text-sky-300">IMAGE k</code> $\rightarrow$ <code class="text-sky-300">IMAGE k+1</code></span>
-            </div>
-            <div class="flex items-start gap-2 text-slate-300">
-              <span class="text-emerald-400">✓</span>
-              <span>Total calculated runtime matches user target constraint</span>
-            </div>
-            <div class="flex items-start gap-2 text-slate-300">
-              <span class="text-emerald-400">✓</span>
-              <span>Persistent IDs for Workers &amp; Equipment strictly preserved</span>
-            </div>
-            <div class="flex items-start gap-2 text-slate-300">
-              <span class="text-emerald-400">✓</span>
-              <span><code class="text-amber-300 font-bold">full_copy_ready_prompt</code> pre-combined in every item</span>
-            </div>
-            <div class="flex items-start gap-2 text-slate-300">
-              <span class="text-emerald-400">✓</span>
-              <span>Strict RFC 8259 JSON structure &amp; escaped linebreaks (\n)</span>
-            </div>
+            <!-- Checked items -->
           </div>
         </div>
 
-      </div>
-
-      <!-- RIGHT COLUMN: SEQUENCE MAP, ASSET CARDS & JSON VIEWER (8 COLS) -->
-      <div class="lg:col-span-8 space-y-6">
-
-        <!-- SEQUENCE FLOW MAPPER -->
-        <div class="glass-panel rounded-2xl p-5 sm:p-6 border border-white/10">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 mb-4 border-b border-white/5">
-            <div>
-              <span class="text-[10px] font-mono text-emerald-400 uppercase tracking-wider font-semibold">Physical Causality Timeline</span>
-              <h2 class="text-base sm:text-lg font-bold text-white">Sequence Map &amp; State Transitions</h2>
-            </div>
-            <div class="flex items-center gap-1.5 bg-slate-900/90 p-1 rounded-xl border border-white/5 text-xs font-mono">
-              <button id="filter-all-assets" class="view-filter-btn active px-3 py-1 rounded-lg bg-emerald-500 text-slate-950 font-bold transition-all">All Assets</button>
-              <button id="filter-images-only" class="view-filter-btn px-3 py-1 rounded-lg text-slate-400 hover:text-white transition-all">Images Only</button>
-              <button id="filter-videos-only" class="view-filter-btn px-3 py-1 rounded-lg text-slate-400 hover:text-white transition-all">Videos Only</button>
-              <button id="filter-json-view" class="view-filter-btn px-3 py-1 rounded-lg text-slate-400 hover:text-white transition-all">JSON View</button>
-            </div>
-          </div>
-
-          <!-- PHYSICAL CAUSALITY EQUATION BANNER -->
-          <div class="bg-gradient-to-r from-slate-900 via-slate-950 to-slate-900 border border-white/5 rounded-xl p-3 mb-5 text-[11px] font-mono flex items-center justify-center flex-wrap gap-2 text-slate-300 text-center">
-            <span class="text-emerald-400 font-bold">PREVIOUS STATE</span>
-            <span class="text-slate-600 font-black">⟶</span>
-            <span class="text-amber-400 font-bold">PHYSICAL ACTION</span>
-            <span class="text-slate-600 font-black">⟶</span>
-            <span class="text-sky-400 font-bold">PHYSICAL CONSEQUENCE</span>
-            <span class="text-slate-600 font-black">⟶</span>
-            <span class="text-emerald-300 font-bold">NEXT STATE</span>
-          </div>
-
-          <!-- HORIZONTAL TIMELINE STEPPER -->
-          <div class="overflow-x-auto pb-4 pt-1" id="sequence-stepper-container">
-            <div class="flex items-center gap-2 min-w-max" id="sequence-stepper">
-              <!-- Injected stepper badges -->
-            </div>
-          </div>
-        </div>
-
-        <!-- ASSETS CONTAINER (CARDS LIST) -->
-        <div id="assets-list-container" class="space-y-4">
-          <!-- Dynamic sequence cards (alternating image and video transition cards) injected here -->
-        </div>
-
-        <!-- RFC 8259 JSON CODE CONSOLE (HIDDEN BY DEFAULT UNLESS JSON TAB CLICKED) -->
-        <div id="json-viewer-container" class="hidden glass-panel rounded-2xl p-5 sm:p-6 border border-white/10 space-y-4">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/5">
-            <div>
-              <span class="text-[10px] font-mono text-emerald-400 uppercase tracking-wider font-semibold">Strict RFC 8259 JSON</span>
-              <h3 class="text-base font-bold text-white">Full Production Continuity Plan</h3>
-            </div>
-            <div class="flex items-center gap-2">
-              <button id="btn-copy-raw-json" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-950 bg-emerald-400 hover:bg-emerald-300 px-3.5 py-1.5 rounded-lg shadow-sm transition-all font-mono">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                <span>Copy RFC 8259 JSON</span>
-              </button>
-            </div>
+        <!-- Strict RFC 8259 JSON Console -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-bold text-white font-mono">Raw RFC 8259 JSON</h3>
+            <button id="btn-copy-raw-json" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-950 bg-emerald-400 hover:bg-emerald-300 px-3 py-1.5 rounded-lg transition-all font-mono shadow-sm">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+              <span>Copy RFC 8259 JSON</span>
+            </button>
           </div>
           <div class="relative bg-slate-950 rounded-xl p-4 border border-white/5 overflow-x-auto max-h-[600px]">
             <pre><code class="text-xs text-slate-300 font-mono leading-relaxed" id="raw-json-output"></code></pre>
           </div>
         </div>
-
       </div>
-
     </div>
   </main>
 
   <!-- CUSTOM PROJECT GENERATOR MODAL -->
-  <div id="generator-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-white/10 rounded-2xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto shadow-2xl">
-      <div class="flex items-center justify-between pb-4 border-b border-white/5 mb-5">
+  <div id="generator-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-slate-900 border border-white/10 rounded-2xl max-w-xl w-full p-4 sm:p-6 max-h-[92vh] overflow-y-auto shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-white/5 mb-4">
         <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm border border-emerald-500/30">
+          <div class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs border border-emerald-500/30">
             ⚡
           </div>
           <div>
-            <h3 class="text-base font-bold text-white">Generate Custom Continuity Plan</h3>
-            <p class="text-xs text-slate-400">Adaptive sequence synthesis based on physical complexity and duration</p>
+            <h3 class="text-sm sm:text-base font-bold text-white">Generate Custom Continuity Plan</h3>
+            <p class="text-[11px] text-slate-400">Adaptive sequence synthesis based on physical complexity</p>
           </div>
         </div>
         <button id="btn-close-generator" class="text-slate-400 hover:text-white p-1 rounded-lg">
@@ -453,50 +353,51 @@
         </button>
       </div>
 
-      <form id="custom-plan-form" class="space-y-4 text-xs">
+      <form id="custom-plan-form" class="space-y-3.5 text-xs">
         <div>
           <label class="block text-[11px] font-mono text-slate-400 uppercase mb-1">Project Name</label>
-          <input type="text" id="custom-name" required value="Suburban Garage to High-Tech Music Production Studio" class="w-full bg-slate-950 border border-white/10 rounded-xl px-3.5 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-sans">
+          <input type="text" id="custom-name" required value="Suburban Garage to High-Tech Music Production Studio" class="w-full bg-slate-950 border border-white/10 rounded-xl px-3 py-2 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-sans">
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block text-[11px] font-mono text-slate-400 uppercase mb-1">Target Total Duration (seconds)</label>
-            <input type="number" id="custom-total-duration" required min="10" max="300" step="5" value="40" class="w-full bg-slate-950 border border-white/10 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-emerald-500 font-mono">
-            <span class="text-[10px] text-slate-500 font-mono">Total video duration constraint</span>
+            <label class="block text-[11px] font-mono text-slate-400 uppercase mb-1">Target Total Duration (s)</label>
+            <input type="number" id="custom-total-duration" required min="10" max="300" step="5" value="40" class="w-full bg-slate-950 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-500 font-mono">
+            <span class="text-[10px] text-slate-500 font-mono">Total duration constraint</span>
           </div>
           <div>
-            <label class="block text-[11px] font-mono text-slate-400 uppercase mb-1">Clip Duration (seconds)</label>
-            <input type="number" id="custom-clip-duration" required min="5" max="30" step="1" value="10" class="w-full bg-slate-950 border border-white/10 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-emerald-500 font-mono">
-            <span class="text-[10px] text-slate-500 font-mono">Standard clip length (e.g. 5s or 10s)</span>
+            <label class="block text-[11px] font-mono text-slate-400 uppercase mb-1">Clip Duration (s)</label>
+            <input type="number" id="custom-clip-duration" required min="5" max="30" step="1" value="10" class="w-full bg-slate-950 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-500 font-mono">
+            <span class="text-[10px] text-slate-500 font-mono">Per-video clip length</span>
           </div>
         </div>
 
         <div>
-          <label class="block text-[11px] font-mono text-slate-400 uppercase mb-1">Initial State Description (IMAGE 1)</label>
-          <textarea id="custom-initial-state" required rows="2" class="w-full bg-slate-950 border border-white/10 rounded-xl p-3 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-sans">Cluttered suburban concrete garage with exposed 2x4 stud walls, bare cement floor with oil stains, overhead steel garage door tracks, and unorganized tool boxes.</textarea>
+          <label class="block text-[11px] font-mono text-slate-400 uppercase mb-1">Initial State (IMAGE 1)</label>
+          <textarea id="custom-initial-state" required rows="2" class="w-full bg-slate-950 border border-white/10 rounded-xl p-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-sans">Cluttered suburban concrete garage with exposed 2x4 stud walls, bare cement floor with oil stains, overhead steel garage door tracks, and unorganized tool boxes.</textarea>
         </div>
 
         <div>
-          <label class="block text-[11px] font-mono text-slate-400 uppercase mb-1">Final Desired State Description (IMAGE N)</label>
-          <textarea id="custom-final-state" required rows="2" class="w-full bg-slate-950 border border-white/10 rounded-xl p-3 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-sans">Acoustically isolated professional music recording studio with custom walnut acoustic slat diffusers, floating hardwood flooring, recessed halo lighting, and dual synth workstations.</textarea>
+          <label class="block text-[11px] font-mono text-slate-400 uppercase mb-1">Final Desired State (IMAGE N)</label>
+          <textarea id="custom-final-state" required rows="2" class="w-full bg-slate-950 border border-white/10 rounded-xl p-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-sans">Acoustically isolated professional music recording studio with custom walnut acoustic slat diffusers, floating hardwood flooring, recessed halo lighting, and dual synth workstations.</textarea>
         </div>
 
         <div>
           <label class="block text-[11px] font-mono text-slate-400 uppercase mb-1">Camera Lock Specs</label>
-          <input type="text" id="custom-camera" value="Tripod locked at 1.5m eye-level in southwest doorway corner, 24mm wide angle, looking northeast at 45-degree angle. Zero pan, tilt, or dolly." class="w-full bg-slate-950 border border-white/10 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-emerald-500 font-sans">
+          <input type="text" id="custom-camera" value="Tripod locked at 1.5m eye-level in southwest doorway corner, 24mm wide angle, looking northeast at 45-degree angle. Zero pan, tilt, or dolly." class="w-full bg-slate-950 border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-500 font-sans">
         </div>
 
-        <div class="pt-4 border-t border-white/5 flex items-center justify-end gap-3">
-          <button type="button" id="btn-cancel-generator" class="px-4 py-2 rounded-xl text-slate-400 hover:text-white font-semibold">
+        <div class="pt-3 border-t border-white/5 flex items-center justify-end gap-2.5">
+          <button type="button" id="btn-cancel-generator" class="px-3.5 py-2 rounded-xl text-slate-400 hover:text-white font-medium text-xs">
             Cancel
           </button>
-          <button type="submit" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-bold px-5 py-2.5 rounded-xl shadow-lg shadow-emerald-500/20 transition-all font-mono">
-            Synthesize Plan ($N_{vid}$ &amp; $N_{img}$)
+          <button type="submit" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-bold px-4 py-2 rounded-xl shadow-md transition-all font-mono text-xs">
+            Synthesize Plan
           </button>
         </div>
       </form>
     </div>
+  </div>
   <!-- IMPORT JSON MODAL -->
   <div id="import-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-white/10 rounded-2xl max-w-3xl w-full p-6 max-h-[92vh] overflow-y-auto shadow-2xl space-y-4">
@@ -2207,8 +2108,8 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
       const summary = currentData.production_summary || {};
       document.getElementById('stat-videos-count').textContent = summary.total_videos || 0;
       document.getElementById('stat-images-count').textContent = summary.total_images || 0;
-      document.getElementById('stat-video-duration').textContent = `${summary.video_duration_sec || 10}s / clip`;
-      document.getElementById('stat-total-duration').textContent = `${summary.target_total_duration_sec || summary.actual_total_runtime_sec || 0} seconds (${summary.total_videos || 0} clips × ${summary.video_duration_sec || 10}s)`;
+      document.getElementById('stat-video-duration').textContent = `${summary.video_duration_sec || 10}s/clip`;
+      document.getElementById('stat-total-duration').textContent = `${summary.target_total_duration_sec || summary.actual_total_runtime_sec || 0}s Total Runtime`;
     }
 
     function renderSceneBible() {
@@ -2379,40 +2280,40 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
       const numMatch = (img.image_id || '').match(/\d+/);
       const num = numMatch ? numMatch[0] : (seqIdx + 1);
       card.id = `card-image-${num}`;
-      card.className = 'glass-card rounded-2xl p-5 sm:p-6 border border-white/10 space-y-4';
+      card.className = 'glass-card rounded-2xl p-4 sm:p-5 border border-white/10 space-y-3.5';
 
-      const shortPromptSection = img.asset_prompt_only ? `
-        <div class="bg-emerald-950/40 p-3 rounded-xl border border-emerald-800/40 space-y-1.5">
+      const hasShortPrompt = Boolean(img.asset_prompt_only);
+      const shortPromptSection = hasShortPrompt ? `
+        <div class="bg-emerald-950/30 p-3 sm:p-3.5 rounded-xl border border-emerald-800/30 space-y-2">
           <div class="flex items-center justify-between">
             <span class="text-[10px] font-mono text-emerald-400 uppercase font-semibold flex items-center gap-1">
               <svg class="w-3 h-3 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
               Direct Visual Prompt (Midjourney / Flux / SD)
             </span>
-            <button class="btn-copy-short-prompt text-[10px] font-mono text-emerald-300 hover:text-white bg-emerald-900/60 hover:bg-emerald-800/80 px-2 py-0.5 rounded border border-emerald-700/50 transition-all font-semibold" data-type="image" data-id="${img.image_id}">
+            <button class="btn-copy-short-prompt text-xs font-semibold text-emerald-300 hover:text-white bg-emerald-900/60 hover:bg-emerald-800/80 px-2.5 py-1 rounded-lg border border-emerald-700/50 transition-all shadow-sm" data-type="image" data-id="${img.image_id}">
               Copy Short Prompt
             </button>
           </div>
-          <p class="text-slate-200 text-[11px] leading-relaxed font-sans">${escapeHtml(img.asset_prompt_only)}</p>
+          <p class="text-slate-200 text-xs sm:text-[13px] leading-relaxed select-all font-sans">${escapeHtml(img.asset_prompt_only)}</p>
         </div>
       ` : '';
 
       card.innerHTML = `
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3 border-b border-white/5">
           <div class="flex items-center gap-2.5">
-            <span class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm border border-emerald-500/30">
+            <span class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm border border-emerald-500/30 shrink-0">
               📸
             </span>
             <div>
-              <div class="flex items-center gap-2">
+              <div class="flex items-center gap-1.5 flex-wrap">
                 <span class="text-sm font-bold text-white font-mono">${img.image_id || `IMAGE ${num}`}</span>
-                <span class="text-[10px] font-mono font-bold text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800/40">${img.state_id || `STATE_${String(num).padStart(2, '0')}`}</span>
-                <span class="text-[10px] font-mono text-slate-400 bg-slate-900 px-2 py-0.5 rounded">STATIC ANCHOR</span>
+                <span class="text-[10px] font-mono font-semibold text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800/40">${img.state_id || `STATE_${String(num).padStart(2, '0')}`}</span>
               </div>
-              <p class="text-xs text-slate-300 font-medium mt-0.5">${img.state_purpose || ''}</p>
+              <p class="text-xs text-slate-300 mt-0.5 line-clamp-1 sm:line-clamp-none">${escapeHtml(img.state_purpose || '')}</p>
             </div>
           </div>
-          <div class="flex items-center gap-2">
-            <button class="btn-copy-prompt inline-flex items-center gap-1.5 text-xs font-bold text-slate-950 bg-emerald-400 hover:bg-emerald-300 px-3.5 py-1.5 rounded-lg shadow-sm transition-all font-mono self-start sm:self-auto" data-copy-type="image" data-id="${img.image_id}">
+          <div class="flex items-center gap-2 self-start sm:self-auto shrink-0">
+            <button class="btn-copy-prompt inline-flex items-center gap-1.5 text-xs font-semibold text-slate-950 bg-emerald-400 hover:bg-emerald-300 px-3 py-1.5 rounded-lg shadow-sm transition-all font-mono" data-copy-type="image" data-id="${img.image_id}">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
               <span>Copy Full Prompt</span>
             </button>
@@ -2421,39 +2322,45 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
 
         ${shortPromptSection}
 
-        <!-- DETAILS GRID -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-          <div class="bg-slate-950/70 p-3 rounded-xl border border-white/5 space-y-1">
-            <span class="text-[10px] font-mono text-emerald-400 uppercase font-semibold">Completed Work</span>
-            <p class="text-slate-300 text-[11px] leading-relaxed">${img.completed_work || '-'}</p>
+        <!-- TECHNICAL DETAILS (COLLAPSIBLE TO AVOID CLUTTER) -->
+        <details class="group bg-slate-950/50 rounded-xl border border-white/5 overflow-hidden">
+          <summary class="cursor-pointer px-3.5 py-2 text-xs font-medium text-slate-400 hover:text-slate-200 flex items-center justify-between transition-colors">
+            <span class="flex items-center gap-1.5">
+              <span>⚙️ Technical Causality Details</span>
+            </span>
+            <span class="group-open:rotate-180 transition-transform text-[10px]">▼</span>
+          </summary>
+          <div class="p-3 border-t border-white/5 grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+            <div class="bg-slate-900/60 p-2.5 rounded-lg border border-white/5">
+              <span class="text-[10px] font-mono text-emerald-400 uppercase font-semibold block">Completed Work</span>
+              <p class="text-slate-300 text-[11px] leading-relaxed mt-0.5">${escapeHtml(img.completed_work || '-')}</p>
+            </div>
+            <div class="bg-slate-900/60 p-2.5 rounded-lg border border-white/5">
+              <span class="text-[10px] font-mono text-sky-400 uppercase font-semibold block">Active Work In Frame</span>
+              <p class="text-slate-300 text-[11px] leading-relaxed mt-0.5">${escapeHtml(img.active_work || '-')}</p>
+            </div>
+            <div class="bg-slate-900/60 p-2.5 rounded-lg border border-white/5">
+              <span class="text-[10px] font-mono text-amber-400 uppercase font-semibold block">Worker Actions &amp; Positions</span>
+              <p class="text-slate-300 text-[11px] leading-relaxed mt-0.5">${escapeHtml(img.worker_actions || '-')}</p>
+            </div>
+            <div class="bg-slate-900/60 p-2.5 rounded-lg border border-white/5">
+              <span class="text-[10px] font-mono text-indigo-400 uppercase font-semibold block">Material &amp; Substrate State</span>
+              <p class="text-slate-300 text-[11px] leading-relaxed mt-0.5">${escapeHtml(img.material_state || '-')}</p>
+            </div>
           </div>
-          <div class="bg-slate-950/70 p-3 rounded-xl border border-white/5 space-y-1">
-            <span class="text-[10px] font-mono text-sky-400 uppercase font-semibold">Active Work In Frame</span>
-            <p class="text-slate-300 text-[11px] leading-relaxed">${img.active_work || '-'}</p>
-          </div>
-          <div class="bg-slate-950/70 p-3 rounded-xl border border-white/5 space-y-1">
-            <span class="text-[10px] font-mono text-amber-400 uppercase font-semibold">Worker Actions &amp; Positions</span>
-            <p class="text-slate-300 text-[11px] leading-relaxed">${img.worker_actions || '-'}</p>
-          </div>
-          <div class="bg-slate-950/70 p-3 rounded-xl border border-white/5 space-y-1">
-            <span class="text-[10px] font-mono text-indigo-400 uppercase font-semibold">Material &amp; Substrate State</span>
-            <p class="text-slate-300 text-[11px] leading-relaxed">${img.material_state || '-'}</p>
-          </div>
-        </div>
+        </details>
 
         <!-- COLLAPSIBLE FULL COPY-READY PROMPT -->
-        <div class="pt-2">
-          <details class="group bg-slate-950/90 rounded-xl border border-white/5 overflow-hidden">
-            <summary class="cursor-pointer px-4 py-2.5 text-[11px] font-mono text-slate-400 hover:text-white flex items-center justify-between transition-colors">
-              <span class="flex items-center gap-1.5">
-                <span class="text-emerald-400">⚡</span>
-                <span>View Pre-Combined Copy-Ready Prompt (${(img.full_copy_ready_prompt || '').length} chars)</span>
-              </span>
-              <span class="group-open:rotate-180 transition-transform">▼</span>
-            </summary>
-            <div class="p-4 border-t border-white/5 bg-slate-950 text-slate-300 font-mono text-[11px] leading-relaxed whitespace-pre-wrap select-all max-h-60 overflow-y-auto">${escapeHtml(img.full_copy_ready_prompt || '')}</div>
-          </details>
-        </div>
+        <details class="group bg-slate-950/80 rounded-xl border border-white/5 overflow-hidden">
+          <summary class="cursor-pointer px-3.5 py-2 text-[11px] font-mono text-slate-400 hover:text-white flex items-center justify-between transition-colors">
+            <span class="flex items-center gap-1.5">
+              <span class="text-emerald-400">⚡</span>
+              <span>View Pre-Combined Prompt (${(img.full_copy_ready_prompt || '').length} chars)</span>
+            </span>
+            <span class="group-open:rotate-180 transition-transform">▼</span>
+          </summary>
+          <div class="p-3 border-t border-white/5 bg-slate-950 text-slate-300 font-mono text-[11px] leading-relaxed whitespace-pre-wrap select-all max-h-56 overflow-y-auto">${escapeHtml(img.full_copy_ready_prompt || '')}</div>
+        </details>
       `;
 
       card.querySelector('.btn-copy-prompt').addEventListener('click', () => {
@@ -2475,40 +2382,41 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
       const numMatch = (vid.video_id || '').match(/\d+/);
       const num = numMatch ? numMatch[0] : (seqIdx + 1);
       card.id = `card-video-${num}`;
-      card.className = 'glass-card rounded-2xl p-5 sm:p-6 border border-white/10 space-y-4';
+      card.className = 'glass-card rounded-2xl p-4 sm:p-5 border border-white/10 space-y-3.5';
 
-      const shortPromptSection = vid.asset_prompt_only ? `
-        <div class="bg-sky-950/40 p-3 rounded-xl border border-sky-800/40 space-y-1.5">
+      const hasShortPrompt = Boolean(vid.asset_prompt_only);
+      const shortPromptSection = hasShortPrompt ? `
+        <div class="bg-sky-950/30 p-3 sm:p-3.5 rounded-xl border border-sky-800/30 space-y-2">
           <div class="flex items-center justify-between">
             <span class="text-[10px] font-mono text-sky-400 uppercase font-semibold flex items-center gap-1">
               <svg class="w-3 h-3 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
               Direct Video Prompt (Sora / Kling / Runway / Luma)
             </span>
-            <button class="btn-copy-short-prompt text-[10px] font-mono text-sky-300 hover:text-white bg-sky-900/60 hover:bg-sky-800/80 px-2 py-0.5 rounded border border-sky-700/50 transition-all font-semibold" data-type="video" data-id="${vid.video_id}">
+            <button class="btn-copy-short-prompt text-xs font-semibold text-sky-300 hover:text-white bg-sky-900/60 hover:bg-sky-800/80 px-2.5 py-1 rounded-lg border border-sky-700/50 transition-all shadow-sm" data-type="video" data-id="${vid.video_id}">
               Copy Short Prompt
             </button>
           </div>
-          <p class="text-slate-200 text-[11px] leading-relaxed font-sans">${escapeHtml(vid.asset_prompt_only)}</p>
+          <p class="text-slate-200 text-xs sm:text-[13px] leading-relaxed select-all font-sans">${escapeHtml(vid.asset_prompt_only)}</p>
         </div>
       ` : '';
 
       card.innerHTML = `
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3 border-b border-white/5">
           <div class="flex items-center gap-2.5">
-            <span class="w-8 h-8 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center font-bold text-sm border border-sky-500/30">
+            <span class="w-8 h-8 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center font-bold text-sm border border-sky-500/30 shrink-0">
               🎬
             </span>
             <div>
-              <div class="flex items-center gap-2">
+              <div class="flex items-center gap-1.5 flex-wrap">
                 <span class="text-sm font-bold text-white font-mono">${vid.video_id || `VIDEO ${num}`}</span>
-                <span class="text-[10px] font-mono font-bold text-sky-400 bg-sky-950/80 px-2 py-0.5 rounded border border-sky-800/40">${vid.from_image_id} ⟶ ${vid.to_image_id}</span>
+                <span class="text-[10px] font-mono font-semibold text-sky-400 bg-sky-950/80 px-2 py-0.5 rounded border border-sky-800/40">${vid.from_image_id} ⟶ ${vid.to_image_id}</span>
                 <span class="text-[10px] font-mono text-amber-300 bg-amber-950/60 px-2 py-0.5 rounded">${vid.target_duration_sec}s TIMELAPSE</span>
               </div>
-              <p class="text-xs text-slate-300 font-medium mt-0.5 font-mono">${vid.temporal_compression_level || ''}</p>
+              <p class="text-xs text-slate-300 mt-0.5 font-mono line-clamp-1 sm:line-clamp-none">${escapeHtml(vid.temporal_compression_level || '')}</p>
             </div>
           </div>
-          <div class="flex items-center gap-2">
-            <button class="btn-copy-prompt inline-flex items-center gap-1.5 text-xs font-bold text-slate-950 bg-sky-400 hover:bg-sky-300 px-3.5 py-1.5 rounded-lg shadow-sm transition-all font-mono self-start sm:self-auto" data-copy-type="video" data-id="${vid.video_id}">
+          <div class="flex items-center gap-2 self-start sm:self-auto shrink-0">
+            <button class="btn-copy-prompt inline-flex items-center gap-1.5 text-xs font-semibold text-slate-950 bg-sky-400 hover:bg-sky-300 px-3 py-1.5 rounded-lg shadow-sm transition-all font-mono" data-copy-type="video" data-id="${vid.video_id}">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
               <span>Copy Full Prompt</span>
             </button>
@@ -2517,39 +2425,45 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
 
         ${shortPromptSection}
 
-        <!-- DETAILS GRID -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-          <div class="bg-slate-950/70 p-3 rounded-xl border border-white/5 space-y-1">
-            <span class="text-[10px] font-mono text-emerald-400 uppercase font-semibold">Physical Workload</span>
-            <p class="text-slate-300 text-[11px] leading-relaxed">${vid.physical_workload || '-'}</p>
+        <!-- TECHNICAL DETAILS (COLLAPSIBLE) -->
+        <details class="group bg-slate-950/50 rounded-xl border border-white/5 overflow-hidden">
+          <summary class="cursor-pointer px-3.5 py-2 text-xs font-medium text-slate-400 hover:text-slate-200 flex items-center justify-between transition-colors">
+            <span class="flex items-center gap-1.5">
+              <span>⚙️ Technical Action Details</span>
+            </span>
+            <span class="group-open:rotate-180 transition-transform text-[10px]">▼</span>
+          </summary>
+          <div class="p-3 border-t border-white/5 grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+            <div class="bg-slate-900/60 p-2.5 rounded-lg border border-white/5">
+              <span class="text-[10px] font-mono text-emerald-400 uppercase font-semibold block">Physical Workload</span>
+              <p class="text-slate-300 text-[11px] leading-relaxed mt-0.5">${escapeHtml(vid.physical_workload || '-')}</p>
+            </div>
+            <div class="bg-slate-900/60 p-2.5 rounded-lg border border-white/5">
+              <span class="text-[10px] font-mono text-sky-400 uppercase font-semibold block">Action Sequence</span>
+              <p class="text-slate-300 text-[11px] leading-relaxed mt-0.5">${escapeHtml(vid.physical_action_sequence || '-')}</p>
+            </div>
+            <div class="bg-slate-900/60 p-2.5 rounded-lg border border-white/5">
+              <span class="text-[10px] font-mono text-amber-400 uppercase font-semibold block">Material Movement &amp; Logistics</span>
+              <p class="text-slate-300 text-[11px] leading-relaxed mt-0.5">${escapeHtml(vid.material_movement || '-')}</p>
+            </div>
+            <div class="bg-slate-900/60 p-2.5 rounded-lg border border-white/5">
+              <span class="text-[10px] font-mono text-indigo-400 uppercase font-semibold block">End State Convergence</span>
+              <p class="text-slate-300 text-[11px] leading-relaxed mt-0.5">${escapeHtml(vid.end_state_convergence || '-')}</p>
+            </div>
           </div>
-          <div class="bg-slate-950/70 p-3 rounded-xl border border-white/5 space-y-1">
-            <span class="text-[10px] font-mono text-sky-400 uppercase font-semibold">Action Sequence (Causal Steps)</span>
-            <p class="text-slate-300 text-[11px] leading-relaxed">${vid.physical_action_sequence || '-'}</p>
-          </div>
-          <div class="bg-slate-950/70 p-3 rounded-xl border border-white/5 space-y-1">
-            <span class="text-[10px] font-mono text-amber-400 uppercase font-semibold">Material Movement &amp; Logistics</span>
-            <p class="text-slate-300 text-[11px] leading-relaxed">${vid.material_movement || '-'}</p>
-          </div>
-          <div class="bg-slate-950/70 p-3 rounded-xl border border-white/5 space-y-1">
-            <span class="text-[10px] font-mono text-indigo-400 uppercase font-semibold">End State Convergence</span>
-            <p class="text-slate-300 text-[11px] leading-relaxed">${vid.end_state_convergence || '-'}</p>
-          </div>
-        </div>
+        </details>
 
         <!-- COLLAPSIBLE FULL COPY-READY PROMPT -->
-        <div class="pt-2">
-          <details class="group bg-slate-950/90 rounded-xl border border-white/5 overflow-hidden">
-            <summary class="cursor-pointer px-4 py-2.5 text-[11px] font-mono text-slate-400 hover:text-white flex items-center justify-between transition-colors">
-              <span class="flex items-center gap-1.5">
-                <span class="text-sky-400">⚡</span>
-                <span>View Pre-Combined Copy-Ready Prompt (${(vid.full_copy_ready_prompt || '').length} chars)</span>
-              </span>
-              <span class="group-open:rotate-180 transition-transform">▼</span>
-            </summary>
-            <div class="p-4 border-t border-white/5 bg-slate-950 text-slate-300 font-mono text-[11px] leading-relaxed whitespace-pre-wrap select-all max-h-60 overflow-y-auto">${escapeHtml(vid.full_copy_ready_prompt || '')}</div>
-          </details>
-        </div>
+        <details class="group bg-slate-950/80 rounded-xl border border-white/5 overflow-hidden">
+          <summary class="cursor-pointer px-3.5 py-2 text-[11px] font-mono text-slate-400 hover:text-white flex items-center justify-between transition-colors">
+            <span class="flex items-center gap-1.5">
+              <span class="text-sky-400">⚡</span>
+              <span>View Pre-Combined Prompt (${(vid.full_copy_ready_prompt || '').length} chars)</span>
+            </span>
+            <span class="group-open:rotate-180 transition-transform">▼</span>
+          </summary>
+          <div class="p-3 border-t border-white/5 bg-slate-950 text-slate-300 font-mono text-[11px] leading-relaxed whitespace-pre-wrap select-all max-h-56 overflow-y-auto">${escapeHtml(vid.full_copy_ready_prompt || '')}</div>
+        </details>
       `;
 
       card.querySelector('.btn-copy-prompt').addEventListener('click', () => {
@@ -2896,6 +2810,31 @@ NEGATIVE CONSTRAINTS: no magical transformations, no teleporting workers or mach
 
           renderAssets();
         });
+      });
+
+      // Toggle Scene Bible Panel
+      const bibleContainer = document.getElementById('scene-bible-container');
+      const toggleBibleBtn = document.getElementById('btn-toggle-scene-bible');
+      const closeBibleBtn = document.getElementById('btn-close-scene-bible');
+      const bibleArrow = document.getElementById('bible-toggle-arrow');
+
+      function toggleSceneBible() {
+        if (!bibleContainer) return;
+        const isHidden = bibleContainer.classList.contains('hidden');
+        if (isHidden) {
+          bibleContainer.classList.remove('hidden');
+          if (bibleArrow) bibleArrow.textContent = '▴';
+          bibleContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        } else {
+          bibleContainer.classList.add('hidden');
+          if (bibleArrow) bibleArrow.textContent = '▾';
+        }
+      }
+
+      if (toggleBibleBtn) toggleBibleBtn.addEventListener('click', toggleSceneBible);
+      if (closeBibleBtn) closeBibleBtn.addEventListener('click', () => {
+        if (bibleContainer) bibleContainer.classList.add('hidden');
+        if (bibleArrow) bibleArrow.textContent = '▾';
       });
 
       // Copy All Prompts Button
