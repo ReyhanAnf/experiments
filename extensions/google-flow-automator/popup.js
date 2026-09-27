@@ -12,10 +12,11 @@ document.addEventListener('DOMContentLoaded', () => {
     chrome.storage.local.get(['tc_flow_state'], res => {
       if (res && res.tc_flow_state && res.tc_flow_state.activePlan) {
         const plan = res.tc_flow_state.activePlan;
-        popProjectName.textContent = plan.production_summary?.project_name || 'Continuity Project';
-        const imgCount = (plan.images || []).length;
-        const vidCount = (plan.videos || []).length;
-        popProjectStats.textContent = `${imgCount} Images · ${vidCount} Videos · ${plan.production_summary?.target_total_duration_sec || 0}s Runtime`;
+        popProjectName.textContent = plan.project_meta?.project_name || plan.production_summary?.project_name || 'Continuity Project';
+        const imgCount = plan.project_meta?.total_images || (plan.images || []).length;
+        const vidCount = plan.project_meta?.total_videos || (plan.videos || []).length;
+        const aspect = plan.project_meta?.target_aspect_ratio || '16:9';
+        popProjectStats.textContent = `${imgCount} Images · ${vidCount} Videos (${aspect})`;
       } else {
         popProjectName.textContent = 'Belum ada proyek yang dimuat';
         popProjectStats.textContent = 'Tempel JSON di bawah untuk memulai';
@@ -53,8 +54,10 @@ document.addEventListener('DOMContentLoaded', () => {
                   chrome.tabs.sendMessage(tabs[0].id, { type: 'TC_SET_PROJECT', plan: parsed });
                 }
               });
-              popProjectName.textContent = parsed.production_summary?.project_name || 'Custom Plan';
-              popProjectStats.textContent = `${parsed.images.length} Images · ${(parsed.videos || []).length} Videos`;
+              popProjectName.textContent = parsed.project_meta?.project_name || parsed.production_summary?.project_name || 'Custom Plan';
+              const imgCount = parsed.project_meta?.total_images || parsed.images.length;
+              const vidCount = parsed.project_meta?.total_videos || (parsed.videos || []).length;
+              popProjectStats.textContent = `${imgCount} Images · ${vidCount} Videos`;
               popJsonInput.value = '';
               popStatus.style.display = 'block';
               setTimeout(() => { popStatus.style.display = 'none'; }, 2500);

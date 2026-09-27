@@ -266,8 +266,8 @@ async function runExtensionTestSuite() {
     console.log("Status Banner:", pasteImgResult.result.value.statusText);
     console.log("Prompt Preview:", pasteImgResult.result.value.promptInserted.slice(0, 120) + '...');
 
-    if (!pasteImgResult.result.value.promptInserted.includes('CORE CONTINUITY INSTRUCTION') ||
-        !pasteImgResult.result.value.promptInserted.includes('IMAGE 1')) {
+    if (!pasteImgResult.result.value.promptInserted.includes('Active work:') ||
+        !pasteImgResult.result.value.promptInserted.includes('Worker action:')) {
       throw new Error("Image 1 prompt was not correctly inserted into Google Flow textarea!");
     }
 
@@ -352,26 +352,39 @@ async function runExtensionTestSuite() {
     console.log("Video Prompt Status:", pasteVidResult.result.value.statusText);
     console.log("Video Prompt Preview:", pasteVidResult.result.value.promptInserted.slice(0, 120) + '...');
 
-    if (!pasteVidResult.result.value.promptInserted.includes('TRANSITION VIDEO TIMELAPSE')) {
+    if (!pasteVidResult.result.value.promptInserted.includes('Documentary timelapse transition') ||
+        !pasteVidResult.result.value.promptInserted.includes('Motion dynamics:')) {
       throw new Error("Video prompt was not correctly inserted into textarea!");
     }
 
     // --- STEP 9: TEST WEB SYNC (POSTMESSAGE TC_FLOW_EXPORT) ---
     console.log("\n--- STEP 9: Testing Web App 1-Click Sync (TC_FLOW_EXPORT) ---");
     const customTestProject = {
-      production_summary: {
+      project_meta: {
         project_name: "Modern Penthouse Sky Terrace",
-        target_total_duration_sec: 40,
-        video_duration_sec: 10,
-        total_videos: 4,
-        total_images: 5
+        total_images: 2,
+        total_videos: 1,
+        target_aspect_ratio: "16:9",
+        style_preset: "Photorealistic documentary timelapse"
+      },
+      core: {
+        scene_environment: "Penthouse terrace overlooking city skyline.",
+        anchor_landmarks: "1. Glass balustrade; 2. Concrete planter; 3. Steel pergola.",
+        worker_registry: "Lead Carpenter in grey overalls.",
+        equipment_and_tools: "Cordless drill, spirit level, teak wood slats.",
+        quality_and_negative: "Photorealistic, 8k --no morphing"
       },
       images: [
         {
-          image_id: "IMAGE 1",
+          image_index: 1,
           state_id: "STATE_01",
-          state_purpose: "Initial empty raw penthouse terrace floor.",
-          full_copy_ready_prompt: "CORE PROMPT: Penthouse Sky Terrace.\nIMAGE 1\nNEGATIVE: no drift."
+          phase_name: "Initial Empty Terrace",
+          camera_setup: "Tripod fixed 1.5m facing North.",
+          state_description: "Empty concrete slab before decking installation.",
+          active_work: "Snapping reference chalk lines.",
+          worker_action: "Kneeling on concrete with chalk reel.",
+          visible_materials: "Chalk markings and raw concrete.",
+          local_negative: "no finished teak decking"
         }
       ],
       videos: []
