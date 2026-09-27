@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mock Google Flow (Veo & Imagen)</title>
+  <style>
+    body {
+      background: #111827;
+      color: #f9fafb;
+      font-family: sans-serif;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .container {
+      max-width: 600px;
+      width: 100%;
+      background: #1f2937;
+      padding: 24px;
+      border-radius: 16px;
+      border: 1px solid #374151;
+    }
+    textarea {
+      width: 100%;
+      height: 120px;
+      background: #111827;
+      border: 1px solid #4b5563;
+      border-radius: 12px;
+      color: #fff;
+      padding: 12px;
+      font-size: 14px;
+      box-sizing: border-box;
+      margin-top: 12px;
+    }
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    button {
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .btn-primary { background: #3b82f6; color: white; }
+    .btn-secondary { background: #374151; color: #e5e7eb; }
+    #library-drawer {
+      margin-top: 16px;
+      padding: 12px;
+      background: #111827;
+      border-radius: 8px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Google Flow / Labs (Mock Interface)</h1>
+    <p style="color: #9ca3af; font-size: 13px;">AI Video & Image Generation Canvas</p>
+
+    <div class="btn-row">
+      <button class="btn-secondary" id="btn-add-asset">Add asset to prompt (Library)</button>
+    </div>
+
+    <div id="library-drawer">
+      <h3>Project Asset Library</h3>
+      <div id="asset-item-1" style="padding: 8px; background: #374151; margin-top: 6px; border-radius: 6px;">[Asset: IMAGE 1]</div>
+      <div id="asset-item-2" style="padding: 8px; background: #374151; margin-top: 6px; border-radius: 6px;">[Asset: IMAGE 2]</div>
+    </div>
+
+    <textarea id="prompt-input" placeholder="Enter a prompt to generate with Google Veo or Imagen..."></textarea>
+
+    <div class="btn-row">
+      <button class="btn-primary" id="btn-generate">Generate</button>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('btn-add-asset').addEventListener('click', () => {
+      const d = document.getElementById('library-drawer');
+      const isHidden = window.getComputedStyle(d).display === 'none';
+      d.style.display = isHidden ? 'block' : 'none';
+    });
+  </script>
+</body>
+</html>
